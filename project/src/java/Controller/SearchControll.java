@@ -61,6 +61,8 @@ public class SearchControll extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String txt = request.getParameter("txt");
+        if(txt == null || txt.isBlank() ){
         String cate = request.getParameter("cate");
         int cateid = Integer.parseInt(cate);
         dao.getProductbyCateId(cateid);
@@ -70,6 +72,9 @@ public class SearchControll extends HttpServlet {
          request.setAttribute("cate", allcate);
         request.setAttribute("pro", allpro);
          request.getRequestDispatcher("shop.jsp").forward(request, response);
+        }else{
+            doPost(request, response);
+        }
     }
 
     /**
@@ -84,13 +89,40 @@ public class SearchControll extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String txt = request.getParameter("txt");
-      
         dao.searchProductShop(txt);
+        
         List<Product> allpro = dao.getPro();
+        if(allpro == null || allpro.isEmpty()){
+            allpro =   dao.fuzzySearchProducts(txt, 60, 15);
+          
+        }
         dao.getAllCate();
         List<Categories> allcate = dao.getCate();
+        
+        
+         int page, numberPage = 6;
+        int size = allpro.size();
+        int num = (size % 6 == 0 ? (size / 6) : ((size / 6) + 1));
+        String xpage = request.getParameter("spage");
+        if (xpage == null || xpage.equals("")) {
+            page = 1;
+        } else {
+            page = Integer.parseInt(xpage);
+        }
+        int start, end;
+        start = (page - 1) * numberPage;
+        end = Math.min(page * numberPage, size);
+        dao.getAllProductPagging(allpro, start, end);
+        List<Product> proPagging = dao.getPro();
+        dao.getAllCate();
+        List<Categories> cate = dao.getCate();
+        
+        request.setAttribute("txt", txt);
+        request.setAttribute("cate", cate);
+        request.setAttribute("pro", proPagging);
+        request.setAttribute("num1", num);
+        request.setAttribute("page1", page);
          request.setAttribute("cate", allcate);
-        request.setAttribute("pro", allpro);
          request.getRequestDispatcher("shop.jsp").forward(request, response);
     }
 
