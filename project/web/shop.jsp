@@ -162,10 +162,14 @@
         <c:set var="xpage" value="${requestScope.page}"/>
         <div class="next-page fs-poppins flex ">
             <c:forEach begin="${1}" end="${requestScope.num}" var="i">
-            <a  href="shop?xpage=${i}" class="bg-red text-white active bold-800">${i}</a>
+                <a style="text-decoration: white" href="shop?xpage=${i}&action=${ac}" class="bg-red text-white active bold-800">${i}</a>
             </c:forEach>
-            <span></span>
+                <c:set var="spage" value="${requestScope.page1}"/>
+                <c:forEach begin="${1}" end="${requestScope.num1}" var="i">
+                <a style="text-decoration: white" href="search?spage=${i}&txt=${txt}" class="bg-red text-white active bold-800">${i}</a>
+            </c:forEach>
         </div>
+        
       </div>
       <!-- ==============Shop-product====================== -->
       <section>
@@ -279,5 +283,12 @@
      </section>
     
       </footer>
+       <df-messenger
+                intent="WELCOME"
+                chat-title="Beta"
+                agent-id="9e78c254-81b7-4fca-9822-1dde277cb01c"
+                language-code="vi"
+                ></df-messenger>
+   <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
   </body>
 </html>
