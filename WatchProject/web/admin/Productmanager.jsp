@@ -160,7 +160,12 @@
                                 </li>
                                
                                   <li class="nav-item ">
-                                    <a class="nav-link active" href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Dashboard </a>
+                                    <a class="nav-link " href="dashboard" ><i class="fa fa-fw fa-user-circle"></i>Dashboard </a>
+
+                                </li>
+                               
+                                  <li class="nav-item ">
+                                    <a class="nav-link active" href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Product Manager </a>
 
                                 </li>
                                 <li class="nav-item ">
@@ -278,7 +283,7 @@
                                                                     </c:if>
                                                                 </c:forEach> 
                                                             </td>
-                                                            <td > $${p.price} </td>
+                                                            <td > ${p.price} </td>
                                                             <td > ${p.stockQuantity} </td>
                                                             <td > ${p.publication_date} </td>
                                                             <td>

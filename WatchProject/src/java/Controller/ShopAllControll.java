@@ -65,7 +65,7 @@ public class ShopAllControll extends HttpServlet {
             throws ServletException, IOException {
         String ac = request.getParameter("action");
         List<Product> allpro = null;
-        if (ac == null) {
+        if (ac == null || ac.isBlank()) {
             dao.getAllProductShop();
             allpro = dao.getPro();
         } else if (ac != null) {
@@ -95,6 +95,7 @@ public class ShopAllControll extends HttpServlet {
         dao.getAllCate();
         List<Categories> cate = dao.getCate();
         request.setAttribute("cate", cate);
+        request.setAttribute("ac", ac);
         request.setAttribute("pro", proPagging);
         request.setAttribute("num", num);
         request.setAttribute("page", page);

@@ -59,7 +59,7 @@ public class HomeController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       dao.getAllBrandShop();
+       dao.getTop6Brand();
        List<Brand> allbr = dao.getBrand();
        dao.getBestProduct();
        List<Product> pro = dao.getPro();
