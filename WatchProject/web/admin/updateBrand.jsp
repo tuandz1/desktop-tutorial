@@ -151,8 +151,12 @@
                                 <li class="nav-divider">
                                     Menu
                                 </li>
+                               <li class="nav-item ">
+                                    <a class="nav-link " href="dashboard" ><i class="fa fa-fw fa-user-circle"></i>Dashboard </a>
+
+                                </li>
                                 <li class="nav-item ">
-                                    <a class="nav-link " href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Dashboard </a>
+                                    <a class="nav-link " href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Product Manager </a>
 
                                 </li>
                                 <li class="nav-item ">
