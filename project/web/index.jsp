@@ -89,11 +89,7 @@
                                    >Contact Us</a
                                 >
                             </li>
-                            <li>
-                                <a class="fs-100 fs-montserrat bold-500" href="cart.jsp"
-                                   >Cart page</a
-                                >
-                            </li>
+
                         </ul>
                     </nav>
                 </div>
@@ -108,13 +104,10 @@
                         color: black"class="fs-100 fs-montserrat bold-500" id="acc-box" aria-controls="acc-icon">${sessionScope.acc.getFull_name()}</p>
 
                         </c:if>
-                        <i class="uil uil-search"></i>
-                        <i
-                            id="cart-box"
-                            aria-controls="cart-icon"
-                            class="uil uil-shopping-bag"
+                            <a  href="showCart">
+                        <i class="uil uil-shopping-bag"
                             ></i>
-
+                            </a>
                         <!-- =================1111111111================== -->
                         <div id="cart-icon" data-visible="false" class="cart-icon">
                             <div class="shopping flex">
@@ -186,7 +179,7 @@
 
                 <!-- =================Product Section======================= -->
 
-                <section class="product-section">
+                <section style="z-index: 1;" class="product-section">
                     <c:forEach items="${brand}" var="o">
 
                         <div class="category  grid"  
@@ -293,7 +286,7 @@
                             <p class="fs-poppins bold-500">$ ${n.price}</p>
                             <!-- ---------------------------- -->
                             <div class="product-details grid bg-red">
-                                <i class="text-white uil uil-shopping-cart-alt"></i>
+                                <a href="addToCart?num=1&id=${n.id}&acc_num=${sessionScope.acc.id}"> <i class="text-white uil uil-shopping-cart-alt"></i></a>
                                 <i class="text-white uil uil-heart-alt"></i>
                             </div>
                             <!-- ===================================== -->

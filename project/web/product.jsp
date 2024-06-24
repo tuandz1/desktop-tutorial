@@ -26,50 +26,50 @@
         <script src="js/shoppage/index.js" defer></script>
         <script src="js/shoppage/product.js" defer></script>
         <style>
-             .slider-container {
-            position: relative;
-            max-width: 600px;
-            margin: auto;
-            overflow: hidden;
-        }
+            .slider-container {
+                position: relative;
+                max-width: 600px;
+                margin: auto;
+                overflow: hidden;
+            }
 
-        .slider {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-        }
+            .slider {
+                display: flex;
+                transition: transform 0.5s ease-in-out;
+            }
 
-        .slide {
-            min-width: 100%;
-            box-sizing: border-box;
-        }
+            .slide {
+                min-width: 100%;
+                box-sizing: border-box;
+            }
 
-        .slide img {
-            width: 100%;
-            display: block;
-        }
+            .slide img {
+                width: 100%;
+                display: block;
+            }
 
-        .prev, .next {
-            cursor: pointer;
-            position: absolute;
-            top: 50%;
-            width: auto;
-            padding: 16px;
-            margin-top: -22px;
-            color: white;
-            font-weight: bold;
-            font-size: 18px;
-            transition: 0.6s ease;
-            user-select: none;
-            border: none;   
-        }
+            .prev, .next {
+                cursor: pointer;
+                position: absolute;
+                top: 50%;
+                width: auto;
+                padding: 16px;
+                margin-top: -22px;
+                color: white;
+                font-weight: bold;
+                font-size: 18px;
+                transition: 0.6s ease;
+                user-select: none;
+                border: none;
+            }
 
-        .next {
-            right: 0;
-        }
+            .next {
+                right: 0;
+            }
 
-        .prev:hover, .next:hover {
-            background-color: rgba(0, 0, 0, 0.8);
-        }
+            .prev:hover, .next:hover {
+                background-color: rgba(0, 0, 0, 0.8);
+            }
         </style>
         <!-- custon style Sheet & JavaScript -->
         <title>Ecommerce Website</title>
@@ -157,11 +157,11 @@
                     <div class="slide">
                         <img style="width: 400px; height: 400px" src="${pro.img}" alt="Product Image 1">
                     </div>
-                        <c:forEach items="${pic}" var="p">
-                    <div class="slide">
-                        <img style="width: 400px; height: 400px" src="${p.img_link}" alt="Product Image 2">
-                    </div>
-                        </c:forEach>
+                    <c:forEach items="${pic}" var="p">
+                        <div class="slide">
+                            <img style="width: 400px; height: 400px" src="${p.img_link}" alt="Product Image 2">
+                        </div>
+                    </c:forEach>
                     <!-- Add more slides as needed -->
                 </div>
                 <button class="prev" onclick="plusSlides(-1)"><i class="uil text-red uil-angle-double-left"></i></button>
@@ -191,15 +191,19 @@
                         ${pro.description}
                     </p>
                 </div>
+                <form action="addToCart" method="get">
+                    <div class="product-add-cart flex">
 
-                <div class="product-add-cart flex">
-                    <input type="number" min="0" max="10" class="bg-gray fs-poppins" />
-                    <button
-                        class="product-btn large-btn bg-red text-white fs-poppins fs-50"
-                        >
-                        Add to cart
-                    </button>
-                </div>
+                        <input type="number" name="num" min="0" value="1" max="${pro.stockQuantity}" class="bg-gray fs-poppins " />
+                        <input type="hidden" name="id" value="${pro.id}" />
+                        <input type="hidden" name="acc_num" value="${sessionScope.acc.id}" />
+                        <button 
+                            class="product-btn large-btn bg-red text-white fs-poppins fs-50"
+                            >
+                            Add to cart
+                        </button>
+                    </div>
+                </form>
 
                 <div>
                     <p class="fs-montserrat text-red">
@@ -458,31 +462,31 @@
             </section>
         </footer>
         <script>
-        let slideIndex = 0;
+            let slideIndex = 0;
 
-        function showSlides(n) {
-            const slides = document.getElementsByClassName('slide');
-            if (n >= slides.length) {
-                slideIndex = 0;
-            } else if (n < 0) {
-                slideIndex = slides.length - 1;
-            } else {
-                slideIndex = n;
+            function showSlides(n) {
+                const slides = document.getElementsByClassName('slide');
+                if (n >= slides.length) {
+                    slideIndex = 0;
+                } else if (n < 0) {
+                    slideIndex = slides.length - 1;
+                } else {
+                    slideIndex = n;
+                }
+
+                for (let i = 0; i < slides.length; i++) {
+                    slides[i].style.display = 'none';
+                }
+
+                slides[slideIndex].style.display = 'block';
             }
 
-            for (let i = 0; i < slides.length; i++) {
-                slides[i].style.display = 'none';
+            function plusSlides(n) {
+                showSlides(slideIndex + n);
             }
 
-            slides[slideIndex].style.display = 'block';
-        }
-
-        function plusSlides(n) {
-            showSlides(slideIndex + n);
-        }
-
-        // Initialize the slider
-        showSlides(slideIndex);
-    </script>
+            // Initialize the slider
+            showSlides(slideIndex);
+        </script>
     </body>
 </html>
