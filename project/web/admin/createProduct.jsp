@@ -117,7 +117,7 @@
                                     </li>
                                 </ul>
                             </li>
-                           <li class="nav-item dropdown nav-user">
+                            <li class="nav-item dropdown nav-user">
                                 <a class="nav-link nav-user-img" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="${sessionScope.acc.avatar}" alt="" class="user-avatar-md rounded-circle"></a>
                                 <div class="dropdown-menu dropdown-menu-right nav-user-dropdown" aria-labelledby="navbarDropdownMenuLink2">
                                     <div class="nav-user-info">
@@ -125,7 +125,7 @@
                                             ${sessionScope.acc.full_name}</h5>
                                         <span class="status"></span><span class="ml-2">Available</span>
                                     </div>
-                                            <a class="dropdown-item" href="accountmanage?action=2&aid=${sessionScope.acc.id}"><i class="fas fa-user mr-2"></i>Account</a>
+                                    <a class="dropdown-item" href="accountmanage?action=2&aid=${sessionScope.acc.id}"><i class="fas fa-user mr-2"></i>Account</a>
                                     <a class="dropdown-item" href="logout"><i class="fas fa-power-off mr-2"></i>Logout</a>
                                 </div>
                             </li>
@@ -151,23 +151,59 @@
                                 <li class="nav-divider">
                                     Menu
                                 </li>
-                                 <li class="nav-item ">
+                                  <li class="nav-item ">
                                     <a class="nav-link active" href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Dashboard </a>
 
                                 </li>
-                                <li class="nav-item ">
-                                    <a class="nav-link " href="accountmanage" ><i class="fa fa-fw fa-user-circle"></i>Account Manage </a>
+                                <c:if test="${sessionScope.acc.role_id == 4 || sessionScope.acc.role_id == 2}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link " href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Product Manager </a>
 
                                 </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 5 || sessionScope.acc.role_id == 4}">
+                                <li class="nav-item ">
+                                    
+                                    <a class="nav-link  " href="accountmanage" ><i class="fa fa-fw fa-user-circle"></i>Account Manage </a>
+
+                                </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 2}">
                                 <li class="nav-item ">
                                     <a class="nav-link " href="brandmanage" ><i class="fa fa-fw fa-user-circle"></i>Brand Manage</a>
 
                                 </li>
-                                  <li class="nav-item ">
-                                    <a class="nav-link  " href="catemanage" ><i class="fa fa-fw fa-user-circle"></i>Cate Manage</a>
+                                </c:if>
+                                      <c:if test="${sessionScope.acc.role_id == 4}">
+                                <li class="nav-item ">
+                                    <a class="nav-link " href="commentManage" ><i class="fa fa-fw fa-user-circle"></i>Comment Manage</a>
 
                                 </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 2}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="catemanage" ><i class="fa fa-fw fa-user-circle"></i>Cate Manage</a>
+                                    
+                                </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 2}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="blogmanage" ><i class="fa fa-fw fa-user-circle"></i>Blog Manage</a>
+                                    
+                                </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 4}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="ordermanage" ><i class="fa fa-fw fa-user-circle"></i>Order Manage</a>
 
+                                </li>
+                                 </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 4}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="vouchermanage" ><i class="fa fa-fw fa-user-circle"></i>Voucher Manage</a>
+
+                                </li>
+                                </c:if>
                             </ul>
                         </div>
                     </nav>
@@ -233,11 +269,16 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
+                                    <div class="col-12 col-sm-8 col-lg-6">
+                                        <img id="imagePreview" src="#"  style="max-height: 200px; display: none;float: right;">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
                                     <label class="col-12 col-sm-3 col-form-label text-sm-right">Image Product</label>
                                     <div class="col-12 col-sm-8 col-lg-6">
-                                        <input type="file" id="fileInput" name="img" multiple accept="image/*" class="form-control">
+                                        <input type="file" id="fileInput" name="img" multiple accept="image/*" class="form-control" id="fileInput" onchange="previewImage(this)">
                                     </div>
-                                <div id="errorMessage" class="error"></div>
+                                    <div id="errorMessage" class="error"></div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-12 col-sm-3 col-form-label text-sm-right">Publication Date</label>
@@ -321,7 +362,7 @@
 <script src="${pageContext.request.contextPath}/vendor/parsley/parsley.js"></script>
 <script src="${pageContext.request.contextPath}/js/admin/main-js.js"></script>
 <script>
-    $('#form').parsley();
+                                            $('#form').parsley();
 </script>
 <script>
     // Example starter JavaScript for disabling form submissions if there are invalid fields
@@ -342,27 +383,46 @@
             });
         }, false);
     })();
-    
-        document.getElementById('fileInput').addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const img = new Image();
-                img.onload = function() {
-                    if (img.width === img.height) {
-                        document.getElementById('errorMessage').textContent = '';
-                        // Image is valid, proceed with upload or other actions
-                    } else {
-                        document.getElementById('errorMessage').textContent = 'Image must have a 1:1 aspect ratio.';
-                        event.target.value = ''; // Clear the file input
-                    }
-                };
-                img.onerror = function() {
-                    document.getElementById('errorMessage').textContent = 'Selected file is not a valid image.';
+
+    document.getElementById('fileInput').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            const img = new Image();
+            img.onload = function () {
+                if (img.width === img.height) {
+                    document.getElementById('errorMessage').textContent = '';
+                    // Image is valid, proceed with upload or other actions
+                } else {
+                    document.getElementById('errorMessage').textContent = 'Image must have a 1:1 aspect ratio.';
                     event.target.value = ''; // Clear the file input
-                };
-                img.src = URL.createObjectURL(file);
-            }
-        });
+                }
+            };
+            img.onerror = function () {
+                document.getElementById('errorMessage').textContent = 'Selected file is not a valid image.';
+                event.target.value = ''; // Clear the file input
+            };
+            img.src = URL.createObjectURL(file);
+        }
+    });
+</script>
+
+<script>
+    function previewImage(input) {
+        var imagePreview = document.getElementById('imagePreview');
+        var file = input.files[0];
+
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                imagePreview.src = e.target.result;
+                imagePreview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            imagePreview.src = "#";
+            imagePreview.style.display = 'none';
+        }
+    }
 </script>
 </body>
 

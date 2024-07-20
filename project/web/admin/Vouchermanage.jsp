@@ -1,6 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!doctype html>
 <html lang="en">
 
@@ -23,7 +24,7 @@
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/vendor/datatables/css/buttons.bootstrap4.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/vendor/datatables/css/select.bootstrap4.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/vendor/datatables/css/fixedHeader.bootstrap4.css">
-        <title>Concept - Bootstrap 4 Admin Dashboard Template</title>
+        <title>Manager </title>
     </head>
 
     <body>
@@ -133,7 +134,7 @@
                                             ${sessionScope.acc.full_name}</h5>
                                         <span class="status"></span><span class="ml-2">Available</span>
                                     </div>
-                                    <a class="dropdown-item" href="accountmanage?action=2&aid=${sessionScope.acc.id}"><i class="fas fa-user mr-2"></i>Account</a>
+                                            <a class="dropdown-item" href="accountmanage?action=2&aid=${sessionScope.acc.id}"><i class="fas fa-user mr-2"></i>Account</a>
                                     <a class="dropdown-item" href="logout"><i class="fas fa-power-off mr-2"></i>Logout</a>
                                 </div>
                             </li>
@@ -150,67 +151,67 @@
             <div class="nav-left-sidebar sidebar-dark">
                 <div class="menu-list">
                     <nav class="navbar navbar-expand-lg navbar-light">
-                        <a class="d-xl-none d-lg-none" href="productmanage">Dashboard</a>
+                        <a class="d-xl-none d-lg-none" href="vouchermanage">Dashboard</a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="navbarNav">
-                            <ul class="navbar-nav flex-column">
+                           <ul class="navbar-nav flex-column">
                                 <li class="nav-divider">
                                     Menu
                                 </li>
-                                <li class="nav-item ">
+                                  <li class="nav-item ">
                                     <a class="nav-link active" href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Dashboard </a>
 
                                 </li>
                                 <c:if test="${sessionScope.acc.role_id == 4 || sessionScope.acc.role_id == 2}">
-                                    <li class="nav-item ">
-                                        <a class="nav-link " href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Product Manager </a>
+                                  <li class="nav-item ">
+                                    <a class="nav-link " href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Product Manager </a>
 
-                                    </li>
+                                </li>
                                 </c:if>
                                 <c:if test="${sessionScope.acc.role_id == 5 || sessionScope.acc.role_id == 4}">
-                                    <li class="nav-item ">
+                                <li class="nav-item ">
+                                    
+                                    <a class="nav-link  " href="accountmanage" ><i class="fa fa-fw fa-user-circle"></i>Account Manage </a>
 
-                                        <a class="nav-link  " href="accountmanage" ><i class="fa fa-fw fa-user-circle"></i>Account Manage </a>
-
-                                    </li>
+                                </li>
                                 </c:if>
                                 <c:if test="${sessionScope.acc.role_id == 2}">
-                                    <li class="nav-item ">
-                                        <a class="nav-link " href="brandmanage" ><i class="fa fa-fw fa-user-circle"></i>Brand Manage</a>
+                                <li class="nav-item ">
+                                    <a class="nav-link " href="brandmanage" ><i class="fa fa-fw fa-user-circle"></i>Brand Manage</a>
 
-                                    </li>
+                                </li>
                                 </c:if>
-                                <c:if test="${sessionScope.acc.role_id == 4}">
-                                    <li class="nav-item ">
-                                        <a class="nav-link " href="commentManage" ><i class="fa fa-fw fa-user-circle"></i>Comment Manage</a>
+                                      <c:if test="${sessionScope.acc.role_id == 4}">
+                                <li class="nav-item ">
+                                    <a class="nav-link " href="commentManage" ><i class="fa fa-fw fa-user-circle"></i>Comment Manage</a>
 
-                                    </li>
-                                </c:if>
-                                <c:if test="${sessionScope.acc.role_id == 2}">
-                                    <li class="nav-item ">
-                                        <a class="nav-link  " href="catemanage" ><i class="fa fa-fw fa-user-circle"></i>Cate Manage</a>
-
-                                    </li>
+                                </li>
                                 </c:if>
                                 <c:if test="${sessionScope.acc.role_id == 2}">
-                                    <li class="nav-item ">
-                                        <a class="nav-link  " href="blogmanage" ><i class="fa fa-fw fa-user-circle"></i>Blog Manage</a>
-
-                                    </li>
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="catemanage" ><i class="fa fa-fw fa-user-circle"></i>Cate Manage</a>
+                                    
+                                </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 2}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="blogmanage" ><i class="fa fa-fw fa-user-circle"></i>Blog Manage</a>
+                                    
+                                </li>
                                 </c:if>
                                 <c:if test="${sessionScope.acc.role_id == 4}">
-                                    <li class="nav-item ">
-                                        <a class="nav-link  " href="ordermanage" ><i class="fa fa-fw fa-user-circle"></i>Order Manage</a>
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="ordermanage" ><i class="fa fa-fw fa-user-circle"></i>Order Manage</a>
 
-                                    </li>
-                                </c:if>
+                                </li>
+                                 </c:if>
                                 <c:if test="${sessionScope.acc.role_id == 4}">
-                                    <li class="nav-item ">
-                                        <a class="nav-link  " href="vouchermanage" ><i class="fa fa-fw fa-user-circle"></i>Voucher Manage</a>
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="vouchermanage" ><i class="fa fa-fw fa-user-circle"></i>Voucher Manage</a>
 
-                                    </li>
+                                </li>
                                 </c:if>
                             </ul>
                         </div>
@@ -225,34 +226,39 @@
             <!-- ============================================================== -->
             <div class="dashboard-wrapper">
                 <div class="container-fluid  dashboard-content">
+                    <c:if test="${mess != null}">
+                        <div id="notification" class="">
+                            ${mess}
+                        </div>
+                    </c:if>
                     <!-- ============================================================== -->
                     <!-- pageheader -->
                     <!-- ============================================================== -->
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="page-header">
-                                <h2 class="pageheader-title">Account Manager</h2>
+                                <h2 class="pageheader-title">Voucher Manager</h2>
                                 <p class="pageheader-text">Proin placerat ante duiullam scelerisque a velit ac porta, fusce sit amet vestibulum mi. Morbi lobortis pulvinar quam.</p>
                                 <div class="page-breadcrumb">
                                     <nav aria-label="breadcrumb">
                                         <ol class="breadcrumb">
                                             <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Dashboard</a></li>
-                                            <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Account Manager</a></li>
-
+                                            <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Product Manager</a></li>
+                                        
                                         </ol>
                                     </nav>
                                 </div >
                                 <div class="row">
-                                    <a href="accountmanage?action=1" class="col-2 btn btn-primary"><i class="  fas fa-plus-circle"></i> Add Account</a>
+                                    <a href="vouchermanage?action=1" class="col-2 btn btn-primary text-white"><i class="  fas fa-plus-circle"></i> Add Voucher</a>
                                     &nbsp;
                                     <button id="exportBtn" class="col-2 btn btn-primary"><i class="  fas fa-plus-circle"></i> export to file</button>
-                                    <form class="col-12 form-control" action="accountmanage"method="post">
-                                        <div class="input-group ">
-                                            <input type="text" placeholder="Search...." name="txt" value="${txt}" class="form-control">
-                                            <div class="input-group-append">
-                                                <button type="submit" class="btn btn-primary">Search</button>
+                                    <form class="col-12 form-control" action="vouchermanage"method="post">
+                                         <div class="input-group ">
+                                             <input type="text" placeholder="Search...." name="txt" value="${search}" class="form-control">
+                                                <div class="input-group-append">
+                                                    <button type="submit" class="btn btn-primary">Search</button>
+                                                </div>
                                             </div>
-                                        </div>
                                     </form>
                                 </div>
                                 <div class="row">   
@@ -282,57 +288,73 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Id</th>
-                                                        <th>Avatar </th>
-                                                        <th>Full Name</th>
-                                                        <th>Role</th>
-                                                        <th>Email</th>
-                                                        <th>Address</th>
-                                                        <th>Phone</th>
+                                                        <th>Discount Rate</th>
+                                                        <th>Amount</th>
+                                                        <th>Start Date</th>
+                                                        <th>End Date</th>
                                                         <th>Funtion</th>
                                                     </tr>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="contents">
-
-                                                    <c:forEach items="${acclist}" var="a">
+                                                    <fmt:parseDate value="${currentTime}" pattern="yyyy-MM-dd HH:mm:ss" var="currentTime" />
+                                                    <c:forEach items="${vou}" var="p">
+                                                        <fmt:parseDate value="${p.getStartDate()}" pattern="yyyy-MM-dd HH:mm:ss" var="startDate" />
+                                                        <fmt:parseDate value="${p.getEndDate()}" pattern="yyyy-MM-dd HH:mm:ss" var="endDate" />
                                                         <tr>
-                                                            <td>${a.id}</td>
-                                                            <td > <img style="height: 150px; width: auto;" src="${a.avatar}"/></td>
-                                                            <td>${a.full_name}</td>
-                                                            <c:forEach items="${role}" var="r">
-                                                                <c:if test="${r.id eq a.role_id}">
-                                                                    <td>${r.name}</td>
-                                                                </c:if>
-                                                            </c:forEach>
-                                                            <td > ${a.email} </td>
-                                                            <td > ${a.address} </td>
-                                                            <td > ${a.phone} </td>
-                                                            <td> 
-                                                                <c:if test="${a.role_id >1}">
-                                                                <a href="accountmanage?action=2&aid=${a.id}" class="btn btn-outline-success"><i class=" fas fa-edit"></i></a>
+                                                            <td>${p.getDiscountID()}</td>
+                                                            
+                                                            <td > ${p.getDiscountRate()*100} % </td>
+                                                            <td > ${p.getAmount()} </td>
+                                                            <td > ${p.getStartDate()} </td>
+                                                            <td > ${p.getEndDate()} </td>
+                                                            <td>
+                                                                <c:if test="${currentTime.before(startDate)|| currentTime.after(endDate)}">
+                                                                <a href="#" class="btn btn-outline-danger"  data-toggle="modal" data-target="#exampleModal${p.getDiscountID()}"><i class=" fas fa-trash-alt"></i></a>
+                                                                <div class="modal fade" id="exampleModal${p.getDiscountID()}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                    <div class="modal-dialog" role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                                                                <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                </a>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <p>Are you sure to delete this Product</p>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <a href="vouchermanage?action=2&vid=${p.getDiscountID()}" class="btn btn-secondary" >Delete</a>
+                                                                                <a href="#" class="btn btn-primary" data-dismiss="modal">Cancel</a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                                 </c:if>
                                                                 &nbsp; 
-                                                                <c:set var="isBlocked" value="false" />
-                                                                <c:forEach var="bl" items="${bl}">
-                                                                    <c:if test="${a.id == bl.accid}">
-                                                                        <c:set var="isBlocked" value="true" />
-                                                                    </c:if>
-                                                                </c:forEach>
-
-                                                                <c:choose>
-                                                                    <c:when test="${isBlocked}">
-                                                                        <a href="accountmanage?action=3&aid=${a.id}" class="btn btn-outline-info"><i class="fas fa-check"></i></a>
-                                                                        </c:when>
-                                                                        <c:otherwise>
-                                                                        <a href="accountmanage?action=4&aid=${a.id}" class="btn btn-outline-warning"><i class="fas fa-ban"></i></a>
-                                                                        </c:otherwise>
-                                                                    </c:choose>
+                                                                <a href="vouchermanage?action=3&vid=${p.getDiscountID()}" class="btn btn-outline-success"><i class=" fas fa-edit"></i></a>
+                                                                 &nbsp; 
+                                                                 <c:if test="${p.getStatus() == 1}">
+                                                                      <a href="vouchermanage?action=4&vid=${p.getDiscountID()}" class="btn btn-outline-warning"><i class="fas fa-ban"></i></a>
+                                                                 </c:if>
+                                                                 <c:if test="${p.getStatus() != 1}">
+                                                                      <a href="vouchermanage?action=5&vid=${p.getDiscountID()}" class="btn btn-outline-info"><i class="fas fa-check"></i></a>
+                                                                 </c:if>
                                                             </td>
                                                         </tr>
                                                     </c:forEach>
-
+                                                    
                                                 </tbody>
                                             </table>
+                                            <c:set var="xpage" value="${requestScope.page}"/>
+                                            <div style="padding: 20px 0px;" class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12"> 
+                                                <ul class="pagination">
+                                                    <c:forEach begin="${1}" end="${requestScope.num}" var="i">
+                                                        <li class="page-item"> <a style="text-decoration: white" href="vouchermanage?xpage=${i}&txt=${search}" class="page-link">${i}</a></li>
+                                                    </c:forEach>
+                                                    
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -401,13 +423,53 @@
                 <script>
 
                 </script>
-                <script>
-                    document.getElementById("exportBtn").addEventListener('click', function () {
-                        var table2excel = new Table2Excel();
-                        table2excel.export(document.querySelectorAll("#userTable"));
-                    });
+                  <script>
+            document.getElementById("exportBtn").addEventListener('click', function () {
+                var table2excel = new Table2Excel();
+                table2excel.export(document.querySelectorAll("#userTable"));
+            });
 
-                </script>
+        </script>
+         <script type="text/javascript">
+                function submitForm(formId) {
+                    document.getElementById(formId).submit();
+                }
+                ;
+                document.addEventListener("DOMContentLoaded", function () {
+                    var mess = "${mess}"; // Đảm bảo rằng bạn nhận được giá trị của 'mess' từ server-side rendering
+
+                    if (mess !== null && mess.trim() !== "") {
+                        var notification = document.getElementById('notification');
+                        if (notification) {
+                            notification.innerHTML = mess;
+                            notification.style.display = 'block'; // Hiển thị thông báo
+
+                            setTimeout(function () {
+                                notification.style.display = 'none'; // Ẩn thông báo sau 2 giây
+                            }, 1000); // Thời gian 2 giây (2000 miligiây)
+                        }
+                    }
+                });
+            </script>
+            <style>
+                .radio-container {
+                    display: flex;
+                    gap: 20px; /* khoảng cách giữa các lựa chọn radio */
+                }
+
+                #notification {
+                    display: none; /* Ẩn thông báo ban đầu */
+                    padding: 10px;
+                    color: white;
+                    background-color: #33cc00f2;
+                    border: 1px solid #ccc;
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 9999;
+                }
+
+            </style>
                 </body>
 
                 </html>     

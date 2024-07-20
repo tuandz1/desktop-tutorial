@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
         <script src="jquery-3.7.1.min.js"></script>
+        <script src="${pageContext.request.contextPath}/js/admin/table2excel.js"></script>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/vendor/bootstrap/css/bootstrap.min.css">
         <link href="${pageContext.request.contextPath}/vendor/fonts/circular-std/style.css" rel="stylesheet">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/style.css">
@@ -21,7 +22,7 @@
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/vendor/datatables/css/buttons.bootstrap4.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/vendor/datatables/css/select.bootstrap4.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/vendor/datatables/css/fixedHeader.bootstrap4.css">
-        <title>Concept - Bootstrap 4 Admin Dashboard Template</title>
+        <title>Manager </title>
     </head>
 
     <body>
@@ -153,28 +154,63 @@
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="navbarNav">
-                            <ul class="navbar-nav flex-column">
+                             <ul class="navbar-nav flex-column">
                                 <li class="nav-divider">
                                     Menu
                                 </li>
-                               
                                   <li class="nav-item ">
-                                    <a class="nav-link active" href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Dashboard </a>
+                                    <a class="nav-link active" href="dashboard" ><i class="fa fa-fw fa-user-circle"></i>Dashboard </a>
 
                                 </li>
+                                <c:if test="${sessionScope.acc.role_id == 4 || sessionScope.acc.role_id == 2}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link " href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Product Manager </a>
+
+                                </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 5 || sessionScope.acc.role_id == 4}">
                                 <li class="nav-item ">
-                                    <a class="nav-link " href="accountmanage" ><i class="fa fa-fw fa-user-circle"></i>Account Manage </a>
+                                    
+                                    <a class="nav-link  " href="accountmanage" ><i class="fa fa-fw fa-user-circle"></i>Account Manage </a>
 
                                 </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 2}">
                                 <li class="nav-item ">
                                     <a class="nav-link " href="brandmanage" ><i class="fa fa-fw fa-user-circle"></i>Brand Manage</a>
 
                                 </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 2}">
                                   <li class="nav-item ">
                                     <a class="nav-link  " href="catemanage" ><i class="fa fa-fw fa-user-circle"></i>Cate Manage</a>
+                                    
+                                </li>
+                                </c:if>
+                                      <c:if test="${sessionScope.acc.role_id == 4}">
+                                <li class="nav-item ">
+                                    <a class="nav-link " href="commentManage" ><i class="fa fa-fw fa-user-circle"></i>Comment Manage</a>
 
                                 </li>
-                                
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 2}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="blogmanage" ><i class="fa fa-fw fa-user-circle"></i>Blog Manage</a>
+                                    
+                                </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 4}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="ordermanage" ><i class="fa fa-fw fa-user-circle"></i>Order Manage</a>
+
+                                </li>
+                                 </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 4}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="vouchermanage" ><i class="fa fa-fw fa-user-circle"></i>Voucher Manage</a>
+
+                                </li>
+                                </c:if>
                             </ul>
                         </div>
                     </nav>
@@ -188,6 +224,11 @@
             <!-- ============================================================== -->
             <div class="dashboard-wrapper">
                 <div class="container-fluid  dashboard-content">
+                    <c:if test="${mess != null}">
+                        <div id="notification" class="">
+                            ${mess}
+                        </div>
+                    </c:if>
                     <!-- ============================================================== -->
                     <!-- pageheader -->
                     <!-- ============================================================== -->
@@ -206,10 +247,12 @@
                                     </nav>
                                 </div >
                                 <div class="row">
-                                    <a href="productmanage?action=1" class="col-2 btn btn-primary"><i class="  fas fa-plus-circle"></i> Add product</a>
-                                    <form class="col-10 form-control" action="productmanage"method="post">
+                                    <a href="productmanage?action=1" class="col-2 btn btn-primary text-white"><i class="  fas fa-plus-circle"></i> Add product</a>
+                                    &nbsp;
+                                    <button id="exportBtn" class="col-2 btn btn-primary"><i class="  fas fa-plus-circle"></i> export to file</button>
+                                    <form class="col-12 form-control" action="productmanage"method="post">
                                          <div class="input-group ">
-                                             <input type="text" placeholder="Search...." name="txt" value="${txt}" class="form-control">
+                                             <input type="text" placeholder="Search...." name="txt" value="${search}" class="form-control">
                                                 <div class="input-group-append">
                                                     <button type="submit" class="btn btn-primary">Search</button>
                                                 </div>
@@ -239,7 +282,7 @@
                                     <div class="card">
                                         <h5 class="card-header">Striped Table</h5>
                                         <div class="card-body">
-                                            <table class="table ">
+                                            <table id="userTable" class="table ">
                                                 <thead>
                                                     <tr>
                                                         <th>Id</th>
@@ -275,7 +318,7 @@
                                                                     </c:if>
                                                                 </c:forEach> 
                                                             </td>
-                                                            <td > $${p.price} </td>
+                                                            <td > ${p.price} </td>
                                                             <td > ${p.stockQuantity} </td>
                                                             <td > ${p.publication_date} </td>
                                                             <td>
@@ -307,6 +350,15 @@
                                                     
                                                 </tbody>
                                             </table>
+                                            <c:set var="xpage" value="${requestScope.page}"/>
+                                            <div style="padding: 20px 0px;" class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12"> 
+                                                <ul class="pagination">
+                                                    <c:forEach begin="${1}" end="${requestScope.num}" var="i">
+                                                        <li class="page-item"> <a style="text-decoration: white" href="productmanage?xpage=${i}&txt=${search}" class="page-link">${i}</a></li>
+                                                    </c:forEach>
+                                                    
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -375,6 +427,42 @@
                 <script>
 
                 </script>
+                  <script>
+            document.getElementById("exportBtn").addEventListener('click', function () {
+                var table2excel = new Table2Excel();
+                table2excel.export(document.querySelectorAll("#userTable"));
+            });
+            
+            document.addEventListener("DOMContentLoaded", function () {
+                    var mess = "${mess}"; // Đảm bảo rằng bạn nhận được giá trị của 'mess' từ server-side rendering
+
+                    if (mess !== null && mess.trim() !== "") {
+                        var notification = document.getElementById('notification');
+                        if (notification) {
+                            notification.innerHTML = mess;
+                            notification.style.display = 'block'; // Hiển thị thông báo
+
+                            setTimeout(function () {
+                                notification.style.display = 'none'; // Ẩn thông báo sau 2 giây
+                            }, 2000); // Thời gian 2 giây (2000 miligiây)
+                        }
+                    }
+                });
+
+        </script>
+         <style>
+             #notification {
+                    display: none; /* Ẩn thông báo ban đầu */
+                    padding: 10px;
+                    color: white;
+                    background-color: #33cc00f2;
+                    border: 1px solid #ccc;
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 9999;
+                }
+        </style>
                 </body>
 
                 </html>     

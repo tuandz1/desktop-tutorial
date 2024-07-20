@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!doctype html>
 <html lang="en">
 
@@ -16,6 +17,8 @@
         <link href="${pageContext.request.contextPath}/vendor/fonts/circular-std/style.css" rel="stylesheet">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/style.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/vendor/fonts/fontawesome/css/fontawesome-all.css">
+
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/shoppage/orderdetail.css" />
     </head>
 
     <body>
@@ -117,7 +120,7 @@
                                     </li>
                                 </ul>
                             </li>
-                           <li class="nav-item dropdown nav-user">
+                            <li class="nav-item dropdown nav-user">
                                 <a class="nav-link nav-user-img" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="${sessionScope.acc.avatar}" alt="" class="user-avatar-md rounded-circle"></a>
                                 <div class="dropdown-menu dropdown-menu-right nav-user-dropdown" aria-labelledby="navbarDropdownMenuLink2">
                                     <div class="nav-user-info">
@@ -125,7 +128,7 @@
                                             ${sessionScope.acc.full_name}</h5>
                                         <span class="status"></span><span class="ml-2">Available</span>
                                     </div>
-                                            <a class="dropdown-item" href="accountmanage?action=2&aid=${sessionScope.acc.id}"><i class="fas fa-user mr-2"></i>Account</a>
+                                    <a class="dropdown-item" href="accountmanage?action=2&aid=${sessionScope.acc.id}"><i class="fas fa-user mr-2"></i>Account</a>
                                     <a class="dropdown-item" href="logout"><i class="fas fa-power-off mr-2"></i>Logout</a>
                                 </div>
                             </li>
@@ -147,7 +150,7 @@
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="navbarNav">
-                            <ul class="navbar-nav flex-column">
+                           <ul class="navbar-nav flex-column">
                                 <li class="nav-divider">
                                     Menu
                                 </li>
@@ -221,119 +224,128 @@
                 <!-- valifation types -->
                 <!-- ============================================================== -->
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                    <div class="card">
-                        <h5 class="card-header">Update Product</h5>
-                        <form id="validationform" action="updateProduct"  method="post" enctype="multipart/form-data">
-                            <input type="hidden" name="id" value="${pro.id}"/>
-                            <div class="form-group row">
-                                <label class="col-12 col-sm-3 col-form-label text-sm-right">Brand</label>
-                                <div class="col-12 col-sm-10 col-lg-6">
-                                    <select style="height: 100%; width: 100%" name="brand">
-                                        <c:forEach items="${br}" var="b">
-                                            <option  value="${b.id}"${b.id == pro.brand_id ? 'selected' : ''}>${b.brand_name}</option>
-                                        </c:forEach>
-
-                                    </select>
-                                    <a href="createBrand" target="_blank"><i class="far fa-edit"></i>Add Brand</a>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-12 col-sm-3 col-form-label text-sm-right">Category</label>
-                                <div class="col-12 col-sm-8 col-lg-6">
-                                    <select style="height: 100%; width: 100%" name="cate">
-                                        <c:forEach items="${cate}" var="c">
-                                            <option value="${c.id}" ${c.id == pro.caid ? 'selected' : ''}>${c.ca_name}</option>
-                                        </c:forEach>
-                                    </select>
-                                    <a href="createCate" target="_blank"><i class="far fa-edit"></i>Add Category</a>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-12 col-sm-3 col-form-label text-sm-right">Product Name</label>
-                                <div class="col-12 col-sm-8 col-lg-6">
-                                    <input type="text" name="name" value="${pro.proName}" required="" placeholder="Input Name" class="form-control">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-12 col-sm-3 col-form-label text-sm-right">Stock Quantity</label>
-                                <div class="col-12 col-sm-8 col-lg-6">
-                                    <input type="number" name="stock" min="1" required="" value="${pro.stockQuantity}"  class="form-control">
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-12 col-sm-3 col-form-label text-sm-right">Price </label>
-                                <div class="col-12 col-sm-8 col-lg-6">
-                                    <input type="text" name="price" required="" value="${pro.price}"  class="form-control">
-                                </div>
-                            </div>
-                             <div class="form-group row">
-                                    <div class=" col-sm-5  text-sm-right ">
-                                        <img  style="width: 150px; height: 150px" src="${pro.img}" alt="alt"/>
-                                    </div>
-                                </div>
-                            <div class="form-group row">
-                                <label class="col-12 col-sm-3 col-form-label text-sm-right">Image Product</label>
-                                <div class="col-12 col-sm-8 col-lg-6">
-                                    <input type="file" id="fileInput" name="img" accept="image/*" class="form-control">
-                                </div>
-                                <div id="errorMessage" class="error"></div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-12 col-sm-3 col-form-label text-sm-right">Publication Date</label>
-                                <div class="col-12 col-sm-8 col-lg-6">
-                                    <input required="" type="date" name="date" value="${pro.publication_date}" class="form-control">
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-12 col-sm-3 col-form-label text-sm-right">Description</label>
-                                <div class="col-12 col-sm-8 col-lg-6">
-                                    <textarea required="" name="des" class="form-control">${pro.description}</textarea>
-                                </div>
-                            </div>
-                                <div class="form-group row">
-                                    <div class=" col-sm-5  text-sm-right ">
-                                    <c:forEach items="${imgs}" var="i">
-                                        <img  style="width: 150px; height: 150px" src="${i.img_link}" alt=""/>
+                    <div class="">
+                        <h5 class="card-header">View Order Detail</h5>
+                        <section class="order-detail-slider">
+                            <div class="slider-container">
+                                <button class="slider-btn prev-btn">&#10094;</button>
+                                <div class="slider-content">
+                                    <c:forEach items="${detail}" var="d">
+                                        <div class="order-detail-product">
+                                            <img class="product-image" src="${d.proimg}" alt="Product Image 1">
+                                            <div class="product-info">
+                                                <h4  class="product-name"><a style="text-decoration: #666666; color: #666666;font-family: var" href="productDetail?proid=${d.product_id}">${d.proName}</a></h4>
+                                                <div class="">
+                                                    <p>Quantity: ${d.quantity}</p>
+                                                </div>
+                                                <div style="font-size: 1.5em; color: red;font-family: inherit">
+                                                    <p><fmt:formatNumber value="${d.total_price}" type="number" pattern="#,##0" /> VND</p>
+                                                </div>
+                                                <div style="margin: 5px 0;">
+                                                    <c:forEach items="${brand}" var="b">
+                                                        <c:if test="${d.brand_id eq b.id}">
+                                                            <p>Brand : ${b.brand_name}</p>
+                                                        </c:if>
+                                                    </c:forEach>
+                                                </div>
+                                                <div class="">
+                                                    <c:forEach items="${cate}" var="c">
+                                                        <c:if test="${d.caid eq c.id}">
+                                                            <p>${c.ca_name}</p>
+                                                        </c:if>
+                                                    </c:forEach>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </c:forEach>
-                                    </div>
-                                </div>
-                                 <div class="form-group row">
-                                    <label class="col-12 col-sm-3 col-form-label text-sm-right">Images Product</label>
-                                    <div class="col-12 col-sm-8 col-lg-6">
-                                        <input type="file" name="imgs" id="fileInput2" multiple accept="image/*" class="form-control">
-                                    </div>
-                                     <div id="errorMessages22" style="color: red;"></div>
-                                </div>
-                            <div class="form-group row text-right">
-                                <div class="col col-sm-10 col-lg-9 offset-sm-1 offset-lg-0">
-                                    <button type="submit" class="btn btn-space btn-primary">Submit</button>
-                                    <a href="#" class="btn btn-outline-danger"  data-toggle="modal" data-target="#exampleModal${p.id}">Cancel</a>
+                                    <button class="slider-btn next-btn">&#10095;</button>
                                 </div>
                             </div>
-                                
-                        </form>
-                        <div class="modal fade" id="exampleModal${p.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Cancel Update</h5>
-                                        <a href="#" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </a>
+                        </section>
+
+                        <!-- ==================Single Product-============================= -->
+
+                        <!-- ==============Product Description====================== -->
+                        <div class="row " >
+                            <section style="padding-top: 5vh" class=" col-lg-6 card product-description grid">
+
+                                <div class="card-body shipper-info-container" data-tab="false">
+                                    <c:if test="${shiper.id == 0}">
+                                        <h3 class="order-status-red">This Order wait for confirming</h3>
+                                        
+                                        <a href="addShipper?orid=${order.id}" target="_blank" class="btn btn-secondary">Add Shipper</a>
+                                    </c:if>
+                                    <c:if test="${shiper.id != 0}">
+                                        <h3 class="order-status-black">Your Shipper</h3>
+                                        <div class="info-block">
+                                            <h4>Shipper Name:</h4> 
+                                            <p class="shipper-name">${shiper.full_name}</p>
+                                        </div>
+                                        <div class="info-block">
+                                            <h4>Phone Number:</h4> 
+                                            <p class="shipper-phone">${shiper.phone}</p>
+                                        </div>
+                                        <div class="info-block">
+                                            <h4>Ship Status</h4> 
+                                            <p class="shipper-phone">${order. shipstatus}</p>
+                                        </div>
+                                    </c:if>
+                                </div>
+                            </section>
+                            <section style="padding-top: 5vh" class="col-lg-6 card product-description grid">
+
+                                <div class="card-body shipper-info-container" data-tab="false">
+
+                                    <h3 class="order-status-black">Your Order</h3>
+                                    <div class="info-block">
+                                        <label>Order Code:  </label>
+                                        &nbsp;
+                                        <strong style="font-family: sans-serif;font-weight: normal" class="shipper-name">${order.id}</strong>
                                     </div>
-                                    <div class="modal-body">
-                                        <p>Are you sure to Cancle update this product. Your data you input will not SAVE</p>
+                                    <div class="info-block">
+                                        <label>Customer name :  </label>
+                                        &nbsp;
+                                        <strong style="font-family: sans-serif;font-weight: normal" class="shipper-name">${order.cus_name}</strong>
                                     </div>
-                                    <div class="modal-footer">
-                                        <a href="productmanage" class="btn btn-secondary" >Confirm Cancel Update</a>
-                                        <a href="#" class="btn btn-primary" data-dismiss="modal">Dismiss</a>
+                                    <div class="info-block">
+                                        <label>Order Date :  </label>
+                                        &nbsp;
+                                        <strong style="font-family: sans-serif;font-weight: normal" class="shipper-name">${order.orderDate}</strong>
+                                    </div>
+                                    <div class="info-block">
+                                        <label>Address :  </label>
+                                        &nbsp;
+                                        <strong style="font-family: sans-serif;font-weight: normal" class="shipper-name">${order.adress}</strong>
+                                    </div>
+
+                                    <div class="info-block">
+                                        <label>Total Amount:  </label>
+                                        &nbsp;
+                                        <strong style="font-family: sans-serif;font-weight: normal;color: red" class="shipper-name"><fmt:formatNumber value="${order.totalAmount}" type="number" pattern="#,##0" /> VND</strong>
+                                    </div>
+                                    <div class="info-block">
+                                        <label>Payment Method :  </label>
+                                        &nbsp;
+                                        <c:forEach items="${pay}" var="pay">
+                                            <c:if test="${order.payment_id eq pay.getPaymentMethodID()}">
+                                                <strong style="font-family: sans-serif;font-weight: normal" class="shipper-name">${pay.getName()}</strong>
+                                            </c:if>
+                                        </c:forEach>
+                                    </div>
+                                    <div class="info-block">
+                                        <label>Payment Status :  </label>
+                                        &nbsp;
+                                        <c:forEach items="${orsta}" var="sta">
+                                            <c:if test="${order.status_id eq sta.getStatusID()}">
+                                                <strong style="font-family: sans-serif;font-weight: normal" class="shipper-name">${sta.getDescription()}</strong>
+                                            </c:if>
+                                        </c:forEach>
                                     </div>
                                 </div>
-                            </div>
+                            </section>
                         </div>
+                                  <a href="ordermanage"  class="btn btn-block btn-google-plus">Close</a>
+
                     </div>
                 </div>
             </div>
@@ -420,25 +432,97 @@
     });
     document.getElementById('fileInput2').addEventListener('change', function (event) {
         const files = event.target.files;
-    const errorMessages = document.getElementById('errorMessages22');
-    errorMessages.innerHTML = '';
+        const errorMessages = document.getElementById('errorMessages22');
+        errorMessages.innerHTML = '';
 
-    let allValid = true;
+        let allValid = true;
 
-    for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const img = new Image();
-        
-        img.onload = function() {
-            if (img.width !== img.height) {
-                allValid = false;
-                const message = `The image ${file.name} does not have a 1:1 aspect ratio.\n`;
-                errorMessages.innerHTML += message;
-            }
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const img = new Image();
+
+            img.onload = function () {
+                if (img.width !== img.height) {
+                    allValid = false;
+                    const message = `The image ${file.name} does not have a 1:1 aspect ratio.\n`;
+                    errorMessages.innerHTML += message;
+                }
+            };
+
+            img.src = URL.createObjectURL(file);
+        }
+    });
+
+
+
+
+</script>
+<script>
+    let slideIndex = 0;
+
+    function showSlides(n) {
+        const slides = document.getElementsByClassName('slide');
+        if (n >= slides.length) {
+            slideIndex = 0;
+        } else if (n < 0) {
+            slideIndex = slides.length - 1;
+        } else {
+            slideIndex = n;
         }
 
-        img.src = URL.createObjectURL(file);
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].style.display = 'none';
+        }
+
+        slides[slideIndex].style.display = 'block';
     }
+
+    function plusSlides(n) {
+        showSlides(slideIndex + n);
+    }
+
+    // Initialize the slider
+    showSlides(slideIndex);
+    document.addEventListener('DOMContentLoaded', function () {
+        const prevBtn = document.querySelector('.prev-btn');
+        const nextBtn = document.querySelector('.next-btn');
+        const sliderContent = document.querySelector('.slider-content');
+
+        prevBtn.addEventListener('click', function () {
+            sliderContent.scrollBy({
+                left: -620,
+                behavior: 'smooth'
+            });
+        });
+
+        nextBtn.addEventListener('click', function () {
+            sliderContent.scrollBy({
+                left: 620,
+                behavior: 'smooth'
+            });
+        });
+    });
+
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const prevBtn = document.querySelector('.prev-btn');
+        const nextBtn = document.querySelector('.next-btn');
+        const sliderContent = document.querySelector('.slider-content');
+
+        prevBtn.addEventListener('click', function () {
+            sliderContent.scrollBy({
+                left: -620,
+                behavior: 'smooth'
+            });
+        });
+
+        nextBtn.addEventListener('click', function () {
+            sliderContent.scrollBy({
+                left: 620,
+                behavior: 'smooth'
+            });
+        });
     });
 </script>
 </body>

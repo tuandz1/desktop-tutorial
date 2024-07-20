@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!doctype html>
 <html lang="en">
 
@@ -117,7 +118,7 @@
                                     </li>
                                 </ul>
                             </li>
-                           <li class="nav-item dropdown nav-user">
+                            <li class="nav-item dropdown nav-user">
                                 <a class="nav-link nav-user-img" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="${sessionScope.acc.avatar}" alt="" class="user-avatar-md rounded-circle"></a>
                                 <div class="dropdown-menu dropdown-menu-right nav-user-dropdown" aria-labelledby="navbarDropdownMenuLink2">
                                     <div class="nav-user-info">
@@ -125,7 +126,7 @@
                                             ${sessionScope.acc.full_name}</h5>
                                         <span class="status"></span><span class="ml-2">Available</span>
                                     </div>
-                                            <a class="dropdown-item" href="accountmanage?action=2&aid=${sessionScope.acc.id}"><i class="fas fa-user mr-2"></i>Account</a>
+                                    <a class="dropdown-item" href="accountmanage?action=2&aid=${sessionScope.acc.id}"><i class="fas fa-user mr-2"></i>Account</a>
                                     <a class="dropdown-item" href="logout"><i class="fas fa-power-off mr-2"></i>Logout</a>
                                 </div>
                             </li>
@@ -222,150 +223,104 @@
                 <!-- ============================================================== -->
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                     <div class="card">
-                        <h5 class="card-header">Update Product</h5>
-                        <form id="validationform" action="updateProduct"  method="post" enctype="multipart/form-data">
-                            <input type="hidden" name="id" value="${pro.id}"/>
-                            <div class="form-group row">
-                                <label class="col-12 col-sm-3 col-form-label text-sm-right">Brand</label>
-                                <div class="col-12 col-sm-10 col-lg-6">
-                                    <select style="height: 100%; width: 100%" name="brand">
-                                        <c:forEach items="${br}" var="b">
-                                            <option  value="${b.id}"${b.id == pro.brand_id ? 'selected' : ''}>${b.brand_name}</option>
-                                        </c:forEach>
-
-                                    </select>
-                                    <a href="createBrand" target="_blank"><i class="far fa-edit"></i>Add Brand</a>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-12 col-sm-3 col-form-label text-sm-right">Category</label>
-                                <div class="col-12 col-sm-8 col-lg-6">
-                                    <select style="height: 100%; width: 100%" name="cate">
-                                        <c:forEach items="${cate}" var="c">
-                                            <option value="${c.id}" ${c.id == pro.caid ? 'selected' : ''}>${c.ca_name}</option>
-                                        </c:forEach>
-                                    </select>
-                                    <a href="createCate" target="_blank"><i class="far fa-edit"></i>Add Category</a>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-12 col-sm-3 col-form-label text-sm-right">Product Name</label>
-                                <div class="col-12 col-sm-8 col-lg-6">
-                                    <input type="text" name="name" value="${pro.proName}" required="" placeholder="Input Name" class="form-control">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-12 col-sm-3 col-form-label text-sm-right">Stock Quantity</label>
-                                <div class="col-12 col-sm-8 col-lg-6">
-                                    <input type="number" name="stock" min="1" required="" value="${pro.stockQuantity}"  class="form-control">
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-12 col-sm-3 col-form-label text-sm-right">Price </label>
-                                <div class="col-12 col-sm-8 col-lg-6">
-                                    <input type="text" name="price" required="" value="${pro.price}"  class="form-control">
-                                </div>
-                            </div>
-                             <div class="form-group row">
-                                    <div class=" col-sm-5  text-sm-right ">
-                                        <img  style="width: 150px; height: 150px" src="${pro.img}" alt="alt"/>
-                                    </div>
-                                </div>
-                            <div class="form-group row">
-                                <label class="col-12 col-sm-3 col-form-label text-sm-right">Image Product</label>
-                                <div class="col-12 col-sm-8 col-lg-6">
-                                    <input type="file" id="fileInput" name="img" accept="image/*" class="form-control">
-                                </div>
-                                <div id="errorMessage" class="error"></div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-12 col-sm-3 col-form-label text-sm-right">Publication Date</label>
-                                <div class="col-12 col-sm-8 col-lg-6">
-                                    <input required="" type="date" name="date" value="${pro.publication_date}" class="form-control">
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="col-12 col-sm-3 col-form-label text-sm-right">Description</label>
-                                <div class="col-12 col-sm-8 col-lg-6">
-                                    <textarea required="" name="des" class="form-control">${pro.description}</textarea>
-                                </div>
-                            </div>
+                        <h5 class="card-header">Insert Voucher</h5>
+                        <div class="card-body">
+                            <fmt:parseDate value="${currentTime}" pattern="yyyy-MM-dd HH:mm:ss" var="currentTime" />
+                            <form id="validationform" action="updateVoucher"  method="post" >
+                                <input type="hidden" value="${vou.getDiscountID()}" name="oldid">
                                 <div class="form-group row">
-                                    <div class=" col-sm-5  text-sm-right ">
-                                    <c:forEach items="${imgs}" var="i">
-                                        <img  style="width: 150px; height: 150px" src="${i.img_link}" alt=""/>
-                                    </c:forEach>
-                                    </div>
-                                </div>
-                                 <div class="form-group row">
-                                    <label class="col-12 col-sm-3 col-form-label text-sm-right">Images Product</label>
+                                    <label class="col-12 col-sm-3 col-form-label text-sm-right">Voucher Code</label>
                                     <div class="col-12 col-sm-8 col-lg-6">
-                                        <input type="file" name="imgs" id="fileInput2" multiple accept="image/*" class="form-control">
+                                        <input  required="" type="text" id="voucherInput" value="${vou.getDiscountID()}" name="name" required placeholder="Input Voucher" class="form-control">
+                                        <p id="message" class="hidden">Bạn phải nhập đủ 8 kí tự</p>
                                     </div>
-                                     <div id="errorMessages22" style="color: red;"></div>
                                 </div>
-                            <div class="form-group row text-right">
-                                <div class="col col-sm-10 col-lg-9 offset-sm-1 offset-lg-0">
-                                    <button type="submit" class="btn btn-space btn-primary">Submit</button>
-                                    <a href="#" class="btn btn-outline-danger"  data-toggle="modal" data-target="#exampleModal${p.id}">Cancel</a>
+
+                                <div class="form-group row">
+                                    <label class="col-12 col-sm-3 col-form-label text-sm-right">Start Date</label>
+                                    <div class="col-12 col-sm-8 col-lg-6">
+                                        <input required="" type="datetime-local" value="${vou.getStartDate()}" id="startdate" name="startdate" class="form-control">
+                                      
+                                    </div>
                                 </div>
-                            </div>
-                                
-                        </form>
-                        <div class="modal fade" id="exampleModal${p.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Cancel Update</h5>
-                                        <a href="#" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </a>
+                                <div class="form-group row">
+                                    <label class="col-12 col-sm-3 col-form-label text-sm-right">End Date</label>
+                                    <div class="col-12 col-sm-8 col-lg-6">
+                                        <input required="" type="datetime-local"value="${vou.getEndDate()}" id="enddate" name="enddate" class="form-control">
+                                        
                                     </div>
-                                    <div class="modal-body">
-                                        <p>Are you sure to Cancle update this product. Your data you input will not SAVE</p>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-12 col-sm-3 col-form-label text-sm-right">Discount Rate</label>
+                                    <div class="col-12 col-sm-8 col-lg-6">
+                                        <input type="number" required="" value="${vou.getDiscountRate() *100}" name="rate" class="form-control">
                                     </div>
-                                    <div class="modal-footer">
-                                        <a href="productmanage" class="btn btn-secondary" >Confirm Cancel Update</a>
-                                        <a href="#" class="btn btn-primary" data-dismiss="modal">Dismiss</a>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-12 col-sm-3 col-form-label text-sm-right">Amount</label>
+                                    <div class="col-12 col-sm-8 col-lg-6">
+                                        <input type="number" required="" value="${vou.getAmount()}"  name="amount" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row text-right">
+                                    <div class="col col-sm-10 col-lg-9 offset-sm-1 offset-lg-0">
+                                        <button type="submit" class="btn btn-space btn-primary">Submit</button>
+                                        <a href="#" class="btn btn-outline-danger"  data-toggle="modal" data-target="#exampleModal${p.id}">Cancel</a>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="modal fade" id="exampleModal${p.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Cancel Update</h5>
+                                            <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </a>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Are you sure to Cancle update this product. Your data you input will not SAVE</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a href="productmanage" class="btn btn-secondary" >Confirm Cancel Create</a>
+                                            <a href="#" class="btn btn-primary" data-dismiss="modal">Dismiss</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <!-- ============================================================== -->
+                <!-- end valifation types -->
+                <!-- ============================================================== -->
             </div>
-            <!-- ============================================================== -->
-            <!-- end valifation types -->
-            <!-- ============================================================== -->
-        </div>
 
-    </div>
-    <!-- ============================================================== -->
-    <!-- footer -->
-    <!-- ============================================================== -->
-    <div class="footer">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-                    Copyright Â© 2018 Concept. All rights reserved. Dashboard by <a href="https://colorlib.com/wp/">Colorlib</a>.
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-                    <div class="text-md-right footer-links d-none d-sm-block">
-                        <a href="javascript: void(0);">About</a>
-                        <a href="javascript: void(0);">Support</a>
-                        <a href="javascript: void(0);">Contact Us</a>
+        </div>
+        <!-- ============================================================== -->
+        <!-- footer -->
+        <!-- ============================================================== -->
+        <div class="footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                        Copyright Â© 2018 Concept. All rights reserved. Dashboard by <a href="https://colorlib.com/wp/">Colorlib</a>.
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                        <div class="text-md-right footer-links d-none d-sm-block">
+                            <a href="javascript: void(0);">About</a>
+                            <a href="javascript: void(0);">Support</a>
+                            <a href="javascript: void(0);">Contact Us</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- ============================================================== -->
+        <!-- end footer -->
+        <!-- ============================================================== -->
     </div>
-    <!-- ============================================================== -->
-    <!-- end footer -->
-    <!-- ============================================================== -->
-</div>
 </div>
 <!-- ============================================================== -->
 <!-- end main wrapper -->
@@ -398,49 +353,84 @@
             });
         }, false);
     })();
-    document.getElementById('fileInput').addEventListener('change', function (event) {
-        const file = event.target.files[0];
-        if (file) {
-            const img = new Image();
-            img.onload = function () {
-                if (img.width === img.height) {
-                    document.getElementById('errorMessage').textContent = '';
-                    // Image is valid, proceed with upload or other actions
-                } else {
-                    document.getElementById('errorMessage').textContent = 'Image must have a 1:1 aspect ratio.';
-                    event.target.value = ''; // Clear the file input
-                }
-            };
-            img.onerror = function () {
-                document.getElementById('errorMessage').textContent = 'Selected file is not a valid image.';
-                event.target.value = ''; // Clear the file input
-            };
-            img.src = URL.createObjectURL(file);
+
+    document.getElementById('voucherInput').addEventListener('input', function () {
+        const input = this.value;
+        const message = document.getElementById('message');
+
+        if (input.length < 8) {
+            message.classList.remove('hidden');
+            message.classList.add('visible');
+        } else {
+            message.classList.remove('visible');
+            message.classList.add('hidden');
         }
     });
-    document.getElementById('fileInput2').addEventListener('change', function (event) {
-        const files = event.target.files;
-    const errorMessages = document.getElementById('errorMessages22');
-    errorMessages.innerHTML = '';
 
-    let allValid = true;
+    document.addEventListener('DOMContentLoaded', function () {
+        const startdateInput = document.getElementById('startdate');
+        const message = document.getElementById('message2');
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
 
-    for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const img = new Image();
-        
-        img.onload = function() {
-            if (img.width !== img.height) {
-                allValid = false;
-                const message = `The image ${file.name} does not have a 1:1 aspect ratio.\n`;
-                errorMessages.innerHTML += message;
-            }
-        }
+        const currentDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
 
-        img.src = URL.createObjectURL(file);
-    }
-    });
+                startdateInput.min = currentDateTime;
+
+                startdateInput.addEventListener('input', function () {
+                    const inputDateTime = new Date(startdateInput.value);
+                    if (inputDateTime < now) {
+                        message.classList.remove('hidden');
+                        message.classList.add('visible');
+                    } else {
+                        message.classList.remove('visible');
+                        message.classList.add('hidden');
+                    }
+                });
+            });
+    document.addEventListener('DOMContentLoaded', function () {
+        const startdateInput = document.getElementById('enddate');
+        const message = document.getElementById('message3');
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+
+        const currentDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+                startdateInput.min = currentDateTime;
+
+                startdateInput.addEventListener('input', function () {
+                    const inputDateTime = new Date(startdateInput.value);
+                    if (inputDateTime < now) {
+                        message.classList.remove('hidden');
+                        message.classList.add('visible');
+                    } else {
+                        message.classList.remove('visible');
+                        message.classList.add('hidden');
+                    }
+                });
+            });
+
 </script>
+<style>
+    .hidden {
+        display: none;
+    }
+
+    .visible {
+        display: block;
+        color: red;
+        font-size: 14px;
+    }
+
+</style>
 </body>
 
 </html>

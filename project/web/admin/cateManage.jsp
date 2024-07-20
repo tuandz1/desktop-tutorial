@@ -14,6 +14,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
         <script src="jquery-3.7.1.min.js"></script>
+         <script src="${pageContext.request.contextPath}/js/admin/table2excel.js"></script>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/vendor/bootstrap/css/bootstrap.min.css">
         <link href="${pageContext.request.contextPath}/vendor/fonts/circular-std/style.css" rel="stylesheet">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/style.css">
@@ -158,23 +159,59 @@
                                 <li class="nav-divider">
                                     Menu
                                 </li>
-                                <li class="nav-item ">
-                                    <a class="nav-link " href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Dashboard </a>
+                                  <li class="nav-item ">
+                                    <a class="nav-link active" href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Dashboard </a>
 
                                 </li>
-                                <li class="nav-item ">
-                                    <a class="nav-link " href="accountmanage" ><i class="fa fa-fw fa-user-circle"></i>Account Manage </a>
+                                <c:if test="${sessionScope.acc.role_id == 4 || sessionScope.acc.role_id == 2}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link " href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Product Manager </a>
 
                                 </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 5 || sessionScope.acc.role_id == 4}">
                                 <li class="nav-item ">
-                                    <a class="nav-link  " href="brandmanage" ><i class="fa fa-fw fa-user-circle"></i>Brand Manage</a>
+                                    
+                                    <a class="nav-link  " href="accountmanage" ><i class="fa fa-fw fa-user-circle"></i>Account Manage </a>
 
                                 </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 2}">
                                 <li class="nav-item ">
-                                    <a class="nav-link active " href="catemanage" ><i class="fa fa-fw fa-user-circle"></i>Cate Manage</a>
+                                    <a class="nav-link " href="brandmanage" ><i class="fa fa-fw fa-user-circle"></i>Brand Manage</a>
 
                                 </li>
+                                </c:if>
+                                      <c:if test="${sessionScope.acc.role_id == 4}">
+                                <li class="nav-item ">
+                                    <a class="nav-link " href="commentManage" ><i class="fa fa-fw fa-user-circle"></i>Comment Manage</a>
 
+                                </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 2}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="catemanage" ><i class="fa fa-fw fa-user-circle"></i>Cate Manage</a>
+                                    
+                                </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 2}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="blogmanage" ><i class="fa fa-fw fa-user-circle"></i>Blog Manage</a>
+                                    
+                                </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 4}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="ordermanage" ><i class="fa fa-fw fa-user-circle"></i>Order Manage</a>
+
+                                </li>
+                                 </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 4}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="vouchermanage" ><i class="fa fa-fw fa-user-circle"></i>Voucher Manage</a>
+
+                                </li>
+                                </c:if>
                             </ul>
                         </div>
                     </nav>
@@ -207,7 +244,9 @@
                                 </div >
                                 <div class="row">
                                     <a href="catemanage?action=1" class="col-2 btn btn-primary"><i class="  fas fa-plus-circle"></i> Add Category</a>
-                                    <form class="col-10 form-control" action="catemanage"method="post">
+                                     &nbsp;
+                                    <button id="exportBtn" class="col-2 btn btn-primary"><i class="  fas fa-plus-circle"></i> export to file</button>
+                                    <form class="col-12 form-control" action="catemanage"method="post">
                                         <div class="input-group ">
                                             <input type="text" placeholder="Search...." name="txt" value="${txt}" class="form-control">
                                             <div class="input-group-append">
@@ -239,7 +278,7 @@
                                     <div class="card">
                                         <h5 class="card-header">Striped Table</h5>
                                         <div class="card-body">
-                                            <table class="table ">
+                                            <table id="userTable" class="table ">
                                                 <thead>
                                                     <tr>
                                                         <th>Id</th>
@@ -354,6 +393,13 @@
                 <script>
 
                 </script>
+                  <script>
+            document.getElementById("exportBtn").addEventListener('click', function () {
+                var table2excel = new Table2Excel();
+                table2excel.export(document.querySelectorAll("#userTable"));
+            });
+
+        </script>
                 </body>
 
                 </html>     

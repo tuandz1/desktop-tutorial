@@ -1,6 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!doctype html>
 <html lang="en">
 
@@ -23,7 +23,7 @@
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/vendor/datatables/css/buttons.bootstrap4.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/vendor/datatables/css/select.bootstrap4.css">
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/vendor/datatables/css/fixedHeader.bootstrap4.css">
-        <title>Concept - Bootstrap 4 Admin Dashboard Template</title>
+        <title>Manager </title>
     </head>
 
     <body>
@@ -159,58 +159,58 @@
                                 <li class="nav-divider">
                                     Menu
                                 </li>
-                                <li class="nav-item ">
+                                  <li class="nav-item ">
                                     <a class="nav-link active" href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Dashboard </a>
 
                                 </li>
                                 <c:if test="${sessionScope.acc.role_id == 4 || sessionScope.acc.role_id == 2}">
-                                    <li class="nav-item ">
-                                        <a class="nav-link " href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Product Manager </a>
+                                  <li class="nav-item ">
+                                    <a class="nav-link " href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Product Manager </a>
 
-                                    </li>
+                                </li>
                                 </c:if>
                                 <c:if test="${sessionScope.acc.role_id == 5 || sessionScope.acc.role_id == 4}">
-                                    <li class="nav-item ">
+                                <li class="nav-item ">
+                                    
+                                    <a class="nav-link  " href="accountmanage" ><i class="fa fa-fw fa-user-circle"></i>Account Manage </a>
 
-                                        <a class="nav-link  " href="accountmanage" ><i class="fa fa-fw fa-user-circle"></i>Account Manage </a>
-
-                                    </li>
+                                </li>
                                 </c:if>
                                 <c:if test="${sessionScope.acc.role_id == 2}">
-                                    <li class="nav-item ">
-                                        <a class="nav-link " href="brandmanage" ><i class="fa fa-fw fa-user-circle"></i>Brand Manage</a>
+                                <li class="nav-item ">
+                                    <a class="nav-link " href="brandmanage" ><i class="fa fa-fw fa-user-circle"></i>Brand Manage</a>
 
-                                    </li>
+                                </li>
                                 </c:if>
-                                <c:if test="${sessionScope.acc.role_id == 4}">
-                                    <li class="nav-item ">
-                                        <a class="nav-link " href="commentManage" ><i class="fa fa-fw fa-user-circle"></i>Comment Manage</a>
+                                      <c:if test="${sessionScope.acc.role_id == 4}">
+                                <li class="nav-item ">
+                                    <a class="nav-link " href="commentManage" ><i class="fa fa-fw fa-user-circle"></i>Comment Manage</a>
 
-                                    </li>
-                                </c:if>
-                                <c:if test="${sessionScope.acc.role_id == 2}">
-                                    <li class="nav-item ">
-                                        <a class="nav-link  " href="catemanage" ><i class="fa fa-fw fa-user-circle"></i>Cate Manage</a>
-
-                                    </li>
+                                </li>
                                 </c:if>
                                 <c:if test="${sessionScope.acc.role_id == 2}">
-                                    <li class="nav-item ">
-                                        <a class="nav-link  " href="blogmanage" ><i class="fa fa-fw fa-user-circle"></i>Blog Manage</a>
-
-                                    </li>
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="catemanage" ><i class="fa fa-fw fa-user-circle"></i>Cate Manage</a>
+                                    
+                                </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 2}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="blogmanage" ><i class="fa fa-fw fa-user-circle"></i>Blog Manage</a>
+                                    
+                                </li>
                                 </c:if>
                                 <c:if test="${sessionScope.acc.role_id == 4}">
-                                    <li class="nav-item ">
-                                        <a class="nav-link  " href="ordermanage" ><i class="fa fa-fw fa-user-circle"></i>Order Manage</a>
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="ordermanage" ><i class="fa fa-fw fa-user-circle"></i>Order Manage</a>
 
-                                    </li>
-                                </c:if>
+                                </li>
+                                 </c:if>
                                 <c:if test="${sessionScope.acc.role_id == 4}">
-                                    <li class="nav-item ">
-                                        <a class="nav-link  " href="vouchermanage" ><i class="fa fa-fw fa-user-circle"></i>Voucher Manage</a>
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="vouchermanage" ><i class="fa fa-fw fa-user-circle"></i>Voucher Manage</a>
 
-                                    </li>
+                                </li>
                                 </c:if>
                             </ul>
                         </div>
@@ -231,24 +231,28 @@
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="page-header">
-                                <h2 class="pageheader-title">Account Manager</h2>
+                                <h2 class="pageheader-title">Order Manager</h2>
                                 <p class="pageheader-text">Proin placerat ante duiullam scelerisque a velit ac porta, fusce sit amet vestibulum mi. Morbi lobortis pulvinar quam.</p>
                                 <div class="page-breadcrumb">
                                     <nav aria-label="breadcrumb">
                                         <ol class="breadcrumb">
                                             <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Dashboard</a></li>
-                                            <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Account Manager</a></li>
+                                            <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Order Manager</a></li>
 
                                         </ol>
                                     </nav>
                                 </div >
                                 <div class="row">
-                                    <a href="accountmanage?action=1" class="col-2 btn btn-primary"><i class="  fas fa-plus-circle"></i> Add Account</a>
+
                                     &nbsp;
                                     <button id="exportBtn" class="col-2 btn btn-primary"><i class="  fas fa-plus-circle"></i> export to file</button>
-                                    <form class="col-12 form-control" action="accountmanage"method="post">
+
+                                    <form class="col-12 form-control" action="ordermanage"method="post">
                                         <div class="input-group ">
-                                            <input type="text" placeholder="Search...." name="txt" value="${txt}" class="form-control">
+                                            <label for="startDate">From:</label>
+                                            <input class="form-control" type="date" name="from" id="startDate">
+                                            <label for="endDate">To:</label>
+                                            <input class="form-control" type="date" name="to" id="endDate">
                                             <div class="input-group-append">
                                                 <button type="submit" class="btn btn-primary">Search</button>
                                             </div>
@@ -258,6 +262,22 @@
                                 <div class="row">   
 
                                 </div>
+                                <form action="ordermanage" method="get" id="radioForm" class="form-group" onsubmit="handleSubmit(event)">
+                                    <div class="form-group radio-container">
+                                        <label class="custom-control custom-radio">
+                                            <input type="radio"  name="status" value="today" onchange="this.form.submit()"class="custom-control-input"><span for="bankCode" class="custom-control-label">Today</span>
+                                        </label>
+                                        <label class="custom-control custom-radio">
+                                            <input type="radio" name="status" value="complete" onchange="this.form.submit()" class="custom-control-input"><span for="bankCode" class="custom-control-label">Complete</span>
+                                        </label>
+                                        <label class="custom-control custom-radio">
+                                            <input type="radio" name="status" value="paid" onchange="this.form.submit()" class="custom-control-input"><span for="bankCode" class="custom-control-label">Paid</span>
+                                        </label>
+                                        <label class="custom-control custom-radio">
+                                            <input type="radio" name="status" value="notPaid" onchange="this.form.submit()" class="custom-control-input"><span for="bankCode" class="custom-control-label">Not Paid</span>
+                                        </label>
+                                    </div>
+                                </form>
                             </div>
                             <!-- ============================================================== -->
                             <!-- end pageheader -->
@@ -276,63 +296,88 @@
                                 <!-- ============================================================== -->
                                 <div >
                                     <div class="card">
-                                        <h5 class="card-header">Striped Table</h5>
+                                        <h5 class="card-header">Order Table</h5>
                                         <div class="card-body">
                                             <table id="userTable" class="table ">
                                                 <thead>
                                                     <tr>
                                                         <th>Id</th>
-                                                        <th>Avatar </th>
-                                                        <th>Full Name</th>
-                                                        <th>Role</th>
-                                                        <th>Email</th>
+                                                        <th>Customer Name </th>
+                                                        <th>Status</th>
                                                         <th>Address</th>
                                                         <th>Phone</th>
-                                                        <th>Funtion</th>
+                                                        <th>Payment Method</th>
+                                                        <th>Total Amount</th>
+                                                        <th>Order Date</th>
+                                                        <th>Shipper</th>
+                                                        <th>Ship Status</th>
+                                                        <th>View</th>
                                                     </tr>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="contents">
-
-                                                    <c:forEach items="${acclist}" var="a">
+                                                    <c:forEach items="${ord}" var="p">
+                                                        <c:set var="checkshipper" value="true"/>
                                                         <tr>
-                                                            <td>${a.id}</td>
-                                                            <td > <img style="height: 150px; width: auto;" src="${a.avatar}"/></td>
-                                                            <td>${a.full_name}</td>
-                                                            <c:forEach items="${role}" var="r">
-                                                                <c:if test="${r.id eq a.role_id}">
-                                                                    <td>${r.name}</td>
-                                                                </c:if>
-                                                            </c:forEach>
-                                                            <td > ${a.email} </td>
-                                                            <td > ${a.address} </td>
-                                                            <td > ${a.phone} </td>
-                                                            <td> 
-                                                                <c:if test="${a.role_id >1}">
-                                                                <a href="accountmanage?action=2&aid=${a.id}" class="btn btn-outline-success"><i class=" fas fa-edit"></i></a>
-                                                                </c:if>
-                                                                &nbsp; 
-                                                                <c:set var="isBlocked" value="false" />
-                                                                <c:forEach var="bl" items="${bl}">
-                                                                    <c:if test="${a.id == bl.accid}">
-                                                                        <c:set var="isBlocked" value="true" />
+                                                            <td>${p.id}</td>
+                                                            <td>${p.cus_name}</td>
+                                                            <td > 
+                                                                <c:forEach items="${sta}" var="b">
+                                                                    <c:if test="${p.status_id eq b.getStatusID()}">
+                                                                        ${b.getDescription()}
+                                                                    </c:if>
+                                                                </c:forEach>
+                                                            </td>
+                                                            <td > ${p.adress}</td>
+                                                            <td > ${p.phone}</td>
+                                                            <td > 
+                                                                <c:forEach items="${pay}" var="b">
+                                                                    <c:if test="${p.status_id eq b.getPaymentMethodID()}">
+                                                                        ${b.getName()}
+                                                                    </c:if>
+                                                                </c:forEach>
+                                                            </td>
+                                                            <td > <fmt:formatNumber value="${p.totalAmount}" type="number" pattern="###0" /> </td>
+                                                            <td > ${p.orderDate} </td>
+                                                            <td > 
+                                                                <c:forEach items="${ship}" var="b">
+                                                                    <c:if test="${p.ship_id eq b.id}">
+                                                                        <c:set var="checkshipper" value="false"/>
+                                                                        <p>  ${b.full_name}</p>
+                                                                        <p> ${b.phone} </p>
                                                                     </c:if>
                                                                 </c:forEach>
 
-                                                                <c:choose>
-                                                                    <c:when test="${isBlocked}">
-                                                                        <a href="accountmanage?action=3&aid=${a.id}" class="btn btn-outline-info"><i class="fas fa-check"></i></a>
-                                                                        </c:when>
-                                                                        <c:otherwise>
-                                                                        <a href="accountmanage?action=4&aid=${a.id}" class="btn btn-outline-warning"><i class="fas fa-ban"></i></a>
-                                                                        </c:otherwise>
-                                                                    </c:choose>
+                                                                <c:if test="${checkshipper}">
+                                                                    <a href="addShipper?orid=${p.id}" target="_blank" class="btn btn-secondary">Add Shipper</a>
+                                                                </c:if> 
+                                                            </td>
+                                                            <td>
+                                                                ${p. shipstatus}
+                                                            </td>
+                                                            <td>
+                                                                <a href="manageorderDetail?orid=${p.id}"  class="btn btn-info">View</a>
                                                             </td>
                                                         </tr>
                                                     </c:forEach>
-
+                                                <tfoot>
+                                                    
+                                                <h3 class="text-align text-red fs-200">Total Money: 
+                                                    &nbsp; <fmt:formatNumber value="${total}" type="number" pattern="#,##0" /> 
+                                                </h3>
+                                                </tfoot>
                                                 </tbody>
+
                                             </table>
+                                            <c:set var="xpage" value="${requestScope.page}"/>
+                                            <div style="padding: 20px 0px;" class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12"> 
+                                                <ul class="pagination">
+                                                    <c:forEach begin="${1}" end="${requestScope.num}" var="i">
+                                                        <li class="page-item"> <a style="text-decoration: white" href="ordermanage?xpage=${i}&status=${requestScope.status}" class="page-link">${i}</a></li>
+                                                    </c:forEach>
+                                                    
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -408,6 +453,12 @@
                     });
 
                 </script>
+                <style>
+                    .radio-container {
+                        display: flex;
+                        gap: 20px; /* khoảng cách giữa các lựa chọn radio */
+                    }
+                </style>
                 </body>
 
                 </html>     
