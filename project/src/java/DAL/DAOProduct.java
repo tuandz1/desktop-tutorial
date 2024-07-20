@@ -13,7 +13,12 @@ import entity.Product;
 import entity.Product_Image;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 /**
@@ -75,6 +80,46 @@ public class DAOProduct {
 
     public void getAllBrand() {
         String sql = "SELECT [id]\n"
+                + "      ,[brand_name]\n"
+                + "      ,[brand_img]\n"
+                + "  FROM [brand]";
+        brand = new Vector<Brand>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt(1);
+                String name = rs.getString(2);
+                String img = rs.getString(3);
+                brand.add(new Brand(id, name, img));
+            }
+        } catch (SQLException e) {
+            // Xử lý ngoại lệ
+        }
+    }
+
+    public void getTop6Brand() {
+        String sql = "SELECT Top 6 [id]\n"
+                + "      ,[brand_name]\n"
+                + "      ,[brand_img]\n"
+                + "  FROM [brand]";
+        brand = new Vector<Brand>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt(1);
+                String name = rs.getString(2);
+                String img = rs.getString(3);
+                brand.add(new Brand(id, name, img));
+            }
+        } catch (SQLException e) {
+            // Xử lý ngoại lệ
+        }
+    }
+
+    public void getTop4Brand() {
+        String sql = "SELECT Top 4 [id]\n"
                 + "      ,[brand_name]\n"
                 + "      ,[brand_img]\n"
                 + "  FROM [brand]";
@@ -187,6 +232,41 @@ public class DAOProduct {
         }
     }
 
+    public void gettop4Product() {
+        String sql = "SELECT top 4 [id]\n"
+                + "      ,[proName]\n"
+                + "      ,[caid]\n"
+                + "      ,[description]\n"
+                + "      ,[img]\n"
+                + "      ,[price]\n"
+                + "      ,[rate]\n"
+                + "      ,[brand_id]\n"
+                + "      ,[stockQuantity]\n"
+                + "      ,[publication_date]\n"
+                + "  FROM [Product]"
+                + " order by [stockQuantity] desc";
+        pro = new Vector<Product>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt(1);
+                String name = rs.getString(2);
+                int caid = rs.getInt(3);
+                String description = rs.getString(4);
+                String img = rs.getString(5);
+                double price = rs.getDouble(6);
+                float rate = rs.getFloat(7);
+                int brand_id = rs.getInt(8);
+                int stockQuantity = rs.getInt(9);
+                String publication_date = rs.getString(10);
+                pro.add(new Product(id, name, caid, description, img, price, rate, brand_id, stockQuantity, publication_date));
+            }
+        } catch (SQLException e) {
+            // Xử lý ngoại lệ
+        }
+    }
+
     public void getAllProductShop() {
         String sql = "SELECT [id]\n"
                 + "      ,[proName]\n"
@@ -221,6 +301,7 @@ public class DAOProduct {
             // Xử lý ngoại lệ
         }
     }
+
     public void getAllProductShopbyHigh() {
         String sql = "SELECT [id]\n"
                 + "      ,[proName]\n"
@@ -256,6 +337,7 @@ public class DAOProduct {
             // Xử lý ngoại lệ
         }
     }
+
     public void getAllProductShopbyLow() {
         String sql = "SELECT [id]\n"
                 + "      ,[proName]\n"
@@ -294,11 +376,12 @@ public class DAOProduct {
 
     public static void main(String[] args) {
         DAOProduct dao = new DAOProduct();
-        dao.getProImagebyId(54);
-        List<Product_Image> all = dao.getProimg();
-        for (Product_Image product_Image : all) {
-            System.out.println(product_Image.getId());
+
+        List<Product> list = dao.fuzzySearchProducts("rolix", 50, 15);
+        for (Product product : list) {
+            System.out.println(product.getProName());
         }
+
     }
 
     public void searchProduct(String txt) {
@@ -402,19 +485,16 @@ public class DAOProduct {
     }
 
     public void getBestProduct() {
-        String sql = "SELECT TOP 8 [id]\n"
-                + "      ,[proName]\n"
-                + "      ,[caid]\n"
-                + "      ,[description]\n"
-                + "      ,[img]\n"
-                + "      ,[price]\n"
-                + "      ,[rate]\n"
-                + "      ,[brand_id]\n"
-                + "      ,[stockQuantity]\n"
-                + "      ,[publication_date]\n"
-                + "  FROM [Product] where   [brand_id] NOT IN (SELECT [brandid] FROM Block) "
-                + "and [stockQuantity] != 0 "
-                + "  ORDER BY [price] DESC;";
+        String sql = "SELECT p.*\n"
+                + "FROM Product p\n"
+                + "JOIN (\n"
+                + "    SELECT TOP 8 product_id, COUNT(product_id) AS product_count\n"
+                + "    FROM orderdetail\n"
+                + "    GROUP BY product_id\n"
+                + "    ORDER BY product_count DESC\n"
+                + ") od ON p.id = od.product_id\n"
+                + "where   [brand_id] NOT IN (SELECT [brandid] FROM Block) and [stockQuantity] > 0\n"
+                + "ORDER BY od.product_count DESC;";
         pro = new Vector<Product>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -893,5 +973,183 @@ public class DAOProduct {
 
         }
         return cate;
+    }
+
+    public int getCountProbyBrand(int brandid) {
+        int procount = 0;
+        Categories cate = new Categories();
+        String sql = "SELECT COUNT(id)\n"
+                + "  FROM [Product]\n"
+                + "  where brand_id = ?";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, brandid);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                procount = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+
+        }
+        return procount;
+    }
+
+    public int getCountProbyCate(int cateid) {
+        int procount = 0;
+        Categories cate = new Categories();
+        String sql = "SELECT COUNT(id)\n"
+                + "  FROM [betashop].[dbo].[Product]\n"
+                + "  where [caid] = ?";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, cateid);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                procount = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+
+        }
+        return procount;
+    }
+
+    public int getCountCustomer() {
+        int procount = 0;
+        Categories cate = new Categories();
+        String sql = "SELECT COUNT(id)\n"
+                + "  FROM [Account]\n"
+                + "  where role_id = 1";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                procount = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+
+        }
+        return procount;
+    }
+
+    public int getCountBrands() {
+        int procount = 0;
+        Categories cate = new Categories();
+        String sql = "SELECT  count(id)\n"
+                + "  FROM [brand]";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                procount = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+
+        }
+        return procount;
+    }
+
+    public int getCountProducts() {
+        int procount = 0;
+        Categories cate = new Categories();
+        String sql = "SELECT  count(id)\n"
+                + "  FROM [Product]";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                procount = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+
+        }
+        return procount;
+    }
+
+    public int getCountCate() {
+        int procount = 0;
+
+        String sql = "SELECT  count(id)\n"
+                + "  FROM [Categories]";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                procount = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+
+        }
+        return procount;
+    }
+
+    public List<Product> fuzzySearchProducts(String searchTerm, int maxDistance, int maxResults) {
+        List<Product> productList = new ArrayList<>();
+        String sql = "SELECT * FROM Product"; // Câu SQL có thể điều kiện theo ID
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String productName = rs.getString(2);
+                int distance = StringUtil.levenshteinDistance(searchTerm.toLowerCase(), productName.toLowerCase());
+
+                // Điều kiện để bỏ qua kết quả khi khoảng cách lớn hơn maxDistance
+                if (distance <= maxDistance) {
+                    int id = rs.getInt(1);
+                    int caid = rs.getInt(3);
+                    String description = rs.getString(4);
+                    String img = rs.getString(5);
+                    double price = rs.getDouble(6);
+                    float rate = rs.getFloat(7);
+                    int brand_id = rs.getInt(8);
+                    int stockQuantity = rs.getInt(9);
+                    String publication_date = rs.getString(10);
+
+                    Product product = new Product(id, productName, caid, description, img, price, rate, brand_id, stockQuantity, publication_date);
+                    productList.add(product);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        // Sắp xếp danh sách kết quả theo độ tương đồng giảm dần
+        Collections.sort(productList, new Comparator<Product>() {
+            @Override
+            public int compare(Product p1, Product p2) {
+                int dist1 = StringUtil.levenshteinDistance(searchTerm.toLowerCase(), p1.getProName().toLowerCase());
+                int dist2 = StringUtil.levenshteinDistance(searchTerm.toLowerCase(), p2.getProName().toLowerCase());
+                return Integer.compare(dist1, dist2);
+            }
+        });
+
+        // Loại bỏ các từ trùng lặp dựa trên kí tự đã sử dụng
+        List<Product> filteredList = new ArrayList<>();
+        Set<Character> usedChars = new HashSet<>();
+        for (Product product : productList) {
+            boolean hasDuplicate = false;
+            for (char c : searchTerm.toLowerCase().toCharArray()) {
+                if (product.getProName().toLowerCase().indexOf(c) != -1) {
+                    if (usedChars.contains(c)) {
+                        hasDuplicate = true;
+                        break;
+                    } else {
+                        usedChars.add(c);
+                    }
+                }
+            }
+            if (!hasDuplicate) {
+                filteredList.add(product);
+            }
+            // Reset usedChars set for the next product
+            usedChars.clear();
+        }
+
+        // Giới hạn số lượng kết quả trả về theo maxResults
+        if (filteredList.size() > maxResults) {
+            filteredList = filteredList.subList(0, maxResults);
+        }
+        Collections.reverse(filteredList);
+        return filteredList;
     }
 }
