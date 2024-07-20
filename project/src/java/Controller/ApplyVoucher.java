@@ -1,11 +1,11 @@
-/*
+    /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 package Controller;
 
-import DAL.DAOAccount;
-import entity.Account;
+import DAL.DAOVoucher;
+import entity.Voucher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,16 +13,19 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
+import jakarta.servlet.http.HttpSession;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  *
  * @author admin
  */
-@WebServlet(name = "RegisterControll", urlPatterns = {"/register"})
-public class RegisterControll extends HttpServlet {
-
-    DAOAccount dao = new DAOAccount();
+@WebServlet(name = "ApplyVoucher", urlPatterns = {"/applyvoucher"})
+public class ApplyVoucher extends HttpServlet {
+    
+    DAOVoucher daovou = new DAOVoucher();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,10 +44,10 @@ public class RegisterControll extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet RegisterControll</title>");
+            out.println("<title>Servlet ApplyVoucher</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet RegisterControll at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ApplyVoucher at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -76,54 +79,51 @@ public class RegisterControll extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String name = request.getParameter("name");
-        String email = request.getParameter("email");
-        String pass = request.getParameter("pass");
-        String cfpass = request.getParameter("cfpass");
-        String role = request.getParameter("role");
-        if(role.isBlank())role = "1";
-        int roleId = Integer.parseInt(role);
-        String mess = "";
-        dao.getAllAccount();
-        List<Account> allacc = dao.getAcc();
-
-        if (pass.equals(cfpass)) {
-            for (Account account : allacc) {
-                if (account.getAcc_name().equals(name) || account.getEmail().equals(email)) {
-                    mess = "The name or email already exists";
-                    request.setAttribute("namemess", mess);
-                    request.getRequestDispatcher("register.jsp").forward(request, response);
-                }
-            }
-            if (name.length() <= 8 || pass.length() <= 8 || pass.length() >= 16) {
-                mess = "Name or password must be at least 8 characters";
-                    request.setAttribute("passmess", mess);
-                    request.getRequestDispatcher("register.jsp").forward(request, response);
-            }else if(!checkPassword(pass)){
-                mess = "Password must be contain special character";
-                    request.setAttribute("charmess", mess);
-                    request.getRequestDispatcher("register.jsp").forward(request, response);
-            }
-            dao.insertAccount(name, email, pass, roleId);
-            response.sendRedirect("login");
+        String vou = request.getParameter("vou");
+        Voucher voucher = daovou.getVoucherbyId(vou);
+        HttpSession session = request.getSession();
+        if (voucher.getDiscountID() == null) {
+            session.setAttribute("messvou", "Voucher is not exist");
+            response.sendRedirect("showCart");
         } else {
-             mess = "Confirm pass doesn't correct";
-                    request.setAttribute("cfpassmess", mess);
-                    request.getRequestDispatcher("register.jsp").forward(request, response);
-        }
-    }
-    public static boolean checkPassword(String password) {
-        // Các ký tự đặc biệt cần kiểm tra
-        String specialCharacters = "!@#$%^&*(),.?\":{}|<>";
-        
-        // Kiểm tra từng ký tự trong mật khẩu
-        for (int i = 0; i < password.length(); i++) {
-            if (specialCharacters.contains(Character.toString(password.charAt(i)))) {
-                return true;
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            try {
+                // Tạo đối tượng Date từ chuỗi
+                Date endate = sdf.parse(voucher.getEndDate());
+                Date startdate = sdf.parse(voucher.getStartDate());
+                // Lấy thời gian hiện tại
+                Date currentDate = new Date();
+
+                // So sánh thời gian
+                String comparisonResult = "";
+                if ((currentDate.before(endate) || currentDate.equals(endate)) && 
+                        (currentDate.after(startdate) || currentDate.equals(startdate))) {
+                    if(voucher.getAmount() > 0){
+                    daovou.useVoucher(voucher.getDiscountID());
+                    session.setAttribute("messvou", "Voucher apply sucessfull");
+                    session.setAttribute("rate", " "+voucher.getDiscountRate());
+                    session.setAttribute("vouid", voucher.getDiscountID());
+                    response.sendRedirect("showCart");
+                    }else{
+                        daovou.deleteVoucher(voucher.getDiscountID());
+                        session.setAttribute("messvou", "Voucher is end");
+                    response.sendRedirect("showCart");
+                    }
+                } else {
+                    session.setAttribute("messvou", "Voucher can not use now");
+                    response.sendRedirect("showCart");
+                }
+
+                // Gửi kết quả so sánh đến client
+               
+                
+            } catch (ParseException e) {
+                e.printStackTrace();
+                response.getWriter().println("Lỗi khi phân tích định dạng thời gian: " + e.getMessage());
             }
         }
-        return false;
     }
+
     /**
      * Returns a short description of the servlet.
      *

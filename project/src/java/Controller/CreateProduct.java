@@ -91,7 +91,7 @@ public class CreateProduct extends HttpServlet {
         int brid = Integer.parseInt(br);
         double price = Double.parseDouble(pr);
         
-        String customDirectory = "D:/SUM24/SWP/Git/WatchProject/web/img";
+        String customDirectory = "D:/SUM24/SWP/Git/WatchProject12/web/img";
         Part part = request.getPart("img");
         String filename = Paths.get(part.getSubmittedFileName()).getFileName().toString();
         Path imagePath = Paths.get(customDirectory, filename);

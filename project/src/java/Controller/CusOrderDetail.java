@@ -4,9 +4,16 @@
  */
 package Controller;
 
+import DAL.DAOAccount;
+import DAL.DAOOrder;
 import DAL.DAOProduct;
+import entity.Account;
+import entity.Brand;
 import entity.Categories;
-import entity.Product;
+import entity.Order;
+import entity.OrderDetail;
+import entity.OrderStatus;
+import entity.PaymentMethod;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -21,10 +28,12 @@ import java.util.List;
  *
  * @author admin
  */
-@WebServlet(name = "ShopAllControll", urlPatterns = {"/shop"})
-public class ShopAllControll extends HttpServlet {
+@WebServlet(name = "CusOrderDetail", urlPatterns = {"/cusorderdetail"})
+public class CusOrderDetail extends HttpServlet {
 
-    DAOProduct dao = new DAOProduct();
+    DAOOrder daoor = new DAOOrder();
+    DAOAccount daoacc = new DAOAccount();
+    DAOProduct daopro = new DAOProduct();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,10 +52,10 @@ public class ShopAllControll extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ShopAllControll</title>");
+            out.println("<title>Servlet CusOrderDetail</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ShopAllControll at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet CusOrderDetail at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -64,54 +73,36 @@ public class ShopAllControll extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String ac = request.getParameter("action");
-        List<Product> allpro = null;
-        if (ac == null || ac.isBlank()) {
-            dao.getAllProductShop();
-            allpro = dao.getPro();
-        } else if (ac != null) {
-            int action = Integer.parseInt(ac);
-            if (action == 1) {
-                dao.getAllProductShopbyHigh();
-                allpro = dao.getPro();
-            } else if (action == 2) {
-                dao.getAllProductShopbyLow();
-                allpro = dao.getPro();
-            }
-        }
-        int page, numberPage = 6;
-        int size = allpro.size();
-        int num = (size % 6 == 0 ? (size / 6) : ((size / 6) + 1));
-        String xpage = request.getParameter("xpage");
-        if (xpage == null || xpage.equals("")) {
-            page = 1;
-        } else {
-            page = Integer.parseInt(xpage);
-        }
-        int start, end;
-        start = (page - 1) * numberPage;
-        end = Math.min(page * numberPage, size);
-        dao.getAllProductPagging(allpro, start, end);
-        List<Product> proPagging = dao.getPro();
-        
-        dao.getAllCate();
-        List<Categories> cate = dao.getCate();
+        int id = Integer.parseInt(request.getParameter("id"));
+        daoor.getOrderDetail(id);
+        List<OrderDetail> detail = daoor.getDetail();
+        Order order = daoor.getOrderbyId(id);
+        daopro.getAllBrand();
+        List<Brand> brand = daopro.getBrand();
+        daopro.getAllCate();
+        List<Categories> cate = daopro.getCate();
+        Account shiper = daoacc.getAccountbyId(order.getShip_id());
+        daoor.getAllPayment();
+        List<PaymentMethod> pay = daoor.getPay();
+        daoor.getAllStatus();
+        List<OrderStatus> orsta = daoor.getSta();
         HttpSession session = request.getSession();
-        String message = (String) session.getAttribute("messcart");
+        String message = (String) session.getAttribute("messcmt");
 
         if (message != null) {
             // Xử lý thông báo, ví dụ hiển thị cho người dùng
             request.setAttribute("mess", message);
             // Xóa thông báo khỏi session sau khi lấy ra để tránh hiển thị lại sau khi tải lại trang
-            session.removeAttribute("messcart");
+            session.removeAttribute("messcmt");
         }
+        request.setAttribute("orsta", orsta);
+        request.setAttribute("pay", pay);
+        request.setAttribute("detail", detail);
+        request.setAttribute("order", order);
+        request.setAttribute("brand", brand);
         request.setAttribute("cate", cate);
-        request.setAttribute("ac", ac);
-        request.setAttribute("pro", proPagging);
-        request.setAttribute("num", num);
-        request.setAttribute("page", page);
-        request.getRequestDispatcher("shop.jsp").forward(request, response);
-
+        request.setAttribute("shiper", shiper);
+        request.getRequestDispatcher("orderDetail.jsp").forward(request, response);
     }
 
     /**
@@ -125,7 +116,27 @@ public class ShopAllControll extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        int id = Integer.parseInt(request.getParameter("id"));
+        daoor.getOrderDetail(id);
+        List<OrderDetail> detail = daoor.getDetail();
+        Order order = daoor.getOrderbyId(id);
+        daopro.getAllBrand();
+        List<Brand> brand = daopro.getBrand();
+        daopro.getAllCate();
+        List<Categories> cate = daopro.getCate();
+        Account shiper = daoacc.getAccountbyId(order.getShip_id());
+        daoor.getAllPayment();
+        List<PaymentMethod> pay = daoor.getPay();
+        daoor.getAllStatus();
+        List<OrderStatus> orsta = daoor.getSta();
+        request.setAttribute("orsta", orsta);
+        request.setAttribute("pay", pay);
+        request.setAttribute("detail", detail);
+        request.setAttribute("order", order);
+        request.setAttribute("brand", brand);
+        request.setAttribute("cate", cate);
+        request.setAttribute("shiper", shiper);
+        request.getRequestDispatcher("orderDetail.jsp").forward(request, response);
     }
 
     /**

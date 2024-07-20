@@ -4,16 +4,20 @@
  */
 package Controller;
 
+import DAL.DAOAccount;
+import DAL.DAOOrder;
 import DAL.DAOProduct;
 import entity.Account;
 import entity.Brand;
-import entity.Cart;
-import entity.Items;
-import entity.Product;
+import entity.Categories;
+import entity.Order;
+import entity.OrderDetail;
+import entity.OrderStatus;
+import entity.PaymentMethod;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,10 +28,11 @@ import java.util.List;
  *
  * @author admin
  */
-public class HomeController extends HttpServlet {
-
-    DAOProduct dao = new DAOProduct();
-
+@WebServlet(name = "manageorderDetail", urlPatterns = {"/manageorderDetail"})
+public class manageorderDetail extends HttpServlet {
+DAOOrder daoor = new DAOOrder();
+    DAOAccount daoacc = new DAOAccount();
+    DAOProduct daopro = new DAOProduct();
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -45,10 +50,10 @@ public class HomeController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet HomeController</title>");
+            out.println("<title>Servlet manageorderDetail</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet HomeController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet manageorderDetail at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -66,37 +71,36 @@ public class HomeController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        dao.getTop6Brand();
-        List<Brand> allbr = dao.getBrand();
-        dao.getBestProduct();
-        List<Product> pro = dao.getPro();
-        dao.getAllProductShop();
-        List<Product> proall = dao.getPro();
-        Cookie[] arr = request.getCookies();
-        String txt = "";
-        if (arr != null) {
-            for (Cookie o : arr) {
-                if (o.getName().equals("cart")) {
-                    txt += o.getValue();
-                }
-            }
-        }
-        Cart cart = new Cart(txt, proall);
-        List<Items> listItems = cart.getItems();
-        int n=0;
+        int id = Integer.parseInt(request.getParameter("orid"));
+        daoor.getOrderDetail(id);
+        List<OrderDetail> detail = daoor.getDetail();
+        Order order = daoor.getOrderbyId(id);
+        daopro.getAllBrand();
+        List<Brand> brand = daopro.getBrand();
+        daopro.getAllCate();
+        List<Categories> cate = daopro.getCate();
+        Account shiper = daoacc.getAccountbyId(order.getShip_id());
+        daoor.getAllPayment();
+        List<PaymentMethod> pay = daoor.getPay();
+        daoor.getAllStatus();
+        List<OrderStatus> orsta = daoor.getSta();
         HttpSession session = request.getSession();
-        Account acc = (Account) session.getAttribute("acc");
-        if (acc == null) {
-            n = 0;
-        } else {
-            
-            n = cart.countItemsByAccountId(acc.getId());
-        }
-        request.setAttribute("n", n);
-        request.setAttribute("brand", allbr);
-        request.setAttribute("pro", pro);
-        request.getRequestDispatcher("index.jsp").forward(request, response);
+        String message = (String) session.getAttribute("messcmt");
 
+        if (message != null) {
+            // Xử lý thông báo, ví dụ hiển thị cho người dùng
+            request.setAttribute("mess", message);
+            // Xóa thông báo khỏi session sau khi lấy ra để tránh hiển thị lại sau khi tải lại trang
+            session.removeAttribute("messcmt");
+        }
+        request.setAttribute("orsta", orsta);
+        request.setAttribute("pay", pay);
+        request.setAttribute("detail", detail);
+        request.setAttribute("order", order);
+        request.setAttribute("brand", brand);
+        request.setAttribute("cate", cate);
+        request.setAttribute("shiper", shiper);
+        request.getRequestDispatcher("admin/ViewOrderDetail.jsp").forward(request, response);
     }
 
     /**

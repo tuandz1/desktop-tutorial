@@ -4,30 +4,25 @@
  */
 package Controller;
 
-import DAL.DAOProduct;
-import entity.Account;
-import entity.Brand;
-import entity.Cart;
-import entity.Items;
-import entity.Product;
+import DAL.DAOBlog;
+import entity.Block;
+import entity.Blog;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 /**
  *
  * @author admin
  */
-public class HomeController extends HttpServlet {
-
-    DAOProduct dao = new DAOProduct();
-
+@WebServlet(name = "customerBlogControll", urlPatterns = {"/customerblog"})
+public class customerBlogControll extends HttpServlet {
+    DAOBlog dao = new DAOBlog();
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -45,10 +40,10 @@ public class HomeController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet HomeController</title>");
+            out.println("<title>Servlet customerBlogControll</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet HomeController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet customerBlogControll at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -66,37 +61,26 @@ public class HomeController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        dao.getTop6Brand();
-        List<Brand> allbr = dao.getBrand();
-        dao.getBestProduct();
-        List<Product> pro = dao.getPro();
-        dao.getAllProductShop();
-        List<Product> proall = dao.getPro();
-        Cookie[] arr = request.getCookies();
-        String txt = "";
-        if (arr != null) {
-            for (Cookie o : arr) {
-                if (o.getName().equals("cart")) {
-                    txt += o.getValue();
-                }
-            }
-        }
-        Cart cart = new Cart(txt, proall);
-        List<Items> listItems = cart.getItems();
-        int n=0;
-        HttpSession session = request.getSession();
-        Account acc = (Account) session.getAttribute("acc");
-        if (acc == null) {
-            n = 0;
+       dao.getAllBlog();
+       List<Blog> blg = dao.getBlg();
+       int page, numberPage = 12;
+        int size = blg.size();
+        int num = (size % 12 == 0 ? (size / 12) : ((size / 12) + 1));
+        String xpage = request.getParameter("xpage");
+        if (xpage == null || xpage.equals("")) {
+            page = 1;
         } else {
-            
-            n = cart.countItemsByAccountId(acc.getId());
+            page = Integer.parseInt(xpage);
         }
-        request.setAttribute("n", n);
-        request.setAttribute("brand", allbr);
-        request.setAttribute("pro", pro);
-        request.getRequestDispatcher("index.jsp").forward(request, response);
-
+        int start, end;
+        start = (page - 1) * numberPage;
+        end = Math.min(page * numberPage, size);
+        dao.getAllBlogPagging(blg, start, end);
+        List<Blog> blgpag = dao.getBlg();
+        request.setAttribute("blg", blgpag);
+        request.setAttribute("num", num);
+        request.setAttribute("page", page);
+        request.getRequestDispatcher("blog.jsp").forward(request, response);
     }
 
     /**

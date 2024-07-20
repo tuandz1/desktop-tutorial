@@ -16,6 +16,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -97,7 +98,7 @@ public class updateProduct extends HttpServlet {
         int caid = Integer.parseInt(ca);
         int brid = Integer.parseInt(br);
         double price = Double.parseDouble(pr);
-        String customDirectory = "D:/SUM24/SWP/Git/WatchProject/web/img";
+        String customDirectory = "D:/SUM24/SWP/Git/WatchProject12/web/img";
         Part part = request.getPart("img");
         if (part == null || part.getSize() == 0) {
             Product pro = dao.getProductbyId(proid);
@@ -150,6 +151,8 @@ public class updateProduct extends HttpServlet {
             }
             dao.UpdateProduct(name, caid, des, "img/" + filename, price, brid, stock, date, proid);
         }
+        HttpSession session = request.getSession();
+        session.setAttribute("messpro", "Update Successfull");
         response.sendRedirect("productmanage");
     }
 

@@ -4,30 +4,29 @@
  */
 package Controller;
 
-import DAL.DAOProduct;
+import DAL.DAOAccount;
+import DAL.DAOOrder;
 import entity.Account;
-import entity.Brand;
-import entity.Cart;
-import entity.Items;
-import entity.Product;
+import entity.Order;
+import entity.OrderStatus;
+import entity.PaymentMethod;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 /**
  *
  * @author admin
  */
-public class HomeController extends HttpServlet {
-
-    DAOProduct dao = new DAOProduct();
-
+@WebServlet(name = "OrderRecieved", urlPatterns = {"/orderrecieved"})
+public class OrderRecieved extends HttpServlet {
+ DAOOrder daoor = new DAOOrder();
+    DAOAccount daoac = new DAOAccount();
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -45,10 +44,10 @@ public class HomeController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet HomeController</title>");
+            out.println("<title>Servlet OrderRecieved</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet HomeController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet OrderRecieved at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -66,37 +65,7 @@ public class HomeController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        dao.getTop6Brand();
-        List<Brand> allbr = dao.getBrand();
-        dao.getBestProduct();
-        List<Product> pro = dao.getPro();
-        dao.getAllProductShop();
-        List<Product> proall = dao.getPro();
-        Cookie[] arr = request.getCookies();
-        String txt = "";
-        if (arr != null) {
-            for (Cookie o : arr) {
-                if (o.getName().equals("cart")) {
-                    txt += o.getValue();
-                }
-            }
-        }
-        Cart cart = new Cart(txt, proall);
-        List<Items> listItems = cart.getItems();
-        int n=0;
-        HttpSession session = request.getSession();
-        Account acc = (Account) session.getAttribute("acc");
-        if (acc == null) {
-            n = 0;
-        } else {
-            
-            n = cart.countItemsByAccountId(acc.getId());
-        }
-        request.setAttribute("n", n);
-        request.setAttribute("brand", allbr);
-        request.setAttribute("pro", pro);
-        request.getRequestDispatcher("index.jsp").forward(request, response);
-
+        processRequest(request, response);
     }
 
     /**
@@ -110,8 +79,31 @@ public class HomeController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String id_raw = request.getParameter("accid");
+        if (id_raw == null || id_raw.isEmpty()) {
+            response.sendRedirect("login");
+        } else {
+            int orid = Integer.parseInt(request.getParameter("id"));
+            daoor.Recievedorder("Received  Successfully", orid);
+            int cusid = Integer.parseInt(id_raw);
+            daoor.getCustomerOrder(cusid);
+            List<Order> or = daoor.getOrd();
+            daoor.getAllPayment();
+            List<PaymentMethod> pay = daoor.getPay();
+            daoor.getAllStatus();
+            List<OrderStatus> sta = daoor.getSta();
+            daoac.getAllShipper();
+            List<Account> ship = daoac.getAcc();
+            String mess = "Received successfull";
+            request.setAttribute("ord", or);
+            request.setAttribute("mess", mess);
+            request.setAttribute("pay", pay);
+            request.setAttribute("sta", sta);
+            request.setAttribute("ship", ship);
+            request.getRequestDispatcher("OrderHistory.jsp").forward(request, response);
+        }
     }
+    
 
     /**
      * Returns a short description of the servlet.

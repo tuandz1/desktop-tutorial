@@ -93,10 +93,15 @@ public class accsettings extends HttpServlet {
         HttpSession session = request.getSession();
         String ans = request.getParameter("answer");
         String address = request.getParameter("address");
-        int sqid = Integer.parseInt(sq);
+        int sqid;
+        if(sq == null){
+         sqid =  1;
+        }else{
+            sqid = Integer.parseInt(sq);
+        }
         int cusid = Integer.parseInt(id);
         
-         String customDirectory = "D:/SUM24/SWP/Git/WatchProject/web/img";
+         String customDirectory = "D:/SUM24/SWP/Git/WatchProject12/web/img";
         Part part = request.getPart("ava");
         String filename = Paths.get(part.getSubmittedFileName()).getFileName().toString();
         Path imagePath = Paths.get(customDirectory, filename);

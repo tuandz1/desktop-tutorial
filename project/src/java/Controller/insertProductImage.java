@@ -14,6 +14,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -84,7 +85,7 @@ public class insertProductImage extends HttpServlet {
         String name = request.getParameter("name");
         Product pro = dao.getProductbyName(name);
 
-        String customDirectory = "D:/SUM24/SWP/Git/WatchProject/web/img";
+        String customDirectory = "D:/SUM24/SWP/Git/WatchProject12/web/img";
         
         for (Part part : request.getParts()) {
              if (part.getName().equals("imgs") && part.getSize() > 0) {
@@ -97,6 +98,8 @@ public class insertProductImage extends HttpServlet {
             dao.insertProImage(pro.getId(), "img/" +filename);
              }
         }
+        HttpSession session  = request.getSession();
+        session.setAttribute("messpro", "Create Successful ");
         response.sendRedirect("productmanage");
     }
 

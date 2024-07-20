@@ -4,30 +4,32 @@
  */
 package Controller;
 
-import DAL.DAOProduct;
-import entity.Account;
-import entity.Brand;
-import entity.Cart;
-import entity.Items;
-import entity.Product;
+import DAL.DAOBlog;
+import entity.Blog;
+import jakarta.mail.Session;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 /**
  *
  * @author admin
  */
-public class HomeController extends HttpServlet {
-
-    DAOProduct dao = new DAOProduct();
-
+@MultipartConfig
+@WebServlet(name = "createBlog", urlPatterns = {"/createblog"})
+public class createBlog extends HttpServlet {
+    DAOBlog dao = new DAOBlog();
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -45,10 +47,10 @@ public class HomeController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet HomeController</title>");
+            out.println("<title>Servlet createBlog</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet HomeController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet createBlog at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -66,37 +68,7 @@ public class HomeController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        dao.getTop6Brand();
-        List<Brand> allbr = dao.getBrand();
-        dao.getBestProduct();
-        List<Product> pro = dao.getPro();
-        dao.getAllProductShop();
-        List<Product> proall = dao.getPro();
-        Cookie[] arr = request.getCookies();
-        String txt = "";
-        if (arr != null) {
-            for (Cookie o : arr) {
-                if (o.getName().equals("cart")) {
-                    txt += o.getValue();
-                }
-            }
-        }
-        Cart cart = new Cart(txt, proall);
-        List<Items> listItems = cart.getItems();
-        int n=0;
-        HttpSession session = request.getSession();
-        Account acc = (Account) session.getAttribute("acc");
-        if (acc == null) {
-            n = 0;
-        } else {
-            
-            n = cart.countItemsByAccountId(acc.getId());
-        }
-        request.setAttribute("n", n);
-        request.setAttribute("brand", allbr);
-        request.setAttribute("pro", pro);
-        request.getRequestDispatcher("index.jsp").forward(request, response);
-
+        request.getRequestDispatcher("admin/insertBlog.jsp").forward(request, response);
     }
 
     /**
@@ -110,7 +82,43 @@ public class HomeController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String tile = request.getParameter("title");
+        String desc = request.getParameter("des");
+        String date = request.getParameter("date");
+        String content = request.getParameter("content");
+        String acid_raw = request.getParameter("acid");
+        if(acid_raw == null){
+            response.sendRedirect("login");
+        }else{
+            int acid = Integer.parseInt(acid_raw);
+            String customDirectory = "D:/SUM24/SWP/Git/WatchProject12/web/img";
+        Part part = request.getPart("img");
+        String filename = Paths.get(part.getSubmittedFileName()).getFileName().toString();
+        Path imagePath = Paths.get(customDirectory, filename);
+        if (!Files.exists(Paths.get(customDirectory))) {
+            Files.createDirectories(Paths.get(customDirectory));
+        }
+        part.write(imagePath.toString());
+        
+        dao.getAllBlog();
+        List<Blog> blg = dao.getBlg();
+        int flag = 0;
+            for (Blog blog : blg) {
+                if(blog.getTitle().equals(tile)){
+                    flag++;
+                }
+            }
+            if(flag == 0){
+                dao.insertBlog(tile, desc, date, content, acid, "img/" + filename);
+                HttpSession sesion = request.getSession();
+                sesion.setAttribute("messbl", "insert Successful");
+                response.sendRedirect("blogmanage");
+            }else{
+                request.setAttribute("mess", "Duplicate Information");
+                 request.getRequestDispatcher("admin/insertBlog.jsp").forward(request, response);
+            }
+        }
+           
     }
 
     /**

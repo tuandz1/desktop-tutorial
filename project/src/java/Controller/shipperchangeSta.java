@@ -4,16 +4,12 @@
  */
 package Controller;
 
-import DAL.DAOProduct;
-import entity.Account;
-import entity.Brand;
-import entity.Cart;
-import entity.Items;
-import entity.Product;
+import DAL.DAOOrder;
+import entity.ShipStatus;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,9 +20,10 @@ import java.util.List;
  *
  * @author admin
  */
-public class HomeController extends HttpServlet {
+@WebServlet(name = "shipperchangeSta", urlPatterns = {"/shipperchangeSta"})
+public class shipperchangeSta extends HttpServlet {
 
-    DAOProduct dao = new DAOProduct();
+    DAOOrder daoor = new DAOOrder();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -45,10 +42,10 @@ public class HomeController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet HomeController</title>");
+            out.println("<title>Servlet shipperchangeSta</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet HomeController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet shipperchangeSta at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -66,37 +63,7 @@ public class HomeController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        dao.getTop6Brand();
-        List<Brand> allbr = dao.getBrand();
-        dao.getBestProduct();
-        List<Product> pro = dao.getPro();
-        dao.getAllProductShop();
-        List<Product> proall = dao.getPro();
-        Cookie[] arr = request.getCookies();
-        String txt = "";
-        if (arr != null) {
-            for (Cookie o : arr) {
-                if (o.getName().equals("cart")) {
-                    txt += o.getValue();
-                }
-            }
-        }
-        Cart cart = new Cart(txt, proall);
-        List<Items> listItems = cart.getItems();
-        int n=0;
-        HttpSession session = request.getSession();
-        Account acc = (Account) session.getAttribute("acc");
-        if (acc == null) {
-            n = 0;
-        } else {
-            
-            n = cart.countItemsByAccountId(acc.getId());
-        }
-        request.setAttribute("n", n);
-        request.setAttribute("brand", allbr);
-        request.setAttribute("pro", pro);
-        request.getRequestDispatcher("index.jsp").forward(request, response);
-
+        processRequest(request, response);
     }
 
     /**
@@ -110,7 +77,21 @@ public class HomeController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        int status = Integer.parseInt(request.getParameter("option"));
+        int orid = Integer.parseInt(request.getParameter("orid"));
+        daoor.getStatusShipper();
+        List<ShipStatus> shpsta = daoor.getShipsta();
+        String namesta = "";
+        for (ShipStatus shipStatus : shpsta) {
+            if (shipStatus.getShipStatusID() == status) {
+                namesta = shipStatus.getStatus();
+            }
+        }
+
+        daoor.UpdateShipStatus(namesta, orid);
+        HttpSession session = request.getSession();
+        session.setAttribute("messor", "Status change sucessfull!");
+        response.sendRedirect("shipperdashboard");
     }
 
     /**

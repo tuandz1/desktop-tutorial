@@ -4,30 +4,32 @@
  */
 package Controller;
 
+import DAL.DAOOrder;
 import DAL.DAOProduct;
-import entity.Account;
-import entity.Brand;
+import DAL.DAOVoucher;
 import entity.Cart;
-import entity.Items;
+import entity.PaymentMethod;
 import entity.Product;
+import entity.Voucher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 /**
  *
  * @author admin
  */
-public class HomeController extends HttpServlet {
-
+@WebServlet(name = "showBills", urlPatterns = {"/showBills"})
+public class showBills extends HttpServlet {
     DAOProduct dao = new DAOProduct();
-
+    DAOOrder daoor = new DAOOrder();
+    DAOVoucher daovou = new DAOVoucher();
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -45,10 +47,10 @@ public class HomeController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet HomeController</title>");
+            out.println("<title>Servlet showBills</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet HomeController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet showBills at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -66,37 +68,31 @@ public class HomeController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        dao.getTop6Brand();
-        List<Brand> allbr = dao.getBrand();
-        dao.getBestProduct();
-        List<Product> pro = dao.getPro();
-        dao.getAllProductShop();
-        List<Product> proall = dao.getPro();
+        String vou = request.getParameter("vou");
+        double rate = 0;
+        if(vou != null){
+            Voucher voucher =  daovou.getVoucherbyId(vou);
+            rate = voucher.getDiscountRate();
+            request.setAttribute("voucher", voucher);
+        }
+           dao.getAllProductShop();
+        List<Product> allpro = dao.getPro();
         Cookie[] arr = request.getCookies();
         String txt = "";
-        if (arr != null) {
+        if(arr != null){
             for (Cookie o : arr) {
-                if (o.getName().equals("cart")) {
+                if(o.getName().equals("cart")){
                     txt += o.getValue();
                 }
             }
         }
-        Cart cart = new Cart(txt, proall);
-        List<Items> listItems = cart.getItems();
-        int n=0;
-        HttpSession session = request.getSession();
-        Account acc = (Account) session.getAttribute("acc");
-        if (acc == null) {
-            n = 0;
-        } else {
-            
-            n = cart.countItemsByAccountId(acc.getId());
-        }
-        request.setAttribute("n", n);
-        request.setAttribute("brand", allbr);
-        request.setAttribute("pro", pro);
-        request.getRequestDispatcher("index.jsp").forward(request, response);
-
+        daoor.getAllPayment();
+        List<PaymentMethod> pay = daoor.getPay();
+        Cart cart = new Cart(txt, allpro);
+        request.setAttribute("rate", rate);
+        request.setAttribute("cart", cart);
+        request.setAttribute("pay", pay);
+        request.getRequestDispatcher("checkouttest.jsp").forward(request, response);
     }
 
     /**
@@ -110,7 +106,7 @@ public class HomeController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        doGet(request, response);
     }
 
     /**

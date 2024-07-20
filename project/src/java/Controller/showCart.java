@@ -5,14 +5,12 @@
 package Controller;
 
 import DAL.DAOProduct;
-import entity.Account;
-import entity.Brand;
 import entity.Cart;
-import entity.Items;
 import entity.Product;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,7 +22,8 @@ import java.util.List;
  *
  * @author admin
  */
-public class HomeController extends HttpServlet {
+@WebServlet(name = "showCart", urlPatterns = {"/showCart"})
+public class showCart extends HttpServlet {
 
     DAOProduct dao = new DAOProduct();
 
@@ -45,10 +44,10 @@ public class HomeController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet HomeController</title>");
+            out.println("<title>Servlet showCart</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet HomeController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet showCart at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -66,12 +65,8 @@ public class HomeController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        dao.getTop6Brand();
-        List<Brand> allbr = dao.getBrand();
-        dao.getBestProduct();
-        List<Product> pro = dao.getPro();
         dao.getAllProductShop();
-        List<Product> proall = dao.getPro();
+        List<Product> allpro = dao.getPro();
         Cookie[] arr = request.getCookies();
         String txt = "";
         if (arr != null) {
@@ -81,21 +76,35 @@ public class HomeController extends HttpServlet {
                 }
             }
         }
-        Cart cart = new Cart(txt, proall);
-        List<Items> listItems = cart.getItems();
-        int n=0;
+        Cart cart = new Cart(txt, allpro);
+
         HttpSession session = request.getSession();
-        Account acc = (Account) session.getAttribute("acc");
-        if (acc == null) {
-            n = 0;
-        } else {
-            
-            n = cart.countItemsByAccountId(acc.getId());
+        String message = (String) session.getAttribute("messvou");
+        String ratevou = (String) session.getAttribute("rate");
+        String vouid = (String) session.getAttribute("vouid");
+        double rate = 0;
+        
+        if (ratevou != null) {
+            rate = Double.parseDouble(ratevou);
+            session.removeAttribute("rate");
         }
-        request.setAttribute("n", n);
-        request.setAttribute("brand", allbr);
-        request.setAttribute("pro", pro);
-        request.getRequestDispatcher("index.jsp").forward(request, response);
+        
+        if (vouid != null) {
+            // Xử lý thông báo, ví dụ hiển thị cho người dùng
+            request.setAttribute("vou", vouid);
+            // Xóa thông báo khỏi session sau khi lấy ra để tránh hiển thị lại sau khi tải lại trang
+            session.removeAttribute("vouid");
+        }
+        if (message != null) {
+            // Xử lý thông báo, ví dụ hiển thị cho người dùng
+            request.setAttribute("mess", message);
+            // Xóa thông báo khỏi session sau khi lấy ra để tránh hiển thị lại sau khi tải lại trang
+            session.removeAttribute("messvou");
+        }
+
+        request.setAttribute("rate", rate);
+        request.setAttribute("cart", cart);
+        request.getRequestDispatcher("cart.jsp").forward(request, response);
 
     }
 

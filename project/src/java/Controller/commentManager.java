@@ -4,11 +4,13 @@
  */
 package Controller;
 
+import DAL.DAOComment;
 import DAL.DAOProduct;
 import entity.Brand;
 import entity.Categories;
 import entity.Product;
 import entity.Product_Image;
+import entity.Review;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -23,11 +25,10 @@ import java.util.List;
  *
  * @author admin
  */
-@WebServlet(name = "ProductManager", urlPatterns = {"/productmanage"})
-public class ProductManager extends HttpServlet {
-
-    DAOProduct dao = new DAOProduct();
-
+@WebServlet(name = "commentManager", urlPatterns = {"/commentManage"})
+public class commentManager extends HttpServlet {
+    DAOComment daocmt = new DAOComment();
+    DAOProduct daopro = new DAOProduct();
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -45,10 +46,10 @@ public class ProductManager extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ProductManager</title>");
+            out.println("<title>Servlet commentManager</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ProductManager at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet commentManager at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -69,38 +70,46 @@ public class ProductManager extends HttpServlet {
         String ac = request.getParameter("action");
         String txt = request.getParameter("txt");
         String search = (String) request.getAttribute("search");
-        List<Product> allpro = null;
+        List<Review> allcmt = null;
 
         if (ac == null) {
             if (search != null) {
                 if (txt == null) {
-                    allpro = (List<Product>) request.getAttribute("pro");
+                    allcmt = (List<Review>) request.getAttribute("cmt");
                 } else {
-                    dao.searchProduct(txt);
-                    allpro = dao.getPro();
+                    daocmt.searchReviewPro(txt);
+                    allcmt = daocmt.getCmt();
                 }
             }else if(search == null && txt != null){
-                dao.searchProduct(txt);
-                    allpro = dao.getPro();
+                daocmt.searchReviewPro(txt);
+                    allcmt = daocmt.getCmt();
             }else {
-                dao.getAllProduct();
-                allpro = dao.getPro();
+                daocmt.getAllReviewPro();
+                allcmt = daocmt.getCmt();
             }
-            paginateAndForward(request, response, allpro, txt);
+            paginateAndForward(request, response, allcmt, txt);
         } else {
             handleAction(request, response, ac);
         }
     }
 
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String ac = request.getParameter("action");
         String txt = request.getParameter("txt");
         if (ac == null) {
-            dao.searchProduct(txt);
-            List<Product> allpro = dao.getPro();
-            request.setAttribute("pro", allpro);
+            daocmt.searchReviewPro(txt);
+            List<Review> allcmt = daocmt.getCmt();
+            request.setAttribute("cmt", allcmt);
             request.setAttribute("search", "search");
             doGet(request, response);
         } else {
@@ -108,9 +117,9 @@ public class ProductManager extends HttpServlet {
         }
     }
 
-    private void paginateAndForward(HttpServletRequest request, HttpServletResponse response, List<Product> allpro, String search) throws ServletException, IOException {
+    private void paginateAndForward(HttpServletRequest request, HttpServletResponse response, List<Review> allcmt, String search) throws ServletException, IOException {
         int page, numberPage = 6;
-        int size = allpro.size();
+        int size = allcmt.size();
         int num = (size % numberPage == 0 ? (size / numberPage) : ((size / numberPage) + 1));
         String xpage = request.getParameter("xpage");
 
@@ -122,65 +131,45 @@ public class ProductManager extends HttpServlet {
 
         int start = (page - 1) * numberPage;
         int end = Math.min(page * numberPage, size);
-        dao.getAllProductPagging(allpro, start, end);
-        List<Product> proPagging = dao.getPro();
+        daocmt.getAllProductPagging(allcmt, start, end);
+        List<Review> cmtPagging = daocmt.getCmt();
 
-        dao.getAllCate();
-        List<Categories> allcate = dao.getCate();
-        dao.getAllBrand();
-        List<Brand> allbr = dao.getBrand();
+        daopro.getAllProduct();
+        List<Product> allprod = daopro.getPro();
         
         HttpSession session = request.getSession();
-        String message = (String) session.getAttribute("messpro");
+        String message = (String) session.getAttribute("messcmt");
        
 
         if (message != null) {
             // Xử lý thông báo, ví dụ hiển thị cho người dùng
             request.setAttribute("mess", message);
             // Xóa thông báo khỏi session sau khi lấy ra để tránh hiển thị lại sau khi tải lại trang
-            session.removeAttribute("messpro");
+            session.removeAttribute("messcmt");
         }
 
 
         request.setAttribute("search", search);
         request.setAttribute("num", num);
         request.setAttribute("page", page);
-        request.setAttribute("pro", proPagging);
-        request.setAttribute("cate", allcate);
-        request.setAttribute("br", allbr);
-        request.getRequestDispatcher("admin/Productmanager.jsp").forward(request, response);
+        request.setAttribute("cmt", cmtPagging);
+        request.setAttribute("pro", allprod);
+        request.getRequestDispatcher("admin/CommentManager.jsp").forward(request, response);
     }
-
-    private void handleAction(HttpServletRequest request, HttpServletResponse response, String ac) throws ServletException, IOException {
+     private void handleAction(HttpServletRequest request, HttpServletResponse response, String ac) throws ServletException, IOException {
         int action = Integer.parseInt(ac);
 
         switch (action) {
-            case 1:
-                response.sendRedirect("createProduct");
-                break;
+            
             case 2:
                 int pridToDelete = Integer.parseInt(request.getParameter("pid"));
-                dao.DeleteProduct(pridToDelete);
-                response.sendRedirect("productmanage");
+                String content = request.getParameter("content");
+                daocmt.updateContext(content,pridToDelete);
+                response.sendRedirect("commentManage");
                 break;
-            case 3:
-                int pridToEdit = Integer.parseInt(request.getParameter("pid"));
-                Product pro = dao.getProductbyId(pridToEdit);
-                dao.getAllCate();
-                List<Categories> allcate = dao.getCate();
-                dao.getAllBrand();
-                List<Brand> allbr = dao.getBrand();
-                dao.getProImagebyId(pridToEdit);
-                List<Product_Image> imgs = dao.getProimg();
-
-                request.setAttribute("cate", allcate);
-                request.setAttribute("imgs", imgs);
-                request.setAttribute("br", allbr);
-                request.setAttribute("pro", pro);
-                request.getRequestDispatcher("admin/updateProduct.jsp").forward(request, response);
-                break;
+            
             default:
-                response.sendRedirect("productmanage");
+                response.sendRedirect("commentManage");
                 break;
         }
     }

@@ -99,7 +99,7 @@ public class LoginGoogleControll extends HttpServlet {
                 if (acc.getFull_name() == null || acc.getFull_name().isBlank()) {
                     response.sendRedirect("accsettings");
                 } else {
-                    response.sendRedirect("index.jsp");
+                    response.sendRedirect("home");
                 }
             }
         }

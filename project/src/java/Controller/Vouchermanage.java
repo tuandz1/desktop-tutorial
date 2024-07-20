@@ -4,11 +4,8 @@
  */
 package Controller;
 
-import DAL.DAOProduct;
-import entity.Brand;
-import entity.Categories;
-import entity.Product;
-import entity.Product_Image;
+import DAL.DAOVoucher;
+import entity.Voucher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -17,16 +14,18 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
  *
  * @author admin
  */
-@WebServlet(name = "ProductManager", urlPatterns = {"/productmanage"})
-public class ProductManager extends HttpServlet {
+@WebServlet(name = "Vouchermanage", urlPatterns = {"/vouchermanage"})
+public class Vouchermanage extends HttpServlet {
 
-    DAOProduct dao = new DAOProduct();
+    DAOVoucher dao = new DAOVoucher();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -45,10 +44,10 @@ public class ProductManager extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ProductManager</title>");
+            out.println("<title>Servlet Vouchermanage</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ProductManager at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet Vouchermanage at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -69,38 +68,46 @@ public class ProductManager extends HttpServlet {
         String ac = request.getParameter("action");
         String txt = request.getParameter("txt");
         String search = (String) request.getAttribute("search");
-        List<Product> allpro = null;
+        List<Voucher> allvou = null;
 
         if (ac == null) {
             if (search != null) {
                 if (txt == null) {
-                    allpro = (List<Product>) request.getAttribute("pro");
+                    allvou = (List<Voucher>) request.getAttribute("vou");
                 } else {
-                    dao.searchProduct(txt);
-                    allpro = dao.getPro();
+                    dao.searchVoucher(txt);
+                    allvou = dao.getVou();
                 }
-            }else if(search == null && txt != null){
-                dao.searchProduct(txt);
-                    allpro = dao.getPro();
-            }else {
-                dao.getAllProduct();
-                allpro = dao.getPro();
+            } else if (search == null && txt != null) {
+                dao.searchVoucher(txt);
+                allvou = dao.getVou();
+            } else {
+                dao.getAllVoucher();
+                allvou = dao.getVou();
             }
-            paginateAndForward(request, response, allpro, txt);
+            paginateAndForward(request, response, allvou, txt);
         } else {
             handleAction(request, response, ac);
         }
     }
 
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String ac = request.getParameter("action");
         String txt = request.getParameter("txt");
         if (ac == null) {
-            dao.searchProduct(txt);
-            List<Product> allpro = dao.getPro();
-            request.setAttribute("pro", allpro);
+            dao.searchVoucher(txt);
+            List<Voucher> allvou = dao.getVou();
+            request.setAttribute("pro", allvou);
             request.setAttribute("search", "search");
             doGet(request, response);
         } else {
@@ -108,9 +115,14 @@ public class ProductManager extends HttpServlet {
         }
     }
 
-    private void paginateAndForward(HttpServletRequest request, HttpServletResponse response, List<Product> allpro, String search) throws ServletException, IOException {
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    private void paginateAndForward(HttpServletRequest request, HttpServletResponse response, List<Voucher> allvou, String search) throws ServletException, IOException {
         int page, numberPage = 6;
-        int size = allpro.size();
+        int size = allvou.size();
         int num = (size % numberPage == 0 ? (size / numberPage) : ((size / numberPage) + 1));
         String xpage = request.getParameter("xpage");
 
@@ -122,33 +134,36 @@ public class ProductManager extends HttpServlet {
 
         int start = (page - 1) * numberPage;
         int end = Math.min(page * numberPage, size);
-        dao.getAllProductPagging(allpro, start, end);
-        List<Product> proPagging = dao.getPro();
-
-        dao.getAllCate();
-        List<Categories> allcate = dao.getCate();
-        dao.getAllBrand();
-        List<Brand> allbr = dao.getBrand();
-        
+        dao.getAllVoucherPagging(allvou, start, end);
+        List<Voucher> vouPagging = dao.getVou();
+        LocalDateTime currentTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedCurrentTime = currentTime.format(formatter);
         HttpSession session = request.getSession();
-        String message = (String) session.getAttribute("messpro");
-       
+        String message = (String) session.getAttribute("messvo");
+        String message2 = (String) request.getAttribute("messvouc");
+
+        if (message2 != null) {
+            // Xử lý thông báo, ví dụ hiển thị cho người dùng
+            request.setAttribute("mess", message2);
+            // Xóa thông báo khỏi session sau khi lấy ra để tránh hiển thị lại sau khi tải lại trang
+            request.removeAttribute("messvouc");
+        }
 
         if (message != null) {
             // Xử lý thông báo, ví dụ hiển thị cho người dùng
             request.setAttribute("mess", message);
             // Xóa thông báo khỏi session sau khi lấy ra để tránh hiển thị lại sau khi tải lại trang
-            session.removeAttribute("messpro");
+            session.removeAttribute("messvo");
         }
 
+        request.setAttribute("currentTime", formattedCurrentTime);
 
         request.setAttribute("search", search);
         request.setAttribute("num", num);
         request.setAttribute("page", page);
-        request.setAttribute("pro", proPagging);
-        request.setAttribute("cate", allcate);
-        request.setAttribute("br", allbr);
-        request.getRequestDispatcher("admin/Productmanager.jsp").forward(request, response);
+        request.setAttribute("vou", vouPagging);
+        request.getRequestDispatcher("admin/Vouchermanage.jsp").forward(request, response);
     }
 
     private void handleAction(HttpServletRequest request, HttpServletResponse response, String ac) throws ServletException, IOException {
@@ -156,28 +171,37 @@ public class ProductManager extends HttpServlet {
 
         switch (action) {
             case 1:
-                response.sendRedirect("createProduct");
+                LocalDateTime currentTime = LocalDateTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                String formattedCurrentTime = currentTime.format(formatter);
+                request.setAttribute("currentTime", formattedCurrentTime);
+                request.getRequestDispatcher("admin/insertVoucher.jsp").forward(request, response);
                 break;
             case 2:
-                int pridToDelete = Integer.parseInt(request.getParameter("pid"));
-                dao.DeleteProduct(pridToDelete);
-                response.sendRedirect("productmanage");
+                String pridToDelete = request.getParameter("vid");
+                dao.deleteVoucher(pridToDelete);
+                HttpSession session = request.getSession();
+                session.setAttribute("messvo", "Delete change sucessfull!");
+                response.sendRedirect("vouchermanage");
                 break;
             case 3:
-                int pridToEdit = Integer.parseInt(request.getParameter("pid"));
-                Product pro = dao.getProductbyId(pridToEdit);
-                dao.getAllCate();
-                List<Categories> allcate = dao.getCate();
-                dao.getAllBrand();
-                List<Brand> allbr = dao.getBrand();
-                dao.getProImagebyId(pridToEdit);
-                List<Product_Image> imgs = dao.getProimg();
+                String  pridToUpdate = request.getParameter("vid");
+                Voucher vouch = dao.getVoucherbyId(pridToUpdate);
+                request.setAttribute("vou", vouch);
+                request.getRequestDispatcher("admin/updateVoucher.jsp").forward(request, response);
+                break;
+            case 4:
+                String Statusvou = request.getParameter("vid");
+                dao.blockVoucher(Statusvou);
+                request.setAttribute("messvouc", "Block voucher successful");
+                response.sendRedirect("vouchermanage");
+                break;
+            case 5:
+                String Statusvou2 = request.getParameter("vid");
+                dao.activeVoucher(Statusvou2);
 
-                request.setAttribute("cate", allcate);
-                request.setAttribute("imgs", imgs);
-                request.setAttribute("br", allbr);
-                request.setAttribute("pro", pro);
-                request.getRequestDispatcher("admin/updateProduct.jsp").forward(request, response);
+                request.setAttribute("messvouc", "Active voucher successful");
+                response.sendRedirect("vouchermanage");
                 break;
             default:
                 response.sendRedirect("productmanage");
@@ -185,11 +209,6 @@ public class ProductManager extends HttpServlet {
         }
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
         return "Short description";
