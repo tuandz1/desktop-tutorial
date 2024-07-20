@@ -12,6 +12,9 @@
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+        <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/vendor/bootstrap/css/bootstrap.min.css">
         <link href="${pageContext.request.contextPath}/vendor/fonts/circular-std/style.css" rel="stylesheet">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/style.css">
@@ -125,7 +128,7 @@
                                             ${sessionScope.acc.full_name}</h5>
                                         <span class="status"></span><span class="ml-2">Available</span>
                                     </div>
-                                            <a class="dropdown-item" href="accountmanage?action=2&aid=${sessionScope.acc.id}"><i class="fas fa-user mr-2"></i>Account</a>
+                                    <a class="dropdown-item" href="accountmanage?action=2&aid=${sessionScope.acc.id}"><i class="fas fa-user mr-2"></i>Account</a>
                                     <a class="dropdown-item" href="logout"><i class="fas fa-power-off mr-2"></i>Logout</a>
                                 </div>
                             </li>
@@ -147,7 +150,7 @@
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="navbarNav">
-                           <ul class="navbar-nav flex-column">
+                      <ul class="navbar-nav flex-column">
                                 <li class="nav-divider">
                                     Menu
                                 </li>
@@ -179,24 +182,50 @@
                 <!-- ============================================================== -->
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                     <div class="card">
-                        <h5 class="card-header">Insert Brand</h5>
+                        <h5 class="card-header">Insert Blog</h5>
                         <div class="card-body">
-                            <form id="validationform" action="createBrand"  method="post" enctype="multipart/form-data">
-
-                                <div class="form-group row">
-                                    <label class="col-12 col-sm-3 col-form-label text-sm-right">Brand Name</label>
+                            <form id="myForm" action="createblog"  method="post" enctype="multipart/form-data">
+                                <input type="hidden" value="${sessionScope.acc.id}" name="acid"/>
+                                 <div class="form-group row">
+                                    <label class="col-12 col-sm-3 col-form-label text-sm-right">Blog Title</label>
                                     <div class="col-12 col-sm-8 col-lg-6">
-                                        <input type="text" name="name" required="" placeholder="Input Name" class="form-control">
+                                        <input type="text" name="title" required="" placeholder="Input Title" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-12 col-sm-3 col-form-label text-sm-right">Description</label>
+                                    <div class="col-12 col-sm-8 col-lg-6">
+                                        <input type="text" name="des"  required=""   class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12 col-sm-8 col-lg-6">
+                                        <img id="imagePreview" src="#"  style="max-height: 200px; display: none;float: right;">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-12 col-sm-3 col-form-label text-sm-right">Blog Banner</label>
+                                    <div class="col-12 col-sm-8 col-lg-6">
+                                        <input type="file" id="fileInput" name="img" multiple accept="image/*" class="form-control" id="fileInput" onchange="previewImage(this)">
+                                    </div>
+                                    <div id="errorMessage" class="error"></div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-12 col-sm-3 col-form-label text-sm-right">Publication Date</label>
+                                    <div class="col-12 col-sm-8 col-lg-6">
+                                        <input required="" type="date" name="date" class="form-control">
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
-                                    <label class="col-12 col-sm-3 col-form-label text-sm-right">Image Brand</label>
+                                    <label class="col-12 col-sm-3 col-form-label text-sm-right">Blog Content</label>
                                     <div class="col-12 col-sm-8 col-lg-6">
-                                        <input type="file" name="img" accept="image/*" class="form-control">
-                                    </div>
+                                       <div id="editor" style="height: 300px;">
                                 </div>
-
+                                <input type="hidden" id="editorContent" name="content">
+                                    </div>
+                               
+                                </div>
                                 <div class="form-group row text-right">
                                     <div class="col col-sm-10 col-lg-9 offset-sm-1 offset-lg-0">
                                         <button type="submit" class="btn btn-space btn-primary">Submit</button>
@@ -217,7 +246,7 @@
                                             <p>Are you sure to Cancle update this product. Your data you input will not SAVE</p>
                                         </div>
                                         <div class="modal-footer">
-                                            <a href="productmanage" class="btn btn-secondary" >Confirm Cancel Create</a>
+                                            <a href="productmanage" class="btn btn-secondary" >Confirm Cancel Insert</a>
                                             <a href="#" class="btn btn-primary" data-dismiss="modal">Dismiss</a>
                                         </div>
                                     </div>
@@ -266,7 +295,7 @@
 <script src="${pageContext.request.contextPath}/vendor/parsley/parsley.js"></script>
 <script src="${pageContext.request.contextPath}/js/admin/main-js.js"></script>
 <script>
-    $('#form').parsley();
+                                            $('#form').parsley();
 </script>
 <script>
     // Example starter JavaScript for disabling form submissions if there are invalid fields
@@ -287,7 +316,53 @@
             });
         }, false);
     })();
+
+    
 </script>
+
+<script>
+    function previewImage(input) {
+        var imagePreview = document.getElementById('imagePreview');
+        var file = input.files[0];
+
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                imagePreview.src = e.target.result;
+                imagePreview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            imagePreview.src = "#";
+            imagePreview.style.display = 'none';
+        }
+    }
+</script>
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script>
+                                        // Initialize Quill
+                                        var quill = new Quill('#editor', {
+                                            theme: 'snow', // 'snow' is one of the themes available
+                                            modules: {
+                                                toolbar: {
+                                                    container: [
+                                                        [{'header': [1, 2, false]}],
+                                                        ['bold', 'italic', 'underline', 'strike'],
+                                                        [{'color': []}, {'background': []}],
+                                                        [{'align': []}],
+                                                        ['link', 'image'], // Add 'image' button
+                                                        ['clean']
+                                                    ],
+                                                },
+                                            },
+                                        });
+                                        document.getElementById('myForm').addEventListener('submit', function (event) {
+                                            // Get Quill's HTML content
+                                            var htmlContent = document.querySelector('.ql-editor').innerHTML;
+                                            // Set the content to the input field with name "content"
+                                            document.querySelector('input[name="content"]').value = htmlContent;
+                                        });
+    </script>
 </body>
 
 </html>

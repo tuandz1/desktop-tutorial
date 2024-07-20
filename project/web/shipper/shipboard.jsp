@@ -1,6 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!doctype html>
 <html lang="en">
 
@@ -14,7 +15,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
         <script src="jquery-3.7.1.min.js"></script>
-         <script src="${pageContext.request.contextPath}/js/admin/table2excel.js"></script>
+        <script src="${pageContext.request.contextPath}/js/admin/table2excel.js"></script>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/vendor/bootstrap/css/bootstrap.min.css">
         <link href="${pageContext.request.contextPath}/vendor/fonts/circular-std/style.css" rel="stylesheet">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/style.css">
@@ -133,13 +134,14 @@
                                             ${sessionScope.acc.full_name}</h5>
                                         <span class="status"></span><span class="ml-2">Available</span>
                                     </div>
-                                            <a class="dropdown-item" href="accountmanage?action=2&aid=${sessionScope.acc.id}"><i class="fas fa-user mr-2"></i>Account</a>
+                                    <a class="dropdown-item" href="accountmanage?action=2&aid=${sessionScope.acc.id}"><i class="fas fa-user mr-2"></i>Account</a>
                                     <a class="dropdown-item" href="logout"><i class="fas fa-power-off mr-2"></i>Logout</a>
                                 </div>
                             </li>
                         </ul>
                     </div>
                 </nav>
+
             </div>
             <!-- ============================================================== -->
             <!-- end navbar -->
@@ -147,64 +149,47 @@
             <!-- ============================================================== -->
             <!-- left sidebar -->
             <!-- ============================================================== -->
-            <div class="nav-left-sidebar sidebar-dark">
-                <div class="menu-list">
-                    <nav class="navbar navbar-expand-lg navbar-light">
-                        <a class="d-xl-none d-lg-none" href="productmanage">Dashboard</a>
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="collapse navbar-collapse" id="navbarNav">
-     <ul class="navbar-nav flex-column">
-                                <li class="nav-divider">
-                                    Menu
-                                </li>
-                                <li class="nav-item ">
-                                    <a class="nav-link active" href="dashboard" ><i class="fa fa-fw fa-user-circle"></i>Dashboard </a>
 
-                                </li>
-                                 <c:if test="${sessionScope.acc.role_id == 2}">
-                                    <li class="nav-item ">
-                                        <a class="nav-link  " href="catemanage" ><i class="fa fa-fw fa-user-circle"></i>Cate Manage</a>
-
-                                    </li>
-                                </c:if>
-                            </ul>   
-                    </nav>
-                </div>
-            </div>
             <!-- ============================================================== -->
             <!-- end left sidebar -->
             <!-- ============================================================== -->
             <!-- ============================================================== -->
             <!-- wrapper  -->
             <!-- ============================================================== -->
-            <div class="dashboard-wrapper">
+
+            <div class="wrapper">
+
                 <div class="container-fluid  dashboard-content">
+                    <c:if test="${mess != null}">
+                        <div id="notification" class="">
+                            nice${mess}
+                        </div>
+                    </c:if>
                     <!-- ============================================================== -->
                     <!-- pageheader -->
                     <!-- ============================================================== -->
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="page-header">
-                                <h2 class="pageheader-title">Account Manager</h2>
+                                <h2 class="pageheader-title">Order Ship Manager</h2>
                                 <p class="pageheader-text">Proin placerat ante duiullam scelerisque a velit ac porta, fusce sit amet vestibulum mi. Morbi lobortis pulvinar quam.</p>
                                 <div class="page-breadcrumb">
                                     <nav aria-label="breadcrumb">
                                         <ol class="breadcrumb">
-                                            <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Dashboard</a></li>
-                                            <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Account Manager</a></li>
 
                                         </ol>
                                     </nav>
                                 </div >
+
                                 <div class="row">
-                                    <a href="accountmanage?action=1" class="col-2 btn btn-primary"><i class="  fas fa-plus-circle"></i> Add Account</a>
-                                     &nbsp;
-                                    <button id="exportBtn" class="col-2 btn btn-primary"><i class="  fas fa-plus-circle"></i> export to file</button>
-                                    <form class="col-12 form-control" action="accountmanage"method="post">
+
+                                    &nbsp;
+                                    <form class="col-12 form-control" action="shipperdashboard"method="post">
                                         <div class="input-group ">
-                                            <input type="text" placeholder="Search...." name="txt" value="${txt}" class="form-control">
+                                            <label for="startDate">From:</label>
+                                            <input class="form-control" type="date" name="from" id="startDate">
+                                            <label for="endDate">To:</label>
+                                            <input class="form-control" type="date" name="to" id="endDate">
                                             <div class="input-group-append">
                                                 <button type="submit" class="btn btn-primary">Search</button>
                                             </div>
@@ -214,6 +199,22 @@
                                 <div class="row">   
 
                                 </div>
+                                <form action="shipperdashboard" method="get" id="radioForm" class="form-group" onsubmit="handleSubmit(event)">
+                                    <div class="form-group radio-container">
+                                        <label class="custom-control custom-radio">
+                                            <input type="radio"  name="status" value="today" onchange="this.form.submit()"class="custom-control-input"><span for="bankCode" class="custom-control-label">Today</span>
+                                        </label>
+                                        <label class="custom-control custom-radio">
+                                            <input type="radio" name="status" value="complete" onchange="this.form.submit()" class="custom-control-input"><span for="bankCode" class="custom-control-label">Complete</span>
+                                        </label>
+                                        <label class="custom-control custom-radio">
+                                            <input type="radio" name="status" value="paid" onchange="this.form.submit()" class="custom-control-input"><span for="bankCode" class="custom-control-label">Paid</span>
+                                        </label>
+                                        <label class="custom-control custom-radio">
+                                            <input type="radio" name="status" value="notPaid" onchange="this.form.submit()" class="custom-control-input"><span for="bankCode" class="custom-control-label">Not Paid</span>
+                                        </label>
+                                    </div>
+                                </form>
                             </div>
                             <!-- ============================================================== -->
                             <!-- end pageheader -->
@@ -231,6 +232,7 @@
                                 <!-- striped table -->
                                 <!-- ============================================================== -->
                                 <div >
+
                                     <div class="card">
                                         <h5 class="card-header">Striped Table</h5>
                                         <div class="card-body">
@@ -238,55 +240,73 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Id</th>
-                                                        <th>Avatar </th>
-                                                        <th>Full Name</th>
-                                                        <th>Role</th>
-                                                        <th>Email</th>
+                                                        <th>Customer Name </th>
                                                         <th>Address</th>
                                                         <th>Phone</th>
-                                                        <th>Funtion</th>
+                                                        <th>Total Amount</th>
+                                                        <th>Order Date</th>
+                                                        <th>Ship Status</th>
+                                                        <th>Change Ship Status</th>
                                                     </tr>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="contents">
+                                                    <c:forEach items="${ord}" var="p">
+                                                        <c:if test="${p.ship_id eq sessionScope.acc.id}">
+                                                            <tr>
+                                                                <td>${p.id}</td>
+                                                                <td>${p.cus_name}</td>
 
-                                                    <c:forEach items="${acclist}" var="a">
-                                                        <tr>
-                                                            <td>${a.id}</td>
-                                                            <td > <img style="height: 150px; width: auto;" src="${a.avatar}"/></td>
-                                                            <td>${a.full_name}</td>
-                                                            <c:forEach items="${role}" var="r">
-                                                                <c:if test="${r.id eq a.role_id}">
-                                                            <td>${r.name}</td>
-                                                                </c:if>
-                                                            </c:forEach>
-                                                            <td > ${a.email} </td>
-                                                            <td > ${a.address} </td>
-                                                            <td > ${a.phone} </td>
-                                                            <td> 
-                                                                <a href="accountmanage?action=2&aid=${a.id}" class="btn btn-outline-success"><i class=" fas fa-edit"></i></a>
-                                                                &nbsp; 
-                                                                <c:set var="isBlocked" value="false" />
-                                                                <c:forEach var="bl" items="${bl}">
-                                                                    <c:if test="${a.id == bl.accid}">
-                                                                        <c:set var="isBlocked" value="true" />
+                                                                <td > ${p.adress}</td>
+                                                                <td > ${p.phone}</td>
+
+                                                                <td > 
+                                                                    <c:if test="${p.status_id == 1}">
+                                                                        0 VND
                                                                     </c:if>
-                                                                </c:forEach>
+                                                                    <c:if test="${p.status_id != 1}">
+                                                                        <fmt:formatNumber value="${p.totalAmount}" type="number" pattern="#,##0" /> VND
+                                                                    </c:if>
+                                                                </td>
+                                                                <td > ${p.orderDate} </td>
 
-                                                                <c:choose>
-                                                                    <c:when test="${isBlocked}">
-                                                                        <a href="accountmanage?action=3&aid=${a.id}" class="btn btn-outline-info"><i class="fas fa-check"></i></a>
+                                                                <td>
+                                                                    ${p. shipstatus}
+                                                                </td>
+                                                                <td>
+                                                                    <c:choose>
+                                                                        <c:when test="${!fn:contains(p.shipstatus, 'Received  Successfully')}">
+                                                                            <form id="${p.id}" action="shipperchangeSta" method="post">
+                                                                                <input type="hidden" value="${p.id}" name="orid"/>
+                                                                                <select class="form-control" name="option" onchange="submitForm('${p.id}')">
+                                                                                    <option value="0">Choose status</option>
+                                                                                    <c:forEach items="${shipsta}" var="stInner">
+                                                                                        <option value="${stInner.getShipStatusID()}">${stInner.getStatus()}</option>
+                                                                                    </c:forEach>
+
+                                                                                </select>
+                                                                            </form>
                                                                         </c:when>
                                                                         <c:otherwise>
-                                                                        <a href="accountmanage?action=4&aid=${a.id}" class="btn btn-outline-warning"><i class="fas fa-ban"></i></a>
+                                                                            <h3 style="color: #66ff66" class=" text-align">Complete</h3>
                                                                         </c:otherwise>
                                                                     </c:choose>
-                                                            </td>
-                                                        </tr>
+                                                                </td>
+                                                            </tr>
+                                                        </c:if>
                                                     </c:forEach>
 
                                                 </tbody>
                                             </table>
+                                            <c:set var="xpage" value="${requestScope.page}"/>
+                                            <div style="padding: 20px 0px;" class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12"> 
+                                                <ul class="pagination">
+                                                    <c:forEach begin="${1}" end="${requestScope.num}" var="i">
+                                                        <li class="page-item"> <a style="text-decoration: white" href="shipperdashboard?xpage=${i}&status=${requestScope.status}" class="page-link">${i}</a></li>
+                                                        </c:forEach>
+
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -329,39 +349,81 @@
                         <!-- ============================================================== -->
                     </div>
                 </div>
-                <!-- ============================================================== -->
-                <!-- end main wrapper -->
-                <!-- ============================================================== -->
-                <!-- Optional JavaScript -->
-                <script src="${pageContext.request.contextPath}/vendor/jquery/jquery-3.3.1.min.js"></script>
-                <script src="${pageContext.request.contextPath}/vendor/bootstrap/js/bootstrap.bundle.js"></script>
-                <script src="${pageContext.request.contextPath}/vendor/slimscroll/jquery.slimscroll.js"></script>
-                <script src="${pageContext.request.contextPath}/vendor/custom-js/jquery.multi-select.html"></script>
-                <script src="${pageContext.request.contextPath}/js/admin/main-js.js"></script>
-                <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-                <script src="${pageContext.request.contextPath}/vendor/datatables/js/dataTables.bootstrap4.min.js"></script>
-                <script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
-                <script src="${pageContext.request.contextPath}/vendor/datatables/js/buttons.bootstrap4.min.js"></script>
-                <script src="${pageContext.request.contextPath}/vendor/datatables/js/data-table.js"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-                <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
-                <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.print.min.js"></script>
-                <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.colVis.min.js"></script>
-                <script src="https://cdn.datatables.net/rowgroup/1.0.4/js/dataTables.rowGroup.min.js"></script>
-                <script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
-                <script src="https://cdn.datatables.net/fixedheader/3.1.5/js/dataTables.fixedHeader.min.js"></script>
-                <script>
+            </div>
+            <!-- ============================================================== -->
+            <!-- end main wrapper -->
+            <!-- ============================================================== -->
+            <!-- Optional JavaScript -->
+            <script src="${pageContext.request.contextPath}/vendor/jquery/jquery-3.3.1.min.js"></script>
+            <script src="${pageContext.request.contextPath}/vendor/bootstrap/js/bootstrap.bundle.js"></script>
+            <script src="${pageContext.request.contextPath}/vendor/slimscroll/jquery.slimscroll.js"></script>
+            <script src="${pageContext.request.contextPath}/vendor/custom-js/jquery.multi-select.html"></script>
+            <script src="${pageContext.request.contextPath}/js/admin/main-js.js"></script>
+            <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+            <script src="${pageContext.request.contextPath}/vendor/datatables/js/dataTables.bootstrap4.min.js"></script>
+            <script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+            <script src="${pageContext.request.contextPath}/vendor/datatables/js/buttons.bootstrap4.min.js"></script>
+            <script src="${pageContext.request.contextPath}/vendor/datatables/js/data-table.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+            <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+            <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.print.min.js"></script>
+            <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.colVis.min.js"></script>
+            <script src="https://cdn.datatables.net/rowgroup/1.0.4/js/dataTables.rowGroup.min.js"></script>
+            <script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
+            <script src="https://cdn.datatables.net/fixedheader/3.1.5/js/dataTables.fixedHeader.min.js"></script>
+            <script>
 
-                </script>
-                  <script>
-            document.getElementById("exportBtn").addEventListener('click', function () {
-                var table2excel = new Table2Excel();
-                table2excel.export(document.querySelectorAll("#userTable"));
-            });
+            </script>
+            <script>
+                document.getElementById("exportBtn").addEventListener('click', function () {
+                    var table2excel = new Table2Excel();
+                    table2excel.export(document.querySelectorAll("#userTable"));
+                });
 
-        </script>
-                </body>
+            </script>
+            <script type="text/javascript">
+                function submitForm(formId) {
+                    document.getElementById(formId).submit();
+                }
+                ;
+                document.addEventListener("DOMContentLoaded", function () {
+                    var mess = "${mess}"; // Đảm bảo rằng bạn nhận được giá trị của 'mess' từ server-side rendering
 
-                </html>     
+                    if (mess !== null && mess.trim() !== "") {
+                        var notification = document.getElementById('notification');
+                        if (notification) {
+                            notification.innerHTML = mess;
+                            notification.style.display = 'block'; // Hiển thị thông báo
+
+                            setTimeout(function () {
+                                notification.style.display = 'none'; // Ẩn thông báo sau 2 giây
+                            }, 1000); // Thời gian 2 giây (2000 miligiây)
+                        }
+                    }
+                });
+            </script>
+            <style>
+                .radio-container {
+                    display: flex;
+                    gap: 20px; /* khoảng cách giữa các lựa chọn radio */
+                }
+
+                #notification {
+                    display: none; /* Ẩn thông báo ban đầu */
+                    padding: 10px;
+                    color: white;
+                    background-color: #33cc00f2;
+                    border: 1px solid #ccc;
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 9999;
+                }
+
+            </style>
+
+    </body>
+
+</html>     

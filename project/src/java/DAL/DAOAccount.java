@@ -168,6 +168,30 @@ public class DAOAccount {
             // Xử lý ngoại lệ
         }
     }
+    public void getAllShipper() {
+        String sql = "SELECT * FROM Account where role_id =3";
+        acc = new Vector<Account>();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt(1);
+                String acc_name = rs.getString(2);
+                String email = rs.getString(3);
+                String address = rs.getString(4);
+                String cus_password = rs.getString(5);
+                String full_name = rs.getString(6);
+                String phone = rs.getString(7);
+                int role_id = rs.getInt(8); // Thay đổi chỉ số index
+                String avatar = rs.getString(9); // Thay đổi chỉ số index
+                int ques_id = rs.getInt(10); // Thay đổi chỉ số index
+                String answer = rs.getString(11); // Thay đổi chỉ số index
+                acc.add(new Account(id, acc_name, email, address, cus_password, full_name, phone, avatar, answer, role_id, ques_id));
+            }
+        } catch (SQLException e) {
+            // Xử lý ngoại lệ
+        }
+    }
     public void gettop4Account() {
         String sql = "SELECT top 4 * FROM Account";
         acc = new Vector<Account>();
@@ -393,13 +417,9 @@ public class DAOAccount {
     }
 
     public static void main(String[] args) {
-        DAOAccount dao = new DAOAccount();
-        dao.searchAllAccount("Ha Noi");
-        List<Account> bl = dao.getAcc();
-
-        for (Account account : bl) {
-            System.out.println(account.getAcc_name());
-        }
+       DAOAccount dao = new DAOAccount();
+        Account acc = dao.getAccountformemailandphone("tuandmhe170730@fpt.edu.vn", "886868");
+        System.out.println(acc.getPhone());
 
     }
 
@@ -551,5 +571,5 @@ public class DAOAccount {
 
         }
     }
-
+    
 }

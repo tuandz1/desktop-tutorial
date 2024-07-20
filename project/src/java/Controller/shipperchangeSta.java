@@ -4,8 +4,8 @@
  */
 package Controller;
 
-import DAL.DAOAccount;
-import entity.Account;
+import DAL.DAOOrder;
+import entity.ShipStatus;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,10 +13,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import entity.GoogleUtils;
-
-import entity.GooglePojo;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
@@ -24,15 +20,10 @@ import java.util.List;
  *
  * @author admin
  */
-@WebServlet(name = "LoginGoogleControll", urlPatterns = {"/login-google"})
-public class LoginGoogleControll extends HttpServlet {
+@WebServlet(name = "shipperchangeSta", urlPatterns = {"/shipperchangeSta"})
+public class shipperchangeSta extends HttpServlet {
 
-    DAOAccount dao = new DAOAccount();
-    private static final long serialVersionUID = 1L;
-
-    public LoginGoogleControll() {
-        super();
-    }
+    DAOOrder daoor = new DAOOrder();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,7 +37,18 @@ public class LoginGoogleControll extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet shipperchangeSta</title>");
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet shipperchangeSta at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -61,48 +63,7 @@ public class LoginGoogleControll extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String code = request.getParameter("code");
-        if (code == null || code.isEmpty()) {
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-
-        } else {
-            String accessToken = GoogleUtils.getToken(code);
-            GooglePojo googlePojo = GoogleUtils.getUserInfo(accessToken);
-            HttpSession session = request.getSession();
-            String emailgoogle = googlePojo.getEmail();
-            int flag = 0;
-            dao.getAllAccount();
-            List<Account> allacc = dao.getAcc();
-            for (Account account : allacc) {
-                if (account.getEmail().equals(emailgoogle) && account.getAcc_name().equals(emailgoogle)) {
-                    flag++;
-                }
-            }
-
-            if (flag != 0) {
-                Account acc = dao.loginAccountbyGoogle(emailgoogle);
-                if(acc != null){
-                session.setAttribute("acc", acc);
-                if (acc.getFull_name() == null || acc.getFull_name().isBlank()) {
-                    response.sendRedirect("accsettings");
-                } else {
-                    response.sendRedirect("index.jsp");
-                }
-                }else{
-                    request.setAttribute("mes", "Your Account Have Been Block For Some Reasons");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-                }
-            } else {
-                dao.insertAccountbyGoogle(emailgoogle);
-                Account acc = dao.loginAccountbyGoogle(emailgoogle);
-                session.setAttribute("acc", acc);
-                if (acc.getFull_name() == null || acc.getFull_name().isBlank()) {
-                    response.sendRedirect("accsettings");
-                } else {
-                    response.sendRedirect("home");
-                }
-            }
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -116,7 +77,21 @@ public class LoginGoogleControll extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        int status = Integer.parseInt(request.getParameter("option"));
+        int orid = Integer.parseInt(request.getParameter("orid"));
+        daoor.getStatusShipper();
+        List<ShipStatus> shpsta = daoor.getShipsta();
+        String namesta = "";
+        for (ShipStatus shipStatus : shpsta) {
+            if (shipStatus.getShipStatusID() == status) {
+                namesta = shipStatus.getStatus();
+            }
+        }
+
+        daoor.UpdateShipStatus(namesta, orid);
+        HttpSession session = request.getSession();
+        session.setAttribute("messor", "Status change sucessfull!");
+        response.sendRedirect("shipperdashboard");
     }
 
     /**

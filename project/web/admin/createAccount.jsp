@@ -125,7 +125,7 @@
                                             ${sessionScope.acc.full_name}</h5>
                                         <span class="status"></span><span class="ml-2">Available</span>
                                     </div>
-                                            <a class="dropdown-item" href="accountmanage?action=2&aid=${sessionScope.acc.id}"><i class="fas fa-user mr-2"></i>Account</a>
+                                    <a class="dropdown-item" href="accountmanage?action=2&aid=${sessionScope.acc.id}"><i class="fas fa-user mr-2"></i>Account</a>
                                     <a class="dropdown-item" href="logout"><i class="fas fa-power-off mr-2"></i>Logout</a>
                                 </div>
                             </li>
@@ -147,32 +147,21 @@
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="navbarNav">
-                            <ul class="navbar-nav flex-column">
+                         <ul class="navbar-nav flex-column">
                                 <li class="nav-divider">
                                     Menu
                                 </li>
-                                  <li class="nav-item ">
-                                    <a class="nav-link " href="dashboard" ><i class="fa fa-fw fa-user-circle"></i>Dashboard </a>
-
-                                </li>
-                                  <li class="nav-item ">
-                                    <a class="nav-link " href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Product Manager </a>
-
-                                </li>
                                 <li class="nav-item ">
-                                    <a class="nav-link  active" href="accountmanage" ><i class="fa fa-fw fa-user-circle"></i>Account Manage </a>
+                                    <a class="nav-link active" href="dashboard" ><i class="fa fa-fw fa-user-circle"></i>Dashboard </a>
 
                                 </li>
-                                <li class="nav-item ">
-                                    <a class="nav-link " href="brandmanage" ><i class="fa fa-fw fa-user-circle"></i>Brand Manage</a>
+                                 <c:if test="${sessionScope.acc.role_id == 2}">
+                                    <li class="nav-item ">
+                                        <a class="nav-link  " href="catemanage" ><i class="fa fa-fw fa-user-circle"></i>Cate Manage</a>
 
-                                </li>
-                                  <li class="nav-item ">
-                                    <a class="nav-link  " href="catemanage" ><i class="fa fa-fw fa-user-circle"></i>Cate Manage</a>
-
-                                </li>
-
-                            </ul>
+                                    </li>
+                                </c:if>
+                            </ul>   
                         </div>
                     </nav>
                 </div>
@@ -247,7 +236,7 @@
                                     <div class="col-12 col-sm-8 col-lg-6">
                                         <input type="file" id="fileInput" name="ava" accept="image/*" class="form-control">
                                     </div>
-                                <div id="errorMessage" class="error"></div>
+                                    <div id="errorMessage" class="error"></div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-12 col-sm-3 col-form-label text-sm-right">Email</label>
@@ -358,27 +347,27 @@
             });
         }, false);
     })();
-    
-            document.getElementById('fileInput').addEventListener('change', function(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const img = new Image();
-        img.onload = function() {
-            if (img.width / img.height === 3 / 4) {
-                document.getElementById('errorMessage').textContent = '';
-                // Hình ảnh hợp lệ, tiếp tục với tải lên hoặc hành động khác
-            } else {
-                document.getElementById('errorMessage').textContent = 'Hình ảnh phải có tỷ lệ 3:4.';
+
+    document.getElementById('fileInput').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            const img = new Image();
+            img.onload = function () {
+                if (img.width / img.height === 3 / 4) {
+                    document.getElementById('errorMessage').textContent = '';
+                    // Hình ảnh hợp lệ, tiếp tục với tải lên hoặc hành động khác
+                } else {
+                    document.getElementById('errorMessage').textContent = 'Hình ảnh phải có tỷ lệ 3:4.';
+                    event.target.value = ''; // Xóa dữ liệu đầu vào tệp
+                }
+            };
+            img.onerror = function () {
+                document.getElementById('errorMessage').textContent = 'Tệp được chọn không phải là hình ảnh hợp lệ.';
                 event.target.value = ''; // Xóa dữ liệu đầu vào tệp
-            }
-        };
-        img.onerror = function() {
-            document.getElementById('errorMessage').textContent = 'Tệp được chọn không phải là hình ảnh hợp lệ.';
-            event.target.value = ''; // Xóa dữ liệu đầu vào tệp
-        };
-        img.src = URL.createObjectURL(file);
-    }
-});
+            };
+            img.src = URL.createObjectURL(file);
+        }
+    });
 </script>
 </body>
 

@@ -385,20 +385,7 @@ body{
   position: relative;
 }
 
-.header-login .uil-shopping-bag::after {
-  content: "0";
-  position: absolute;
-  font-size: 1rem;
-  font-weight: 700;
-  color: hsl(var(--clr-white));
-  margin-top: -3rem;
-  margin-left: 1rem;
-  border-radius: 0.3rem;
-  display: grid;
-  width: 1rem;
-  height: 1.2rem;
-  background-color: hsl(var(--clr-red));
-}
+
 
 .mobile-open-btn {
   display: none;
