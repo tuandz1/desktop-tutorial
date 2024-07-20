@@ -155,32 +155,33 @@
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="navbarNav">
-                            <ul class="navbar-nav flex-column">
+     <ul class="navbar-nav flex-column">
                                 <li class="nav-divider">
                                     Menu
                                 </li>
                                 <li class="nav-item ">
-                                    <a class="nav-link " href="dashboard" ><i class="fa fa-fw fa-user-circle"></i>Dashboard </a>
+                                    <a class="nav-link active" href="dashboard" ><i class="fa fa-fw fa-user-circle"></i>Dashboard </a>
 
                                 </li>
-                                <li class="nav-item ">
-                                    <a class="nav-link " href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Product Manager</a>
+                                <c:if test="${sessionScope.acc.role_id == 4 || sessionScope.acc.role_id == 2}">
+                                    <li class="nav-item ">
+                                        <a class="nav-link " href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Product Manager </a>
 
-                                </li>
-                                <li class="nav-item ">
-                                    <a class="nav-link " href="accountmanage" ><i class="fa fa-fw fa-user-circle"></i>Account Manage </a>
+                                    </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 4}">
+                                    <li class="nav-item ">
+                                        <a class="nav-link " href="commentManage" ><i class="fa fa-fw fa-user-circle"></i>Comment Manage</a>
 
-                                </li>
-                                <li class="nav-item ">
-                                    <a class="nav-link  " href="brandmanage" ><i class="fa fa-fw fa-user-circle"></i>Brand Manage</a>
+                                    </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 2}">
+                                    <li class="nav-item ">
+                                        <a class="nav-link  " href="blogmanage" ><i class="fa fa-fw fa-user-circle"></i>Blog Manage</a>
 
-                                </li>
-                                <li class="nav-item ">
-                                    <a class="nav-link active " href="catemanage" ><i class="fa fa-fw fa-user-circle"></i>Cate Manage</a>
-
-                                </li>
-
-                            </ul>
+                                    </li>
+                                </c:if>
+                            </ul>   
                         </div>
                     </nav>
                 </div>

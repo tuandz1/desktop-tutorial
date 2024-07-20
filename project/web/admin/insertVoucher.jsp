@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!doctype html>
 <html lang="en">
 
@@ -125,7 +126,7 @@
                                             ${sessionScope.acc.full_name}</h5>
                                         <span class="status"></span><span class="ml-2">Available</span>
                                     </div>
-                                            <a class="dropdown-item" href="accountmanage?action=2&aid=${sessionScope.acc.id}"><i class="fas fa-user mr-2"></i>Account</a>
+                                    <a class="dropdown-item" href="accountmanage?action=2&aid=${sessionScope.acc.id}"><i class="fas fa-user mr-2"></i>Account</a>
                                     <a class="dropdown-item" href="logout"><i class="fas fa-power-off mr-2"></i>Logout</a>
                                 </div>
                             </li>
@@ -147,7 +148,7 @@
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="navbarNav">
-       <ul class="navbar-nav flex-column">
+                           <ul class="navbar-nav flex-column">
                                 <li class="nav-divider">
                                     Menu
                                 </li>
@@ -191,17 +192,45 @@
                 <!-- ============================================================== -->
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                     <div class="card">
-                        <h5 class="card-header">Create Category</h5>
+                        <h5 class="card-header">Insert Voucher</h5>
                         <div class="card-body">
-                            <form id="validationform" action="createCate"  method="post">
+                            <fmt:parseDate value="${currentTime}" pattern="yyyy-MM-dd HH:mm:ss" var="currentTime" />
+                            <form id="validationform" action="createVoucher"  method="post" >
 
                                 <div class="form-group row">
-                                    <label class="col-12 col-sm-3 col-form-label text-sm-right">Category Name</label>
+                                    <label class="col-12 col-sm-3 col-form-label text-sm-right">Voucher Code</label>
                                     <div class="col-12 col-sm-8 col-lg-6">
-                                        <input type="text" name="name" required="" placeholder="Input Name" class="form-control">
+                                        <input  required="" type="text" id="voucherInput" name="name" required placeholder="Input Voucher" class="form-control">
+                                        <p id="message" class="hidden">Bạn phải nhập đủ 8 kí tự</p>
                                     </div>
                                 </div>
 
+                                <div class="form-group row">
+                                    <label class="col-12 col-sm-3 col-form-label text-sm-right">Start Date</label>
+                                    <div class="col-12 col-sm-8 col-lg-6">
+                                        <input required="" type="datetime-local" id="startdate" name="startdate" class="form-control">
+                                        <p id="message2" class="hidden">The start time cannot be made before the current time</p>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-12 col-sm-3 col-form-label text-sm-right">End Date</label>
+                                    <div class="col-12 col-sm-8 col-lg-6">
+                                        <input required="" type="datetime-local" id="enddate" name="enddate" class="form-control">
+                                        <p id="message3" class="hidden">The end time cannot be made before the current time</p>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-12 col-sm-3 col-form-label text-sm-right">Discount Rate</label>
+                                    <div class="col-12 col-sm-8 col-lg-6">
+                                        <input type="number" required=""  name="rate" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-12 col-sm-3 col-form-label text-sm-right">Amount</label>
+                                    <div class="col-12 col-sm-8 col-lg-6">
+                                        <input type="number" required=""  name="amount" class="form-control">
+                                    </div>
+                                </div>
 
                                 <div class="form-group row text-right">
                                     <div class="col col-sm-10 col-lg-9 offset-sm-1 offset-lg-0">
@@ -293,7 +322,84 @@
             });
         }, false);
     })();
+
+    document.getElementById('voucherInput').addEventListener('input', function () {
+        const input = this.value;
+        const message = document.getElementById('message');
+
+        if (input.length < 8) {
+            message.classList.remove('hidden');
+            message.classList.add('visible');
+        } else {
+            message.classList.remove('visible');
+            message.classList.add('hidden');
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const startdateInput = document.getElementById('startdate');
+        const message = document.getElementById('message2');
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+
+        const currentDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+                startdateInput.min = currentDateTime;
+
+                startdateInput.addEventListener('input', function () {
+                    const inputDateTime = new Date(startdateInput.value);
+                    if (inputDateTime < now) {
+                        message.classList.remove('hidden');
+                        message.classList.add('visible');
+                    } else {
+                        message.classList.remove('visible');
+                        message.classList.add('hidden');
+                    }
+                });
+            });
+    document.addEventListener('DOMContentLoaded', function () {
+        const startdateInput = document.getElementById('enddate');
+        const message = document.getElementById('message3');
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+
+        const currentDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+                startdateInput.min = currentDateTime;
+
+                startdateInput.addEventListener('input', function () {
+                    const inputDateTime = new Date(startdateInput.value);
+                    if (inputDateTime < now) {
+                        message.classList.remove('hidden');
+                        message.classList.add('visible');
+                    } else {
+                        message.classList.remove('visible');
+                        message.classList.add('hidden');
+                    }
+                });
+            });
+
 </script>
+<style>
+    .hidden {
+        display: none;
+    }
+
+    .visible {
+        display: block;
+        color: red;
+        font-size: 14px;
+    }
+
+</style>
 </body>
 
 </html>
