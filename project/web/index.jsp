@@ -1,4 +1,5 @@
 <%@taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -75,46 +76,44 @@
                                 >
                             </li>
                             <li>
+                                <a class="fs-100 fs-montserrat bold-500" href="customerblog"
+                                   >Blog</a
+                                >
+                            </li>
+                            <li>
                                 <a class="fs-100 fs-montserrat bold-500" href="about.jsp"
                                    >About Us</a
                                 >
                             </li>
-                            <li>
-                                <a class="fs-100 fs-montserrat bold-500" href="blog.jsp"
-                                   >Blog</a
-                                >
-                            </li>
+
                             <li>
                                 <a class="fs-100 fs-montserrat bold-500" href="contactus.jsp"
                                    >Contact Us</a
                                 >
                             </li>
-                            <li>
-                                <a class="fs-100 fs-montserrat bold-500" href="cart.jsp"
-                                   >Cart page</a
-                                >
-                            </li>
+
                         </ul>
                     </nav>
                 </div>
 
                 <div class="header-login flex">
-                    <c:if test="${sessionScope.acc.full_name == null}">
+                    <c:if test="${sessionScope.acc.getAcc_name() == null}">
                         <a style="text-decoration: none;
-                        color: black"class="fs-100 fs-montserrat bold-500" href="login.jsp">Login</a></p>
+                           color: black"class="fs-100 fs-montserrat bold-500" href="login.jsp">Login</a></p>
+                        </c:if>
+                        <c:if test="${empty sessionScope.acc.full_name }">
+                            <p style="text-decoration: none;
+                            color: black"class="fs-100 fs-montserrat bold-500" id="acc-box" aria-controls="acc-icon">${sessionScope.acc.getAcc_name()}</p>
                         </c:if>
                         <c:if test="${sessionScope.acc.full_name != null}">
                             <p style="text-decoration: none;
-                        color: black"class="fs-100 fs-montserrat bold-500" id="acc-box" aria-controls="acc-icon">${sessionScope.acc.getFull_name()}</p>
+                            color: black"class="fs-100 fs-montserrat bold-500" id="acc-box" aria-controls="acc-icon">${sessionScope.acc.getFull_name()}</p>
 
                         </c:if>
-                        <i class="uil uil-search"></i>
-                        <i
-                            id="cart-box"
-                            aria-controls="cart-icon"
-                            class="uil uil-shopping-bag"
-                            ></i>
-
+                        <a  href="showCart">
+                            <i class="uil uil-shopping-bag"
+                               ></i>${n}
+                        </a>
                         <!-- =================1111111111================== -->
                         <div id="cart-icon" data-visible="false" class="cart-icon">
                             <div class="shopping flex">
@@ -137,41 +136,47 @@
                             </div>
                             <div style="padding-top: 2rem;" class="cart bold-800 flex">
                             <a style="text-decoration: none;
-                            color: black"class="fs-100 fs-montserrat bold-500" href="logout">Log out</a>
+                               color: black"class="fs-100 fs-montserrat bold-500" href="logout">Log out</a>
                             </div>
                             <div style="padding-top: 2rem;" class="cart bold-800 flex">
                             <a style="text-decoration: none;
-                            color: black"class="fs-100 fs-montserrat bold-500" href="accsettings">Account Settings</a>
+                               color: black"class="fs-100 fs-montserrat bold-500" href="accsettings">Account Settings</a>
                             </div>
                             <div style="padding-top: 2rem;" class="cart bold-800 flex">
                             <a style="text-decoration: none;
-                            color: black"class="fs-100 fs-montserrat bold-500" href="changePassword">Change Passwords</a>
+                               color: black"class="fs-100 fs-montserrat bold-500" href="changePassword">Change Passwords</a>
                             </div>
+                            <div style="padding-top: 2rem;" class="cart bold-800 flex">
+                            <form action="orderhistory" method="post">
+                                <input type="hidden" value="${sessionScope.acc.id}" name="accid"/>
+                                <input style="border: none;" class="fs-100 fs-montserrat bold-500" type="submit" value="View Order History"/>
+                            </form>
                         </div>
                     </div>
-                    <div class="mobile-open-btn"><i class="uil uil-align-right"></i></div>
-                </header>
+                </div>
+                <div class="mobile-open-btn"><i class="uil uil-align-right"></i></div>
+            </header>
 
-                <!-- ===========Hero Section===================== -->
+            <!-- ===========Hero Section===================== -->
 
-                <main class="hero-section">
+            <main class="hero-section">
+                <div>
+                    <h1 class="fs-200 fs-poppins">
+                        Beats Solo
+                        <span class="block lineheight fs-300 bold-900 big-wireless fs-poppins"
+                              >Watches</span
+                        ><span
+                            class="text-white fs-900 uppercase lineheight-2 bold-bolder fs-poppins"
+                            >Smart Watch</span
+                        >
+                    </h1>
+                    <img src="img/p12.png" alt="" />
+                </div>
+                <div class="hero-inner flex">
                     <div>
-                        <h1 class="fs-200 fs-poppins">
-                            Beats Solo
-                            <span class="block lineheight fs-300 bold-900 big-wireless fs-poppins"
-                                  >Watches</span
-                            ><span
-                                class="text-white fs-900 uppercase lineheight-2 bold-bolder fs-poppins"
-                                >Smart Watch</span
-                            >
-                        </h1>
-                        <img src="img/p12.png" alt="" />
-                    </div>
-                    <div class="hero-inner flex">
-                        <div>
-                            <button class="large-btn bg-red text-white fs-poppins fs-50">
-                                <a style="text-decoration: white;
-                            color: white" href="shop">Shop By Category</a> 
+                        <button class="large-btn bg-red text-white fs-poppins fs-50">
+                            <a style="text-decoration: white;
+                               color: white" href="shop">Shop By Category</a> 
                             </button>
                         </div>
                         <div class="hero-info">
@@ -186,14 +191,14 @@
 
                 <!-- =================Product Section======================= -->
 
-                <section class="product-section">
-                    <c:forEach items="${brand}" var="o">
+                <section style="z-index: 1;" class="product-section">
+                <c:forEach items="${brand}" var="o">
 
-                        <div class="category  grid"  
-                             style="background-image: url(${o.brand_img});
-                        background-size: cover;
-                        background-position: center;
-                        background-repeat: no-repeat;">
+                    <div class="category  grid"  
+                         style="background-image: url(${o.brand_img});
+                         background-size: cover;
+                         background-position: center;
+                         background-repeat: no-repeat;">
                         <div>
                             <h3 class="text-white fs-50 fs-montserrat bold">
                                 Wacthes <span class="block fs-300 fs-poppins bold">${o.brand_name}</span
@@ -211,7 +216,7 @@
                 </c:forEach>
                 <button class="large-btn bg-red text-white fs-poppins fs-50">
                     <a style="text-decoration: white;
-                    color: white" href="allbrand">View All Brand</a>   
+                       color: white" href="allbrand">View All Brand</a>   
                     </button>
                 </section>
 
@@ -254,22 +259,25 @@
                 <section class="feature-section bg-red">
                     <div class="feature-one grid">
                         <img src="img/p-1.png" alt="" />
-                        <p class="text-white uppercase">20% OFF</p>
+                        <p class="text-white uppercase">Up 25% OFF</p>
                         <p
                             class="font-size lineheight fs-500 text-white fs-poppins bold-900 uppercase"
                             >
-                            fine <span class="smile">smile</span>
+                            Voucher
                         </p>
-                        <p class="text-white fs-poppins fs-50">15 Nov To & Dec</p>
                     </div>
                     <div class="feature-info">
-                        <h2 class="fs-200 text-white fs-poppins bold-500">Beats Solo Air</h2>
-                        <p class="fs-poppins fs-300 bold-800 text-white">Summer Sale</p>
+                        <h2 class="fs-200 text-white fs-poppins bold-500">⏳ Limited Time Offer! ⏳</h2>
+                        <p class="fs-poppins fs-300 bold-800 text-white">Ultra Sale</p>
                         <p class="fs-montserrat text-white fs-50">
-                            Company thatâs grown from 270 to 480 employees in the last 12 months.
+
+                            Enjoy up to 25% off with our special discount vouchers. 🎁
+                            Hurry, get your voucher before it's gone
                         </p>
                         <button class="prdduct-btn large-btn text-red bg-white fs-poppins">
-                            Shop
+                            <a class="text-red" href="allvoucher" >
+                                View
+                            </a>
                         </button>
                     </div>
                 </section>
@@ -284,27 +292,27 @@
 
                 <!-- ===========================Heading======================== -->
                 <section style="z-index: 1;" class="best-Seller">
-                    <c:forEach items="${pro}" var="n">
-                        <div class="product grid">
-                            <a class="fs-poppins bold-500" style="text-decoration: #000;
-                            color: black"  href="productDetail?proid=${n.id}">
-                                <img style=" width: 350px" src="${n.img}" alt="" />
-                                <p   class="fs-poppins bold-500">${n.proName}</a></p>
-                            <p class="fs-poppins bold-500">$ ${n.price}</p>
-                            <!-- ---------------------------- -->
-                            <div class="product-details grid bg-red">
-                                <i class="text-white uil uil-shopping-cart-alt"></i>
-                                <i class="text-white uil uil-heart-alt"></i>
-                            </div>
-                            <!-- ===================================== -->
+                <c:forEach items="${pro}" var="n">
+                    <div class="product grid">
+                        <a class="fs-poppins bold-500" style="text-decoration: #000;
+                           color: black"  href="productDetail?proid=${n.id}">
+                               <img style=" width: 350px" src="${n.img}" alt="" />
+                               <p   class="fs-poppins bold-500">${n.proName}</a></p>
+                           <p class="fs-poppins bold-500"><fmt:formatNumber value="${n.price}" type="number" pattern="#,##0" /> VND</p>
+                           <!-- ---------------------------- -->
+                           <div class="product-details grid bg-red">
+                               <a href="addToCart?num=1&id=${n.id}&acc_num=${sessionScope.acc.id}"> <i class="text-white uil uil-shopping-cart-alt"></i></a>
+
+                           </div>
+                           <!-- ===================================== -->
                         </div>
                     </c:forEach>
-                       <df-messenger
-                intent="WELCOME"
-                chat-title="Beta"
-                agent-id="9e78c254-81b7-4fca-9822-1dde277cb01c"
-                language-code="vi"
-                ></df-messenger>
+                    <df-messenger
+                        intent="WELCOME"
+                        chat-title="Watch Shop"
+                        agent-id="9e78c254-81b7-4fca-9822-1dde277cb01c"
+                        language-code="vi"
+                        ></df-messenger>
                 </section>
 
                 <!-- =========================================== -->
@@ -398,40 +406,40 @@
                         </p>
                     </section>
                 </footer>
-               
-         
-            <script>
-                const accountBtn = document.getElementById('acc-box');
-                const accItme = document.getElementById('acc-icon');
-                accountBtn.addEventListener('click', () => {
-                    const showCart = accItme.getAttribute('data-visible');
 
-                    if (showCart === 'false') {
-                        accItme.setAttribute('data-visible', true)
-                    } else {
-                        accItme.setAttribute('data-visible', false)
+
+                <script>
+                    const accountBtn = document.getElementById('acc-box');
+                    const accItme = document.getElementById('acc-icon');
+                    accountBtn.addEventListener('click', () => {
+                        const showCart = accItme.getAttribute('data-visible');
+
+                        if (showCart === 'false') {
+                            accItme.setAttribute('data-visible', true)
+                        } else {
+                            accItme.setAttribute('data-visible', false)
+                        }
+                    })
+                </script>
+                <script>
+                    window.onscroll = function () {
+                        scrollFunction()
+                    };
+
+                    function scrollFunction() {
+                        if (document.body.scrollTop > 15 || document.documentElement.scrollTop > 15) {
+                            document.getElementById("scrollToTopBtn").style.display = "block";
+                        } else {
+                            document.getElementById("scrollToTopBtn").style.display = "none";
+                        }
                     }
-                })
-            </script>
-            <script>
-                window.onscroll = function () {
-                    scrollFunction()
-                };
 
-                function scrollFunction() {
-                    if (document.body.scrollTop > 15 || document.documentElement.scrollTop > 15) {
-                        document.getElementById("scrollToTopBtn").style.display = "block";
-                    } else {
-                        document.getElementById("scrollToTopBtn").style.display = "none";
-                    }
-                }
-
-                // Khi người dùng bấm vào nút, cuộn lên đầu trang
-                document.getElementById('scrollToTopBtn').addEventListener('click', function () {
-                    document.body.scrollTop = 0; // Đối với Safari
-                    document.documentElement.scrollTop = 0; // Đối với Chrome, Firefox, IE và Opera
-                });
-            </script>
-             <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
-        </body>
-    </html>
+                    // Khi người dùng bấm vào nút, cuộn lên đầu trang
+                    document.getElementById('scrollToTopBtn').addEventListener('click', function () {
+                        document.body.scrollTop = 0; // Đối với Safari
+                        document.documentElement.scrollTop = 0; // Đối với Chrome, Firefox, IE và Opera
+                    });
+                </script>
+                <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+            </body>
+        </html>

@@ -132,7 +132,7 @@
                                             ${sessionScope.acc.full_name}</h5>
                                         <span class="status"></span><span class="ml-2">Available</span>
                                     </div>
-                                            <a class="dropdown-item" href="accountmanage?action=2&aid=${sessionScope.acc.id}"><i class="fas fa-user mr-2"></i>Account</a>
+                                    <a class="dropdown-item" href="accountmanage?action=2&aid=${sessionScope.acc.id}"><i class="fas fa-user mr-2"></i>Account</a>
                                     <a class="dropdown-item" href="logout"><i class="fas fa-power-off mr-2"></i>Logout</a>
                                 </div>
                             </li>
@@ -154,7 +154,7 @@
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="navbarNav">
-                      <ul class="navbar-nav flex-column">
+                            <ul class="navbar-nav flex-column">
                                 <li class="nav-divider">
                                     Menu
                                 </li>
@@ -193,34 +193,39 @@
             <!-- ============================================================== -->
             <div class="dashboard-wrapper">
                 <div class="container-fluid  dashboard-content">
+                    <c:if test="${mess != null}">
+                        <div id="notification" class="">
+                            ${mess}
+                        </div>
+                    </c:if>
                     <!-- ============================================================== -->
                     <!-- pageheader -->
                     <!-- ============================================================== -->
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="page-header">
-                                <h2 class="pageheader-title">Product Manager</h2>
+                                <h2 class="pageheader-title">Comment Manager</h2>
                                 <p class="pageheader-text">Proin placerat ante duiullam scelerisque a velit ac porta, fusce sit amet vestibulum mi. Morbi lobortis pulvinar quam.</p>
                                 <div class="page-breadcrumb">
                                     <nav aria-label="breadcrumb">
                                         <ol class="breadcrumb">
                                             <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Dashboard</a></li>
                                             <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Product Manager</a></li>
-                                        
+
                                         </ol>
                                     </nav>
                                 </div >
                                 <div class="row">
-                                    <a class="col-2 btn btn-primary text-white"><i class="  fas fa-plus-circle"></i> Add product</a>
+
                                     &nbsp;
                                     <button id="exportBtn" class="col-2 btn btn-primary"><i class="  fas fa-plus-circle"></i> export to file</button>
                                     <form class="col-12 form-control" action="productmanage"method="post">
-                                         <div class="input-group ">
-                                             <input type="text" placeholder="Search...." name="txt" value="${txt}" class="form-control">
-                                                <div class="input-group-append">
-                                                    <button type="submit" class="btn btn-primary">Search</button>
-                                                </div>
+                                        <div class="input-group ">
+                                            <input type="text" placeholder="Search...." name="txt" value="${search}" class="form-control">
+                                            <div class="input-group-append">
+                                                <button type="submit" class="btn btn-primary">Search</button>
                                             </div>
+                                        </div>
                                     </form>
                                 </div>
                                 <div class="row">   
@@ -244,50 +249,41 @@
                                 <!-- ============================================================== -->
                                 <div >
                                     <div class="card">
-                                        <h5 class="card-header">Striped Table</h5>
+                                        <h5 class="card-header">Comment Table</h5>
                                         <div class="card-body">
                                             <table id="userTable" class="table ">
                                                 <thead>
                                                     <tr>
                                                         <th>Id</th>
                                                         <th>Product Name </th>
-                                                        <th>Brand</th>
-                                                        <th>Images</th>
-                                                        <th>Category</th>
-                                                        <th>Price</th>
-                                                        <th>Stock Quantity</th>
-                                                        <th>Publication Date</th>
+                                                        <th>Create On</th>
+                                                        <th>Create By</th>
+                                                        <th>Content</th>
+                                                        <th>Rate</th>
                                                         <th>Funtion</th>
                                                     </tr>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="contents">
-                                                    
-                                                    <c:forEach items="${pro}" var="p">
+
+                                                    <c:forEach items="${cmt}" var="p">
                                                         <tr>
-                                                            <td>${p.id}</td>
-                                                            <td>${p.proName}</td>
+                                                            <td>${p.commentId}</td>
                                                             <td > 
-                                                                <c:forEach items="${br}" var="b">
-                                                                    <c:if test="${p.brand_id eq b.id}">
-                                                                        ${b.brand_name}
+                                                                <c:forEach items="${pro}" var="b">
+                                                                    <c:if test="${p.getProId() eq b.id}">
+                                                                        ${b.proName}
                                                                     </c:if>
                                                                 </c:forEach>
                                                             </td>
-                                                            <td > <img style="height: 150px; width: auto;" src="${p.img}"/></td>
-                                                            <td > 
-                                                                <c:forEach items="${cate}" var="c">
-                                                                    <c:if test="${p.caid eq c.id}">
-                                                                        ${c.ca_name}
-                                                                    </c:if>
-                                                                </c:forEach> 
-                                                            </td>
-                                                            <td > ${p.price} </td>
-                                                            <td > ${p.stockQuantity} </td>
-                                                            <td > ${p.publication_date} </td>
+
+                                                            <td > ${p.getCreatedOn()} </td>
+                                                            <td > ${p.fullname} </td>
+                                                            <td > ${p.commentText} </td>
+                                                            <td > ${p.getRating()} </td>
                                                             <td>
-                                                                <a href="#" class="btn btn-outline-danger"  data-toggle="modal" data-target="#exampleModal${p.id}"><i class=" fas fa-trash-alt"></i></a>
-                                                                <div class="modal fade" id="exampleModal${p.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                <a href="#" class="btn btn-outline-danger"  data-toggle="modal" data-target="#exampleModal${p.commentId}"><i class=" fas fa-trash-alt"></i></a>
+                                                                <div class="modal fade" id="exampleModal${p.commentId}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                                     <div class="modal-dialog" role="document">
                                                                         <div class="modal-content">
                                                                             <div class="modal-header">
@@ -297,23 +293,40 @@
                                                                                 </a>
                                                                             </div>
                                                                             <div class="modal-body">
-                                                                                <p>Are you sure to delete this Product</p>
+                                                                                <form action="updateComment" method="post">
+                                                                                    <div class="form-group row">
+                                                                                        <label class="col-12 col-sm-3 col-form-label text-sm-right">Reason</label>
+                                                                                        <input type="hidden" name="id" value="${p.commentId}"/>
+                                                                                        <div class="col-12 col-sm-8 col-lg-6">
+                                                                                            <input type="text" name="content"  required="" placeholder="Input comment" value="${p.commentText}" class="form-control">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                        <input type="submit" class="btn btn-secondary"  value="Fix">
+                                                                                <a href="#" class="btn btn-primary" data-dismiss="modal">Cancel</a>
+                                                                                </form>
                                                                             </div>
                                                                             <div class="modal-footer">
-                                                                                <a href="productmanage?action=2&pid=${p.id}" class="btn btn-secondary" >Delete</a>
-                                                                                <a href="#" class="btn btn-primary" data-dismiss="modal">Cancel</a>
+                                                                                
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                &nbsp; 
-                                                                <a href="productmanage?action=3&pid=${p.id}" class="btn btn-outline-success"><i class=" fas fa-edit"></i></a>
+
                                                             </td>
                                                         </tr>
                                                     </c:forEach>
-                                                    
+
                                                 </tbody>
                                             </table>
+                                            <c:set var="xpage" value="${requestScope.page}"/>
+                                            <div style="padding: 20px 0px;" class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12"> 
+                                                <ul class="pagination">
+                                                    <c:forEach begin="${1}" end="${requestScope.num}" var="i">
+                                                        <li class="page-item"> <a style="text-decoration: white" href="commentManage?xpage=${i}&txt=${search}" class="page-link">${i}</a></li>
+                                                        </c:forEach>
+
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -382,13 +395,42 @@
                 <script>
 
                 </script>
-                  <script>
-            document.getElementById("exportBtn").addEventListener('click', function () {
-                var table2excel = new Table2Excel();
-                table2excel.export(document.querySelectorAll("#userTable"));
-            });
+                <script>
+                    document.getElementById("exportBtn").addEventListener('click', function () {
+                        var table2excel = new Table2Excel();
+                        table2excel.export(document.querySelectorAll("#userTable"));
+                    });
 
-        </script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        var mess = "${mess}"; // Đảm bảo rằng bạn nhận được giá trị của 'mess' từ server-side rendering
+
+                        if (mess !== null && mess.trim() !== "") {
+                            var notification = document.getElementById('notification');
+                            if (notification) {
+                                notification.innerHTML = mess;
+                                notification.style.display = 'block'; // Hiển thị thông báo
+
+                                setTimeout(function () {
+                                    notification.style.display = 'none'; // Ẩn thông báo sau 2 giây
+                                }, 2000); // Thời gian 2 giây (2000 miligiây)
+                            }
+                        }
+                    });
+
+                </script>
+                <style>
+                    #notification {
+                        display: none; /* Ẩn thông báo ban đầu */
+                        padding: 10px;
+                        color: white;
+                        background-color: #33cc00f2;
+                        border: 1px solid #ccc;
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        z-index: 9999;
+                    }
+                </style>
                 </body>
 
                 </html>     

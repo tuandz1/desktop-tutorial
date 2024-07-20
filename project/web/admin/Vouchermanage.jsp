@@ -1,5 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core"%>
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!doctype html>
 <html lang="en">
 
@@ -149,12 +151,12 @@
             <div class="nav-left-sidebar sidebar-dark">
                 <div class="menu-list">
                     <nav class="navbar navbar-expand-lg navbar-light">
-                        <a class="d-xl-none d-lg-none" href="productmanage">Dashboard</a>
+                        <a class="d-xl-none d-lg-none" href="vouchermanage">Dashboard</a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="navbarNav">
-                      <ul class="navbar-nav flex-column">
+                             <ul class="navbar-nav flex-column">
                                 <li class="nav-divider">
                                     Menu
                                 </li>
@@ -193,13 +195,18 @@
             <!-- ============================================================== -->
             <div class="dashboard-wrapper">
                 <div class="container-fluid  dashboard-content">
+                    <c:if test="${mess != null}">
+                        <div id="notification" class="">
+                            ${mess}
+                        </div>
+                    </c:if>
                     <!-- ============================================================== -->
                     <!-- pageheader -->
                     <!-- ============================================================== -->
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="page-header">
-                                <h2 class="pageheader-title">Product Manager</h2>
+                                <h2 class="pageheader-title">Voucher Manager</h2>
                                 <p class="pageheader-text">Proin placerat ante duiullam scelerisque a velit ac porta, fusce sit amet vestibulum mi. Morbi lobortis pulvinar quam.</p>
                                 <div class="page-breadcrumb">
                                     <nav aria-label="breadcrumb">
@@ -211,12 +218,12 @@
                                     </nav>
                                 </div >
                                 <div class="row">
-                                    <a class="col-2 btn btn-primary text-white"><i class="  fas fa-plus-circle"></i> Add product</a>
+                                    <a href="vouchermanage?action=1" class="col-2 btn btn-primary text-white"><i class="  fas fa-plus-circle"></i> Add Voucher</a>
                                     &nbsp;
                                     <button id="exportBtn" class="col-2 btn btn-primary"><i class="  fas fa-plus-circle"></i> export to file</button>
-                                    <form class="col-12 form-control" action="productmanage"method="post">
+                                    <form class="col-12 form-control" action="vouchermanage"method="post">
                                          <div class="input-group ">
-                                             <input type="text" placeholder="Search...." name="txt" value="${txt}" class="form-control">
+                                             <input type="text" placeholder="Search...." name="txt" value="${search}" class="form-control">
                                                 <div class="input-group-append">
                                                     <button type="submit" class="btn btn-primary">Search</button>
                                                 </div>
@@ -250,44 +257,30 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Id</th>
-                                                        <th>Product Name </th>
-                                                        <th>Brand</th>
-                                                        <th>Images</th>
-                                                        <th>Category</th>
-                                                        <th>Price</th>
-                                                        <th>Stock Quantity</th>
-                                                        <th>Publication Date</th>
+                                                        <th>Discount Rate</th>
+                                                        <th>Amount</th>
+                                                        <th>Start Date</th>
+                                                        <th>End Date</th>
                                                         <th>Funtion</th>
                                                     </tr>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="contents">
-                                                    
-                                                    <c:forEach items="${pro}" var="p">
+                                                    <fmt:parseDate value="${currentTime}" pattern="yyyy-MM-dd HH:mm:ss" var="currentTime" />
+                                                    <c:forEach items="${vou}" var="p">
+                                                        <fmt:parseDate value="${p.getStartDate()}" pattern="yyyy-MM-dd HH:mm:ss" var="startDate" />
+                                                        <fmt:parseDate value="${p.getEndDate()}" pattern="yyyy-MM-dd HH:mm:ss" var="endDate" />
                                                         <tr>
-                                                            <td>${p.id}</td>
-                                                            <td>${p.proName}</td>
-                                                            <td > 
-                                                                <c:forEach items="${br}" var="b">
-                                                                    <c:if test="${p.brand_id eq b.id}">
-                                                                        ${b.brand_name}
-                                                                    </c:if>
-                                                                </c:forEach>
-                                                            </td>
-                                                            <td > <img style="height: 150px; width: auto;" src="${p.img}"/></td>
-                                                            <td > 
-                                                                <c:forEach items="${cate}" var="c">
-                                                                    <c:if test="${p.caid eq c.id}">
-                                                                        ${c.ca_name}
-                                                                    </c:if>
-                                                                </c:forEach> 
-                                                            </td>
-                                                            <td > ${p.price} </td>
-                                                            <td > ${p.stockQuantity} </td>
-                                                            <td > ${p.publication_date} </td>
+                                                            <td>${p.getDiscountID()}</td>
+                                                            
+                                                            <td > ${p.getDiscountRate()*100} % </td>
+                                                            <td > ${p.getAmount()} </td>
+                                                            <td > ${p.getStartDate()} </td>
+                                                            <td > ${p.getEndDate()} </td>
                                                             <td>
-                                                                <a href="#" class="btn btn-outline-danger"  data-toggle="modal" data-target="#exampleModal${p.id}"><i class=" fas fa-trash-alt"></i></a>
-                                                                <div class="modal fade" id="exampleModal${p.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                <c:if test="${currentTime.before(startDate)|| currentTime.after(endDate)}">
+                                                                <a href="#" class="btn btn-outline-danger"  data-toggle="modal" data-target="#exampleModal${p.getDiscountID()}"><i class=" fas fa-trash-alt"></i></a>
+                                                                <div class="modal fade" id="exampleModal${p.getDiscountID()}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                                     <div class="modal-dialog" role="document">
                                                                         <div class="modal-content">
                                                                             <div class="modal-header">
@@ -300,20 +293,37 @@
                                                                                 <p>Are you sure to delete this Product</p>
                                                                             </div>
                                                                             <div class="modal-footer">
-                                                                                <a href="productmanage?action=2&pid=${p.id}" class="btn btn-secondary" >Delete</a>
+                                                                                <a href="vouchermanage?action=2&vid=${p.getDiscountID()}" class="btn btn-secondary" >Delete</a>
                                                                                 <a href="#" class="btn btn-primary" data-dismiss="modal">Cancel</a>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                                                </c:if>
                                                                 &nbsp; 
-                                                                <a href="productmanage?action=3&pid=${p.id}" class="btn btn-outline-success"><i class=" fas fa-edit"></i></a>
+                                                                <a href="vouchermanage?action=3&vid=${p.getDiscountID()}" class="btn btn-outline-success"><i class=" fas fa-edit"></i></a>
+                                                                 &nbsp; 
+                                                                 <c:if test="${p.getStatus() == 1}">
+                                                                      <a href="vouchermanage?action=4&vid=${p.getDiscountID()}" class="btn btn-outline-warning"><i class="fas fa-ban"></i></a>
+                                                                 </c:if>
+                                                                 <c:if test="${p.getStatus() != 1}">
+                                                                      <a href="vouchermanage?action=5&vid=${p.getDiscountID()}" class="btn btn-outline-info"><i class="fas fa-check"></i></a>
+                                                                 </c:if>
                                                             </td>
                                                         </tr>
                                                     </c:forEach>
                                                     
                                                 </tbody>
                                             </table>
+                                            <c:set var="xpage" value="${requestScope.page}"/>
+                                            <div style="padding: 20px 0px;" class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12"> 
+                                                <ul class="pagination">
+                                                    <c:forEach begin="${1}" end="${requestScope.num}" var="i">
+                                                        <li class="page-item"> <a style="text-decoration: white" href="vouchermanage?xpage=${i}&txt=${search}" class="page-link">${i}</a></li>
+                                                    </c:forEach>
+                                                    
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -389,6 +399,46 @@
             });
 
         </script>
+         <script type="text/javascript">
+                function submitForm(formId) {
+                    document.getElementById(formId).submit();
+                }
+                ;
+                document.addEventListener("DOMContentLoaded", function () {
+                    var mess = "${mess}"; // Đảm bảo rằng bạn nhận được giá trị của 'mess' từ server-side rendering
+
+                    if (mess !== null && mess.trim() !== "") {
+                        var notification = document.getElementById('notification');
+                        if (notification) {
+                            notification.innerHTML = mess;
+                            notification.style.display = 'block'; // Hiển thị thông báo
+
+                            setTimeout(function () {
+                                notification.style.display = 'none'; // Ẩn thông báo sau 2 giây
+                            }, 1000); // Thời gian 2 giây (2000 miligiây)
+                        }
+                    }
+                });
+            </script>
+            <style>
+                .radio-container {
+                    display: flex;
+                    gap: 20px; /* khoảng cách giữa các lựa chọn radio */
+                }
+
+                #notification {
+                    display: none; /* Ẩn thông báo ban đầu */
+                    padding: 10px;
+                    color: white;
+                    background-color: #33cc00f2;
+                    border: 1px solid #ccc;
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 9999;
+                }
+
+            </style>
                 </body>
 
                 </html>     

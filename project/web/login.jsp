@@ -60,16 +60,13 @@
                     <div class="social">
 
                         <div class="social-icons google">
-                            <a href="https://accounts.google.com/o/oauth2/auth?scope=email&redirect_uri=http://localhost:8080/WatchProject/login-google&response_type=code&client_id=495179221908-hrqrs564g8ts8i4oqjagiq8k4uvl1a52.apps.googleusercontent.com&approval_prompt=force">
+                            <a href="https://accounts.google.com/o/oauth2/auth?scope=email&redirect_uri=http://localhost:9999/WatchProject/login-google&response_type=code&client_id=495179221908-hrqrs564g8ts8i4oqjagiq8k4uvl1a52.apps.googleusercontent.com&approval_prompt=force">
                                 <img src="img/google.png">Log in with Google</a>
                         </div>
                     </div>
                     <div class="account">
-                        <p>Don't have account ?</p>
+                        <p>Dont hava account ?</p>
                         <a href="register.jsp">Register</a>
-                    </div>
-                    <div class="account">
-                        <a href="home">Back to Home</a>
                     </div>
                 </form>
             </div>
