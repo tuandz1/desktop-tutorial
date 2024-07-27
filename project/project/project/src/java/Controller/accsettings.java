@@ -71,6 +71,12 @@ public class accsettings extends HttpServlet {
         dao.getQuestion();
         List<SecurityQuestion> allq = dao.getSq();
         request.setAttribute("allq", allq);
+        HttpSession session = request.getSession();
+        String mess = (String) session.getAttribute("messset");
+        if(mess != null){
+            request.setAttribute("mess", mess);
+            session.removeAttribute("messset");
+        }
         request.getRequestDispatcher("accsetings.jsp").forward(request, response);
     }
 
@@ -93,10 +99,15 @@ public class accsettings extends HttpServlet {
         HttpSession session = request.getSession();
         String ans = request.getParameter("answer");
         String address = request.getParameter("address");
-        int sqid = Integer.parseInt(sq);
+        int sqid;
+        if(sq == null){
+         sqid =  1;
+        }else{
+            sqid = Integer.parseInt(sq);
+        }
         int cusid = Integer.parseInt(id);
         
-         String customDirectory = "D:/SUM24/SWP/Git/WatchProject/web/img";
+         String customDirectory = "D:/SUM24/SWP/Git/WatchProject12/web/img";
         Part part = request.getPart("ava");
         String filename = Paths.get(part.getSubmittedFileName()).getFileName().toString();
         Path imagePath = Paths.get(customDirectory, filename);
@@ -109,6 +120,7 @@ public class accsettings extends HttpServlet {
        
        Account acc1 = dao.getAccountbyId(cusid);
        session.setAttribute("acc", acc1);
+       session.setAttribute("messset", "Update Successfull");
         doGet(request, response);
     }
 

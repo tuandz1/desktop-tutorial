@@ -111,8 +111,7 @@ public class createAccount extends HttpServlet {
         List<Account> allacc = dao.getAcc();
         int flag = 0;
         for (Account account : allacc) {
-            if(account.getAcc_name().equals(acc_name)|| account.getEmail().equals(email)|| 
-                    account.getPhone().equals(phone))flag++;
+            if(account.getAcc_name().equals(acc_name)|| account.getEmail().equals(email))flag++;
         }
         if(flag == 0){
         dao.insertAccountByAdmin(acc_name, email, add, pass, full_name, phone, roleid, "img/" +filename, qsid, ans);

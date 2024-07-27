@@ -14,6 +14,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -92,8 +93,18 @@ public class ShopAllControll extends HttpServlet {
         end = Math.min(page * numberPage, size);
         dao.getAllProductPagging(allpro, start, end);
         List<Product> proPagging = dao.getPro();
+        
         dao.getAllCate();
         List<Categories> cate = dao.getCate();
+        HttpSession session = request.getSession();
+        String message = (String) session.getAttribute("messcart");
+
+        if (message != null) {
+            // Xử lý thông báo, ví dụ hiển thị cho người dùng
+            request.setAttribute("mess", message);
+            // Xóa thông báo khỏi session sau khi lấy ra để tránh hiển thị lại sau khi tải lại trang
+            session.removeAttribute("messcart");
+        }
         request.setAttribute("cate", cate);
         request.setAttribute("ac", ac);
         request.setAttribute("pro", proPagging);

@@ -16,6 +16,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -66,93 +67,121 @@ public class ProductManager extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String ac = request.getParameter("action");
+        String txt = request.getParameter("txt");
+        String search = (String) request.getAttribute("search");
+        List<Product> allpro = null;
 
         if (ac == null) {
-            dao.getAllProduct();
-            List<Product> allpro = dao.getPro();
-            dao.getAllCate();
-            List<Categories> allcate = dao.getCate();
-            dao.getAllBrand();
-            List<Brand> allbr = dao.getBrand();
-            request.setAttribute("pro", allpro);
-            request.setAttribute("cate", allcate);
-            request.setAttribute("br", allbr);
-            request.getRequestDispatcher("admin/Productmanager.jsp").forward(request, response);
-        } else {
-            int action = Integer.parseInt(ac);
-            if (action == 1) {
-                response.sendRedirect("createProduct");
+            if (search != null) {
+                if (txt == null) {
+                    allpro = (List<Product>) request.getAttribute("pro");
+                } else {
+                    dao.searchProduct(txt);
+                    allpro = dao.getPro();
+                }
+            }else if(search == null && txt != null){
+                dao.searchProduct(txt);
+                    allpro = dao.getPro();
+            }else {
+                dao.getAllProduct();
+                allpro = dao.getPro();
             }
-            if (action == 2) {
-                int prid = Integer.parseInt(request.getParameter("pid"));
-                dao.DeleteProduct(prid);
-                request.setAttribute("mess", prid);
+            paginateAndForward(request, response, allpro, txt);
+        } else {
+            handleAction(request, response, ac);
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String ac = request.getParameter("action");
+        String txt = request.getParameter("txt");
+        if (ac == null) {
+            dao.searchProduct(txt);
+            List<Product> allpro = dao.getPro();
+            request.setAttribute("pro", allpro);
+            request.setAttribute("search", "search");
+            doGet(request, response);
+        } else {
+            handleAction(request, response, ac);
+        }
+    }
+
+    private void paginateAndForward(HttpServletRequest request, HttpServletResponse response, List<Product> allpro, String search) throws ServletException, IOException {
+        int page, numberPage = 6;
+        int size = allpro.size();
+        int num = (size % numberPage == 0 ? (size / numberPage) : ((size / numberPage) + 1));
+        String xpage = request.getParameter("xpage");
+
+        if (xpage == null || xpage.isEmpty()) {
+            page = 1;
+        } else {
+            page = Integer.parseInt(xpage);
+        }
+
+        int start = (page - 1) * numberPage;
+        int end = Math.min(page * numberPage, size);
+        dao.getAllProductPagging(allpro, start, end);
+        List<Product> proPagging = dao.getPro();
+
+        dao.getAllCate();
+        List<Categories> allcate = dao.getCate();
+        dao.getAllBrand();
+        List<Brand> allbr = dao.getBrand();
+        
+        HttpSession session = request.getSession();
+        String message = (String) session.getAttribute("messpro");
+       
+
+        if (message != null) {
+            // Xử lý thông báo, ví dụ hiển thị cho người dùng
+            request.setAttribute("mess", message);
+            // Xóa thông báo khỏi session sau khi lấy ra để tránh hiển thị lại sau khi tải lại trang
+            session.removeAttribute("messpro");
+        }
+
+
+        request.setAttribute("search", search);
+        request.setAttribute("num", num);
+        request.setAttribute("page", page);
+        request.setAttribute("pro", proPagging);
+        request.setAttribute("cate", allcate);
+        request.setAttribute("br", allbr);
+        request.getRequestDispatcher("admin/Productmanager.jsp").forward(request, response);
+    }
+
+    private void handleAction(HttpServletRequest request, HttpServletResponse response, String ac) throws ServletException, IOException {
+        int action = Integer.parseInt(ac);
+
+        switch (action) {
+            case 1:
+                response.sendRedirect("createProduct");
+                break;
+            case 2:
+                int pridToDelete = Integer.parseInt(request.getParameter("pid"));
+                dao.DeleteProduct(pridToDelete);
                 response.sendRedirect("productmanage");
-            } else if (action == 3) {
-                int prid = Integer.parseInt(request.getParameter("pid"));
-                Product pro = dao.getProductbyId(prid);
+                break;
+            case 3:
+                int pridToEdit = Integer.parseInt(request.getParameter("pid"));
+                Product pro = dao.getProductbyId(pridToEdit);
                 dao.getAllCate();
                 List<Categories> allcate = dao.getCate();
                 dao.getAllBrand();
                 List<Brand> allbr = dao.getBrand();
-                dao.getProImagebyId(prid);
+                dao.getProImagebyId(pridToEdit);
                 List<Product_Image> imgs = dao.getProimg();
+
                 request.setAttribute("cate", allcate);
                 request.setAttribute("imgs", imgs);
                 request.setAttribute("br", allbr);
                 request.setAttribute("pro", pro);
                 request.getRequestDispatcher("admin/updateProduct.jsp").forward(request, response);
-            }
-        }
-    }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-       String ac = request.getParameter("action");
-       String txt = request.getParameter("txt");
-        if (ac == null) {
-            dao.searchProduct(txt);
-            List<Product> allpro = dao.getPro();
-            dao.getAllCate();
-            List<Categories> allcate = dao.getCate();
-            dao.getAllBrand();
-            List<Brand> allbr = dao.getBrand();
-            request.setAttribute("pro", allpro);
-            request.setAttribute("cate", allcate);
-            request.setAttribute("txt", txt);
-            request.setAttribute("br", allbr);
-            request.getRequestDispatcher("admin/Productmanager.jsp").forward(request, response);
-        } else {
-            int action = Integer.parseInt(ac);
-            if (action == 1) {
-                response.sendRedirect("createProduct");
-            }
-            if (action == 2) {
-                int prid = Integer.parseInt(request.getParameter("pid"));
-                dao.DeleteProduct(prid);
-                request.setAttribute("mess", prid);
+                break;
+            default:
                 response.sendRedirect("productmanage");
-            } else if (action == 3) {
-                int prid = Integer.parseInt(request.getParameter("pid"));
-                Product pro = dao.getProductbyId(prid);
-                dao.getAllCate();
-                List<Categories> allcate = dao.getCate();
-                dao.getAllBrand();
-                List<Brand> allbr = dao.getBrand();
-                request.setAttribute("cate", allcate);
-                request.setAttribute("br", allbr);
-                request.setAttribute("pro", pro);
-                request.getRequestDispatcher("admin/updateProduct.jsp").forward(request, response);
-            }
+                break;
         }
     }
 

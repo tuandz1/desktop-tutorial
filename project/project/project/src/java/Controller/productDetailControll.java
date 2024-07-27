@@ -4,9 +4,13 @@
  */
 package Controller;
 
+import DAL.DAOComment;
 import DAL.DAOProduct;
+import entity.Brand;
+import entity.Categories;
 import entity.Product;
 import entity.Product_Image;
+import entity.Review;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -23,6 +27,7 @@ import java.util.List;
 @WebServlet(name = "productDetailControll", urlPatterns = {"/productDetail"})
 public class productDetailControll extends HttpServlet {
     DAOProduct dao = new DAOProduct();
+    DAOComment daocmt = new DAOComment();
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -70,6 +75,16 @@ public class productDetailControll extends HttpServlet {
        List<Product> sameca = dao.getPro();
        dao.getProImagebyId(proid);
        List<Product_Image> pic = dao.getProimg();
+       daocmt.getReviewPro(proid);
+       List<Review> rv = daocmt.getCmt();
+       dao.getAllBrandShop();
+       List<Brand> br = dao.getBrand();
+       dao.getAllCate();
+       List<Categories> cate = dao.getCate();
+        request.setAttribute("br", br);
+        request.setAttribute("cate", cate);
+        request.setAttribute("amountrv", rv.size());
+        request.setAttribute("rv", rv);
         request.setAttribute("pro", pro);
         request.setAttribute("pic", pic);
         request.setAttribute("samebr", samebr);

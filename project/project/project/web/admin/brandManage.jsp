@@ -14,7 +14,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
         <script src="jquery-3.7.1.min.js"></script>
-        <script src="${pageContext.request.contextPath}/js/admin/table2excel.js"></script>
+         <script src="${pageContext.request.contextPath}/js/admin/table2excel.js"></script>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/vendor/bootstrap/css/bootstrap.min.css">
         <link href="${pageContext.request.contextPath}/vendor/fonts/circular-std/style.css" rel="stylesheet">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/style.css">
@@ -133,7 +133,7 @@
                                             ${sessionScope.acc.full_name}</h5>
                                         <span class="status"></span><span class="ml-2">Available</span>
                                     </div>
-                                    <a class="dropdown-item" href="accountmanage?action=2&aid=${sessionScope.acc.id}"><i class="fas fa-user mr-2"></i>Account</a>
+                                            <a class="dropdown-item" href="accountmanage?action=2&aid=${sessionScope.acc.id}"><i class="fas fa-user mr-2"></i>Account</a>
                                     <a class="dropdown-item" href="logout"><i class="fas fa-power-off mr-2"></i>Logout</a>
                                 </div>
                             </li>
@@ -154,238 +154,268 @@
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
-                        <div class="collapse navbar-collapse" id="navbarNav">                   
-     <ul class="navbar-nav flex-column">
+                        <div class="collapse navbar-collapse" id="navbarNav">
+                            <ul class="navbar-nav flex-column">
                                 <li class="nav-divider">
                                     Menu
                                 </li>
-                                <li class="nav-item ">
-                                    <a class="nav-link active" href="dashboard" ><i class="fa fa-fw fa-user-circle"></i>Dashboard </a>
+                                  <li class="nav-item ">
+                                    <a class="nav-link active" href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Dashboard </a>
 
                                 </li>
-                                <c:if test="${sessionScope.acc.role_id == 5 || sessionScope.acc.role_id == 4}">
-                                    <li class="nav-item ">
+                                <c:if test="${sessionScope.acc.role_id == 4 || sessionScope.acc.role_id == 2}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link " href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Product Manager </a>
 
-                                        <a class="nav-link  " href="accountmanage" ><i class="fa fa-fw fa-user-circle"></i>Account Manage </a>
+                                </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 5 }">
+                                <li class="nav-item ">
+                                    
+                                    <a class="nav-link  " href="accountmanage" ><i class="fa fa-fw fa-user-circle"></i>Account Manage </a>
 
-                                    </li>
+                                </li>
                                 </c:if>
                                 <c:if test="${sessionScope.acc.role_id == 2}">
-                                    <li class="nav-item ">
-                                        <a class="nav-link " href="brandmanage" ><i class="fa fa-fw fa-user-circle"></i>Brand Manage</a>
+                                <li class="nav-item ">
+                                    <a class="nav-link " href="brandmanage" ><i class="fa fa-fw fa-user-circle"></i>Brand Manage</a>
 
-                                    </li>
+                                </li>
+                                </c:if>
+                                      <c:if test="${sessionScope.acc.role_id == 4}">
+                                <li class="nav-item ">
+                                    <a class="nav-link " href="commentManage" ><i class="fa fa-fw fa-user-circle"></i>Comment Manage</a>
+
+                                </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 2}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="catemanage" ><i class="fa fa-fw fa-user-circle"></i>Cate Manage</a>
+                                    
+                                </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 2}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="blogmanage" ><i class="fa fa-fw fa-user-circle"></i>Blog Manage</a>
+                                    
+                                </li>
                                 </c:if>
                                 <c:if test="${sessionScope.acc.role_id == 4}">
-                                    <li class="nav-item ">
-                                        <a class="nav-link  " href="vouchermanage" ><i class="fa fa-fw fa-user-circle"></i>Voucher Manage</a>
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="ordermanage" ><i class="fa fa-fw fa-user-circle"></i>Order Manage</a>
 
-                                    </li>
+                                </li>
+                                 </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 4}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="vouchermanage" ><i class="fa fa-fw fa-user-circle"></i>Voucher Manage</a>
+
+                                </li>
                                 </c:if>
                             </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- end left sidebar -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- wrapper  -->
+            <!-- ============================================================== -->
+            <div class="dashboard-wrapper">
+                <div class="container-fluid  dashboard-content">
+                    <!-- ============================================================== -->
+                    <!-- pageheader -->
+                    <!-- ============================================================== -->
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="page-header">
+                                <h2 class="pageheader-title">Account Manager</h2>
+                                <p class="pageheader-text">Proin placerat ante duiullam scelerisque a velit ac porta, fusce sit amet vestibulum mi. Morbi lobortis pulvinar quam.</p>
+                                <div class="page-breadcrumb">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Dashboard</a></li>
+                                            <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Brand Manager</a></li>
+
+                                        </ol>
+                                    </nav>
+                                </div >
+                                <div class="row">
+                                    <a href="brandmanage?action=1" class="col-2 btn btn-primary"><i class="  fas fa-plus-circle"></i> Add Brand</a>
+                                     &nbsp;
+                                    <button id="exportBtn" class="col-2 btn btn-primary"><i class="  fas fa-plus-circle"></i> export to file</button>
+                                    <form class="col-12 form-control" action="brandmanage"method="post">
+                                        <div class="input-group ">
+                                            <input type="text" placeholder="Search...." name="txt" value="${txt}" class="form-control">
+                                            <div class="input-group-append">
+                                                <button type="submit" class="btn btn-primary">Search</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="row">   
+
+                                </div>
                             </div>
-                        </nav>
+                            <!-- ============================================================== -->
+                            <!-- end pageheader -->
+                            <!-- ============================================================== -->
+
+                            <div >
+                                <!-- ============================================================== -->
+                                <!-- basic table -->
+                                <!-- ============================================================== -->
+
+                                <!-- ============================================================== -->
+                                <!-- end basic table -->
+                                <!-- ============================================================== -->
+                                <!-- ============================================================== -->
+                                <!-- striped table -->
+                                <!-- ============================================================== -->
+                                <div >
+                                    <div class="card">
+                                        <h5 class="card-header">Striped Table</h5>
+                                        <div class="card-body">
+                                            <table id="userTable" class="table ">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Id</th>
+                                                        <th>Brand Image </th>
+                                                        <th>Brand Name</th>
+                                                    </tr>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="contents">
+
+                                                    <c:forEach items="${brandlist}" var="a">
+                                                        <tr>
+                                                            <td>${a.id}</td>
+                                                            <td > <img style="height: 150px; width: auto;" src="${a.brand_img}"/></td>
+                                                            <td>${a.brand_name}</td>
+                                                            <td> 
+                                                                 <c:if test="${!brandHasProducts[a.id]}">
+                                                                <a href="#" class="btn btn-outline-danger"  data-toggle="modal" data-target="#exampleModal${a.id}"><i class=" fas fa-trash-alt"></i></a>
+                                                                <div class="modal fade" id="exampleModal${a.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                    <div class="modal-dialog" role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                                                                <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                </a>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <p>Are you sure to delete this Brand</p>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <a href="brandmanage?action=5&bid=${a.id}" class="btn btn-secondary" >Delete</a>
+                                                                                <a href="#" class="btn btn-primary" data-dismiss="modal">Cancel</a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                 </c:if>
+                                                                  &nbsp; 
+                                                                <a href="brandmanage?action=2&bid=${a.id}" class="btn btn-outline-success"><i class=" fas fa-edit"></i></a>
+                                                                &nbsp; 
+                                                                <c:set var="isBlocked" value="false" />
+                                                                <c:forEach var="bl" items="${bl}">
+                                                                    <c:if test="${a.id == bl.brandid}">
+                                                                        <c:set var="isBlocked" value="true" />
+                                                                    </c:if>
+                                                                </c:forEach>
+
+                                                                <c:choose>
+                                                                    <c:when test="${isBlocked}">
+                                                                        <a href="brandmanage?action=3&bid=${a.id}" class="btn btn-outline-info"><i class="fas fa-check"></i></a>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                        <a href="brandmanage?action=4&bid=${a.id}" class="btn btn-outline-warning"><i class="fas fa-ban"></i></a>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                            </td>
+                                                        </tr>
+                                                    </c:forEach>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- ============================================================== -->
+                                <!-- end striped table -->
+                                <!-- ============================================================== -->
+                            </div>
+
+                            <!-- ============================================================== -->
+                            <!-- end contextual table -->
+                            <!-- ============================================================== -->
+                            <!-- ============================================================== -->
+                            <!-- responsive table -->
+                            <!-- ============================================================== -->
+
+
+                        </div>
+                        <!-- ============================================================== -->
+                        <!-- footer -->
+                        <!-- ============================================================== -->
+                        <div >
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                                        Copyright Â© 2018 Concept. All rights reserved. Dashboard by <a href="https://colorlib.com/wp/">Colorlib</a>.
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                                        <div class="text-md-right footer-links d-none d-sm-block">
+                                            <a href="javascript: void(0);">About</a>
+                                            <a href="javascript: void(0);">Support</a>
+                                            <a href="javascript: void(0);">Contact Us</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ============================================================== -->
+                        <!-- end footer -->
+                        <!-- ============================================================== -->
                     </div>
                 </div>
                 <!-- ============================================================== -->
-                <!-- end left sidebar -->
+                <!-- end main wrapper -->
                 <!-- ============================================================== -->
-                <!-- ============================================================== -->
-                <!-- wrapper  -->
-                <!-- ============================================================== -->
-                <div class="dashboard-wrapper">
-                    <div class="container-fluid  dashboard-content">
-                        <!-- ============================================================== -->
-                        <!-- pageheader -->
-                        <!-- ============================================================== -->
-                        <div class="row">
-                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                <div class="page-header">
-                                    <h2 class="pageheader-title">Account Manager</h2>
-                                    <p class="pageheader-text">Proin placerat ante duiullam scelerisque a velit ac porta, fusce sit amet vestibulum mi. Morbi lobortis pulvinar quam.</p>
-                                    <div class="page-breadcrumb">
-                                        <nav aria-label="breadcrumb">
-                                            <ol class="breadcrumb">
-                                                <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Dashboard</a></li>
-                                                <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Brand Manager</a></li>
+                <!-- Optional JavaScript -->
+                <script src="${pageContext.request.contextPath}/vendor/jquery/jquery-3.3.1.min.js"></script>
+                <script src="${pageContext.request.contextPath}/vendor/bootstrap/js/bootstrap.bundle.js"></script>
+                <script src="${pageContext.request.contextPath}/vendor/slimscroll/jquery.slimscroll.js"></script>
+                <script src="${pageContext.request.contextPath}/vendor/custom-js/jquery.multi-select.html"></script>
+                <script src="${pageContext.request.contextPath}/js/admin/main-js.js"></script>
+                <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+                <script src="${pageContext.request.contextPath}/vendor/datatables/js/dataTables.bootstrap4.min.js"></script>
+                <script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+                <script src="${pageContext.request.contextPath}/vendor/datatables/js/buttons.bootstrap4.min.js"></script>
+                <script src="${pageContext.request.contextPath}/vendor/datatables/js/data-table.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+                <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+                <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.print.min.js"></script>
+                <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.colVis.min.js"></script>
+                <script src="https://cdn.datatables.net/rowgroup/1.0.4/js/dataTables.rowGroup.min.js"></script>
+                <script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
+                <script src="https://cdn.datatables.net/fixedheader/3.1.5/js/dataTables.fixedHeader.min.js"></script>
+                <script>
 
-                                            </ol>
-                                        </nav>
-                                    </div >
-                                    <div class="row">
-                                        <a href="brandmanage?action=1" class="col-2 btn btn-primary"><i class="  fas fa-plus-circle"></i> Add Brand</a>
-                                        &nbsp;
-                                        <button id="exportBtn" class="col-2 btn btn-primary"><i class="  fas fa-plus-circle"></i> export to file</button>
-                                        <form class="col-12 form-control" action="brandmanage"method="post">
-                                            <div class="input-group ">
-                                                <input type="text" placeholder="Search...." name="txt" value="${txt}" class="form-control">
-                                                <div class="input-group-append">
-                                                    <button type="submit" class="btn btn-primary">Search</button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="row">   
+                </script>
+                  <script>
+            document.getElementById("exportBtn").addEventListener('click', function () {
+                var table2excel = new Table2Excel();
+                table2excel.export(document.querySelectorAll("#userTable"));
+            });
 
-                                    </div>
-                                </div>
-                                <!-- ============================================================== -->
-                                <!-- end pageheader -->
-                                <!-- ============================================================== -->
+        </script>
+                </body>
 
-                                <div >
-                                    <!-- ============================================================== -->
-                                    <!-- basic table -->
-                                    <!-- ============================================================== -->
-
-                                    <!-- ============================================================== -->
-                                    <!-- end basic table -->
-                                    <!-- ============================================================== -->
-                                    <!-- ============================================================== -->
-                                    <!-- striped table -->
-                                    <!-- ============================================================== -->
-                                    <div >
-                                        <div class="card">
-                                            <h5 class="card-header">Striped Table</h5>
-                                            <div class="card-body">
-                                                <table id="userTable" class="table ">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Id</th>
-                                                            <th>Brand Image </th>
-                                                            <th>Brand Name</th>
-                                                        </tr>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="contents">
-
-                                                        <c:forEach items="${brandlist}" var="a">
-                                                            <tr>
-                                                                <td>${a.id}</td>
-                                                                <td > <img style="height: 150px; width: auto;" src="${a.brand_img}"/></td>
-                                                                <td>${a.brand_name}</td>
-                                                                <td> 
-                                                                    <c:if test="${!brandHasProducts[a.id]}">
-                                                                        <a href="#" class="btn btn-outline-danger"  data-toggle="modal" data-target="#exampleModal${a.id}"><i class=" fas fa-trash-alt"></i></a>
-                                                                        <div class="modal fade" id="exampleModal${a.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                                            <div class="modal-dialog" role="document">
-                                                                                <div class="modal-content">
-                                                                                    <div class="modal-header">
-                                                                                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                                                                                        <a href="#" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                            <span aria-hidden="true">&times;</span>
-                                                                                        </a>
-                                                                                    </div>
-                                                                                    <div class="modal-body">
-                                                                                        <p>Are you sure to delete this Brand</p>
-                                                                                    </div>
-                                                                                    <div class="modal-footer">
-                                                                                        <a href="brandmanage?action=5&bid=${a.id}" class="btn btn-secondary" >Delete</a>
-                                                                                        <a href="#" class="btn btn-primary" data-dismiss="modal">Cancel</a>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </c:if>
-                                                                    &nbsp; 
-                                                                    <a href="brandmanage?action=2&bid=${a.id}" class="btn btn-outline-success"><i class=" fas fa-edit"></i></a>
-                                                                    &nbsp; 
-                                                                    <c:set var="isBlocked" value="false" />
-                                                                    <c:forEach var="bl" items="${bl}">
-                                                                        <c:if test="${a.id == bl.brandid}">
-                                                                            <c:set var="isBlocked" value="true" />
-                                                                        </c:if>
-                                                                    </c:forEach>
-
-                                                                    <c:choose>
-                                                                        <c:when test="${isBlocked}">
-                                                                            <a href="brandmanage?action=3&bid=${a.id}" class="btn btn-outline-info"><i class="fas fa-check"></i></a>
-                                                                            </c:when>
-                                                                            <c:otherwise>
-                                                                            <a href="brandmanage?action=4&bid=${a.id}" class="btn btn-outline-warning"><i class="fas fa-ban"></i></a>
-                                                                            </c:otherwise>
-                                                                        </c:choose>
-                                                                </td>
-                                                            </tr>
-                                                        </c:forEach>
-
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- ============================================================== -->
-                                    <!-- end striped table -->
-                                    <!-- ============================================================== -->
-                                </div>
-
-                                <!-- ============================================================== -->
-                                <!-- end contextual table -->
-                                <!-- ============================================================== -->
-                                <!-- ============================================================== -->
-                                <!-- responsive table -->
-                                <!-- ============================================================== -->
-
-
-                            </div>
-                            <!-- ============================================================== -->
-                            <!-- footer -->
-                            <!-- ============================================================== -->
-                            <div >
-                                <div class="container-fluid">
-                                    <div class="row">
-                                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-                                            Copyright Â© 2018 Concept. All rights reserved. Dashboard by <a href="https://colorlib.com/wp/">Colorlib</a>.
-                                        </div>
-                                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-                                            <div class="text-md-right footer-links d-none d-sm-block">
-                                                <a href="javascript: void(0);">About</a>
-                                                <a href="javascript: void(0);">Support</a>
-                                                <a href="javascript: void(0);">Contact Us</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- ============================================================== -->
-                            <!-- end footer -->
-                            <!-- ============================================================== -->
-                        </div>
-                    </div>
-                    <!-- ============================================================== -->
-                    <!-- end main wrapper -->
-                    <!-- ============================================================== -->
-                    <!-- Optional JavaScript -->
-                    <script src="${pageContext.request.contextPath}/vendor/jquery/jquery-3.3.1.min.js"></script>
-                    <script src="${pageContext.request.contextPath}/vendor/bootstrap/js/bootstrap.bundle.js"></script>
-                    <script src="${pageContext.request.contextPath}/vendor/slimscroll/jquery.slimscroll.js"></script>
-                    <script src="${pageContext.request.contextPath}/vendor/custom-js/jquery.multi-select.html"></script>
-                    <script src="${pageContext.request.contextPath}/js/admin/main-js.js"></script>
-                    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-                    <script src="${pageContext.request.contextPath}/vendor/datatables/js/dataTables.bootstrap4.min.js"></script>
-                    <script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
-                    <script src="${pageContext.request.contextPath}/vendor/datatables/js/buttons.bootstrap4.min.js"></script>
-                    <script src="${pageContext.request.contextPath}/vendor/datatables/js/data-table.js"></script>
-                    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-                    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
-                    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-                    <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
-                    <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.print.min.js"></script>
-                    <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.colVis.min.js"></script>
-                    <script src="https://cdn.datatables.net/rowgroup/1.0.4/js/dataTables.rowGroup.min.js"></script>
-                    <script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
-                    <script src="https://cdn.datatables.net/fixedheader/3.1.5/js/dataTables.fixedHeader.min.js"></script>
-                    <script>
-
-                    </script>
-                    <script>
-                        document.getElementById("exportBtn").addEventListener('click', function () {
-                            var table2excel = new Table2Excel();
-                            table2excel.export(document.querySelectorAll("#userTable"));
-                        });
-
-                    </script>
-                    </body>
-
-                    </html>     
+                </html>     

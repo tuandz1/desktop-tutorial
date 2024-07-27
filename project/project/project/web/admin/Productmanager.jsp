@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!doctype html>
 <html lang="en">
 
@@ -154,32 +155,62 @@
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="navbarNav">
-                      <ul class="navbar-nav flex-column">
+                             <ul class="navbar-nav flex-column">
                                 <li class="nav-divider">
                                     Menu
                                 </li>
-                                <li class="nav-item ">
+                                  <li class="nav-item ">
                                     <a class="nav-link active" href="dashboard" ><i class="fa fa-fw fa-user-circle"></i>Dashboard </a>
 
                                 </li>
-                                <c:if test="${sessionScope.acc.role_id == 5 || sessionScope.acc.role_id == 4}">
-                                    <li class="nav-item ">
+                                <c:if test="${sessionScope.acc.role_id == 4 || sessionScope.acc.role_id == 2}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link " href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Product Manager </a>
 
-                                        <a class="nav-link  " href="accountmanage" ><i class="fa fa-fw fa-user-circle"></i>Account Manage </a>
+                                </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 5 }">
+                                <li class="nav-item ">
+                                    
+                                    <a class="nav-link  " href="accountmanage" ><i class="fa fa-fw fa-user-circle"></i>Account Manage </a>
 
-                                    </li>
+                                </li>
                                 </c:if>
                                 <c:if test="${sessionScope.acc.role_id == 2}">
-                                    <li class="nav-item ">
-                                        <a class="nav-link " href="brandmanage" ><i class="fa fa-fw fa-user-circle"></i>Brand Manage</a>
+                                <li class="nav-item ">
+                                    <a class="nav-link " href="brandmanage" ><i class="fa fa-fw fa-user-circle"></i>Brand Manage</a>
 
-                                    </li>
+                                </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 2}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="catemanage" ><i class="fa fa-fw fa-user-circle"></i>Cate Manage</a>
+                                    
+                                </li>
+                                </c:if>
+                                      <c:if test="${sessionScope.acc.role_id == 4}">
+                                <li class="nav-item ">
+                                    <a class="nav-link " href="commentManage" ><i class="fa fa-fw fa-user-circle"></i>Comment Manage</a>
+
+                                </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 2}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="blogmanage" ><i class="fa fa-fw fa-user-circle"></i>Blog Manage</a>
+                                    
+                                </li>
                                 </c:if>
                                 <c:if test="${sessionScope.acc.role_id == 4}">
-                                    <li class="nav-item ">
-                                        <a class="nav-link  " href="vouchermanage" ><i class="fa fa-fw fa-user-circle"></i>Voucher Manage</a>
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="ordermanage" ><i class="fa fa-fw fa-user-circle"></i>Order Manage</a>
 
-                                    </li>
+                                </li>
+                                 </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 4}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="vouchermanage" ><i class="fa fa-fw fa-user-circle"></i>Voucher Manage</a>
+
+                                </li>
                                 </c:if>
                             </ul>
                         </div>
@@ -194,6 +225,11 @@
             <!-- ============================================================== -->
             <div class="dashboard-wrapper">
                 <div class="container-fluid  dashboard-content">
+                    <c:if test="${mess != null}">
+                        <div id="notification" class="">
+                            ${mess}
+                        </div>
+                    </c:if>
                     <!-- ============================================================== -->
                     <!-- pageheader -->
                     <!-- ============================================================== -->
@@ -212,12 +248,12 @@
                                     </nav>
                                 </div >
                                 <div class="row">
-                                    <a class="col-2 btn btn-primary text-white"><i class="  fas fa-plus-circle"></i> Add product</a>
+                                    <a href="productmanage?action=1" class="col-2 btn btn-primary text-white"><i class="  fas fa-plus-circle"></i> Add product</a>
                                     &nbsp;
                                     <button id="exportBtn" class="col-2 btn btn-primary"><i class="  fas fa-plus-circle"></i> export to file</button>
                                     <form class="col-12 form-control" action="productmanage"method="post">
                                          <div class="input-group ">
-                                             <input type="text" placeholder="Search...." name="txt" value="${txt}" class="form-control">
+                                             <input type="text" placeholder="Search...." name="txt" value="${search}" class="form-control">
                                                 <div class="input-group-append">
                                                     <button type="submit" class="btn btn-primary">Search</button>
                                                 </div>
@@ -283,8 +319,16 @@
                                                                     </c:if>
                                                                 </c:forEach> 
                                                             </td>
-                                                            <td > ${p.price} </td>
+                                                            <td >  <fmt:formatNumber value="${p.price}" type="number" pattern="#,##0" />  </td>
+                                                            <c:if test="${p.stockQuantity > 0}">
                                                             <td > ${p.stockQuantity} </td>
+                                                            </c:if>
+                                                            <c:if test="${p.stockQuantity < 0}">
+                                                            <td > Stop selling this product </td>
+                                                            </c:if>
+                                                            <c:if test="${p.stockQuantity == 0}">
+                                                            <td > Sold out </td>
+                                                            </c:if>
                                                             <td > ${p.publication_date} </td>
                                                             <td>
                                                                 <a href="#" class="btn btn-outline-danger"  data-toggle="modal" data-target="#exampleModal${p.id}"><i class=" fas fa-trash-alt"></i></a>
@@ -315,6 +359,15 @@
                                                     
                                                 </tbody>
                                             </table>
+                                            <c:set var="xpage" value="${requestScope.page}"/>
+                                            <div style="padding: 20px 0px;" class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12"> 
+                                                <ul class="pagination">
+                                                    <c:forEach begin="${1}" end="${requestScope.num}" var="i">
+                                                        <li class="page-item"> <a style="text-decoration: white" href="productmanage?xpage=${i}&txt=${search}" class="page-link">${i}</a></li>
+                                                    </c:forEach>
+                                                    
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -388,8 +441,37 @@
                 var table2excel = new Table2Excel();
                 table2excel.export(document.querySelectorAll("#userTable"));
             });
+            
+            document.addEventListener("DOMContentLoaded", function () {
+                    var mess = "${mess}"; // Đảm bảo rằng bạn nhận được giá trị của 'mess' từ server-side rendering
+
+                    if (mess !== null && mess.trim() !== "") {
+                        var notification = document.getElementById('notification');
+                        if (notification) {
+                            notification.innerHTML = mess;
+                            notification.style.display = 'block'; // Hiển thị thông báo
+
+                            setTimeout(function () {
+                                notification.style.display = 'none'; // Ẩn thông báo sau 2 giây
+                            }, 2000); // Thời gian 2 giây (2000 miligiây)
+                        }
+                    }
+                });
 
         </script>
+         <style>
+             #notification {
+                    display: none; /* Ẩn thông báo ban đầu */
+                    padding: 10px;
+                    color: white;
+                    background-color: #33cc00f2;
+                    border: 1px solid #ccc;
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 9999;
+                }
+        </style>
                 </body>
 
                 </html>     

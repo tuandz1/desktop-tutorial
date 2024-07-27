@@ -110,7 +110,9 @@ public class LoginController extends HttpServlet {
                 }
             } else if (acc.getRole_id() == 3) {
                 response.sendRedirect("shipperdashboard");
-            } else if (acc.getRole_id() != 1 || acc.getRole_id() != 3) {
+            }else if(acc.getRole_id() == 5){
+                 response.sendRedirect("accountmanage");
+            }else if (acc.getRole_id() != 1 || acc.getRole_id() != 3) {
                 response.sendRedirect("dashboard");
             }
         } else {

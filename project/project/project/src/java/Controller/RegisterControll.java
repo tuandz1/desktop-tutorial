@@ -95,7 +95,7 @@ public class RegisterControll extends HttpServlet {
                     request.getRequestDispatcher("register.jsp").forward(request, response);
                 }
             }
-            if (name.length() <= 8 || (pass.length() <= 8 || pass.length() >= 16)) {
+            if (name.length() <= 8 || pass.length() <= 8 || pass.length() >= 16) {
                 mess = "Name or password must be at least 8 characters";
                     request.setAttribute("passmess", mess);
                     request.getRequestDispatcher("register.jsp").forward(request, response);

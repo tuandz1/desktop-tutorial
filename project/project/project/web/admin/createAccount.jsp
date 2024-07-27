@@ -147,15 +147,21 @@
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="navbarNav">
-                             <ul class="navbar-nav flex-column">
+                            <ul class="navbar-nav flex-column">
                                 <li class="nav-divider">
                                     Menu
                                 </li>
                                 <li class="nav-item ">
-                                    <a class="nav-link active" href="dashboard" ><i class="fa fa-fw fa-user-circle"></i>Dashboard </a>
+                                    <a class="nav-link active" href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Dashboard </a>
 
                                 </li>
-                                <c:if test="${sessionScope.acc.role_id == 5 || sessionScope.acc.role_id == 4}">
+                                <c:if test="${sessionScope.acc.role_id == 4 || sessionScope.acc.role_id == 2}">
+                                    <li class="nav-item ">
+                                        <a class="nav-link " href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Product Manager </a>
+
+                                    </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 5 }">
                                     <li class="nav-item ">
 
                                         <a class="nav-link  " href="accountmanage" ><i class="fa fa-fw fa-user-circle"></i>Account Manage </a>
@@ -165,6 +171,30 @@
                                 <c:if test="${sessionScope.acc.role_id == 2}">
                                     <li class="nav-item ">
                                         <a class="nav-link " href="brandmanage" ><i class="fa fa-fw fa-user-circle"></i>Brand Manage</a>
+
+                                    </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 4}">
+                                    <li class="nav-item ">
+                                        <a class="nav-link " href="commentManage" ><i class="fa fa-fw fa-user-circle"></i>Comment Manage</a>
+
+                                    </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 2}">
+                                    <li class="nav-item ">
+                                        <a class="nav-link  " href="catemanage" ><i class="fa fa-fw fa-user-circle"></i>Cate Manage</a>
+
+                                    </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 2}">
+                                    <li class="nav-item ">
+                                        <a class="nav-link  " href="blogmanage" ><i class="fa fa-fw fa-user-circle"></i>Blog Manage</a>
+
+                                    </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 4}">
+                                    <li class="nav-item ">
+                                        <a class="nav-link  " href="ordermanage" ><i class="fa fa-fw fa-user-circle"></i>Order Manage</a>
 
                                     </li>
                                 </c:if>
@@ -201,9 +231,10 @@
                                     <div class="col-12 col-sm-10 col-lg-6">
                                         <select style="height: 100%; width: 100%" name="role">
                                             <c:forEach items="${role}" var="b">
-                                                <option  value="${b.id}">${b.name}</option>
+                                                <c:if test="${b.id != 1 && b.id !=5}">
+                                                    <option value="${b.id}">${b.name}</option>
+                                                </c:if>
                                             </c:forEach>
-
                                         </select>
                                     </div>
                                 </div>
@@ -247,7 +278,7 @@
                                 <div class="form-group row">
                                     <label class="col-12 col-sm-3 col-form-label text-sm-right">Avatar</label>
                                     <div class="col-12 col-sm-8 col-lg-6">
-                                        <input type="file" id="fileInput" name="ava" accept="image/*" class="form-control">
+                                        <input required="" type="file" id="fileInput" name="ava" accept="image/*" class="form-control">
                                     </div>
                                     <div id="errorMessage" class="error"></div>
                                 </div>

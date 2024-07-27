@@ -6,7 +6,9 @@ package Controller;
 
 import DAL.DAOOrder;
 import DAL.DAOProduct;
+import entity.Account;
 import entity.Cart;
+import entity.Email;
 import entity.Items;
 import entity.Order;
 import entity.Product;
@@ -18,8 +20,13 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  *
@@ -106,7 +113,7 @@ public class Checkout extends HttpServlet {
             String phone = request.getParameter("phone");
             String add = request.getParameter("add");
             if (payid == 1) {
-                daoor.addOrder(cusid,2, phone, name, add, payid, cart,"Preparing for shipment",rate);
+                daoor.addOrder(cusid, 2, phone, name, add, payid, cart, "Preparing for shipment", rate);
                 for (Iterator<Items> iterator = cart.getItems().iterator(); iterator.hasNext();) {
                     Items i = iterator.next();
                     if (i.getAccid() == cusid) {
@@ -130,9 +137,18 @@ public class Checkout extends HttpServlet {
                 response.addCookie(c);
                 Order o = daoor.getOrderbyId(daoor.Orderid(cusid));
                 request.setAttribute("orderId", o.getId());
+                HttpSession session = request.getSession();
+                Account acc = (Account) session.getAttribute("acc");
+                Email e = new Email();
+                LocalDateTime currentDateTime = LocalDateTime.now();
+
+                executorService.submit(() -> {
+                    e.sendEmail(e.subjectOrder(name), e.messageOrder(add), acc.getEmail());
+
+                });
                 request.getRequestDispatcher("paymentsucess.jsp").forward(request, response);
             } else if (payid == 2) {
-                    daoor.addOrder(cusid,1, phone, name, add, payid, cart,"Preparing for shipment",rate);
+                daoor.addOrder(cusid, 1, phone, name, add, payid, cart, "Preparing for shipment", rate);
                 int orderid = daoor.Orderid(cusid);
                 Order o = daoor.getOrderbyId(orderid);
                 request.setAttribute("rate", rate);
@@ -141,6 +157,12 @@ public class Checkout extends HttpServlet {
             }
         }
     }
+    ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+    private static final String ALPHANUMERIC_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private static final String SPECIAL_CHARACTERS = "!@#$%^&*()-_=+[]{}|;:'\",.<>?/`~";
+    private static final String CHARACTERS = ALPHANUMERIC_CHARACTERS + SPECIAL_CHARACTERS;
+    private static final SecureRandom random = new SecureRandom();
 
     /**
      * Returns a short description of the servlet.

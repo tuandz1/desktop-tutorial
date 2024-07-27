@@ -21,8 +21,10 @@
         <!-- Google fonts End -->
 
         <!-- custon style Sheet & JavaScript -->
-        <link rel="stylesheet" href="css/shoppage/index.css" />
-        <script src="js/shoppage/index.js" defer></script>
+      <link rel="stylesheet" href="css/shoppage/shop.css" />
+    <link rel="stylesheet" href="css/shoppage/index.css" />
+    <script src="js/shoppage/index.js" defer></script>
+    <script src="js/shoppage/shop.js" defer></script>
         <style>
             #scrollToTopBtn {
                 display: none; /* Ẩn nút khi trang mới tải */
@@ -155,6 +157,11 @@
                     </div>
                 </div>
                 <div class="mobile-open-btn"><i class="uil uil-align-right"></i></div>
+                    <c:if test="${mess != null}">
+                    <div id="notification" class="hidden">
+                        ${mess}
+                    </div>
+                </c:if>
             </header>
 
             <!-- ===========Hero Section===================== -->
@@ -406,40 +413,49 @@
                         </p>
                     </section>
                 </footer>
+             
 
+            <script>
+                const accountBtn = document.getElementById('acc-box');
+                const accItme = document.getElementById('acc-icon');
+                accountBtn.addEventListener('click', () => {
+                    const showCart = accItme.getAttribute('data-visible');
 
-                <script>
-                    const accountBtn = document.getElementById('acc-box');
-                    const accItme = document.getElementById('acc-icon');
-                    accountBtn.addEventListener('click', () => {
-                        const showCart = accItme.getAttribute('data-visible');
-
-                        if (showCart === 'false') {
-                            accItme.setAttribute('data-visible', true)
-                        } else {
-                            accItme.setAttribute('data-visible', false)
-                        }
-                    })
-                </script>
-                <script>
-                    window.onscroll = function () {
-                        scrollFunction()
-                    };
-
-                    function scrollFunction() {
-                        if (document.body.scrollTop > 15 || document.documentElement.scrollTop > 15) {
-                            document.getElementById("scrollToTopBtn").style.display = "block";
-                        } else {
-                            document.getElementById("scrollToTopBtn").style.display = "none";
-                        }
+                    if (showCart === 'false') {
+                        accItme.setAttribute('data-visible', true)
+                    } else {
+                        accItme.setAttribute('data-visible', false)
                     }
+                })
+            </script>
+            <script>
+                document.getElementById('showNotification').addEventListener('click', function () {
+                    document.getElementById('notification').classList.remove('hidden');
+                    setTimeout(function () {
+                        document.getElementById('notification').classList.add('hidden');
+                    }, 10000); // Đợi 1 giây trước khi ẩn đi
+                });
+            </script>
+            <script>
+                window.onscroll = function () {
+                    scrollFunction()
+                };
 
-                    // Khi người dùng bấm vào nút, cuộn lên đầu trang
-                    document.getElementById('scrollToTopBtn').addEventListener('click', function () {
-                        document.body.scrollTop = 0; // Đối với Safari
-                        document.documentElement.scrollTop = 0; // Đối với Chrome, Firefox, IE và Opera
-                    });
-                </script>
-                <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
-            </body>
-        </html>
+                function scrollFunction() {
+                    if (document.body.scrollTop > 15 || document.documentElement.scrollTop > 15) {
+                        document.getElementById("scrollToTopBtn").style.display = "block";
+                    } else {
+                        document.getElementById("scrollToTopBtn").style.display = "none";
+                    }
+                }
+
+                // Khi người dùng bấm vào nút, cuộn lên đầu trang
+                document.getElementById('scrollToTopBtn').addEventListener('click', function () {
+                    document.body.scrollTop = 0; // Đối với Safari
+                    document.documentElement.scrollTop = 0; // Đối với Chrome, Firefox, IE và Opera
+                });
+            </script>
+            
+            <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+        </body>
+    </html>

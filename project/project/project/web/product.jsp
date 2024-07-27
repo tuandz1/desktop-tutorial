@@ -1,4 +1,5 @@
 <%@taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,50 +27,50 @@
         <script src="js/shoppage/index.js" defer></script>
         <script src="js/shoppage/product.js" defer></script>
         <style>
-             .slider-container {
-            position: relative;
-            max-width: 600px;
-            margin: auto;
-            overflow: hidden;
-        }
+            .slider-container {
+                position: relative;
+                max-width: 600px;
+                margin: auto;
+                overflow: hidden;
+            }
 
-        .slider {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-        }
+            .slider {
+                display: flex;
+                transition: transform 0.5s ease-in-out;
+            }
 
-        .slide {
-            min-width: 100%;
-            box-sizing: border-box;
-        }
+            .slide {
+                min-width: 100%;
+                box-sizing: border-box;
+            }
 
-        .slide img {
-            width: 100%;
-            display: block;
-        }
+            .slide img {
+                width: 100%;
+                display: block;
+            }
 
-        .prev, .next {
-            cursor: pointer;
-            position: absolute;
-            top: 50%;
-            width: auto;
-            padding: 16px;
-            margin-top: -22px;
-            color: white;
-            font-weight: bold;
-            font-size: 18px;
-            transition: 0.6s ease;
-            user-select: none;
-            border: none;   
-        }
+            .prev, .next {
+                cursor: pointer;
+                position: absolute;
+                top: 50%;
+                width: auto;
+                padding: 16px;
+                margin-top: -22px;
+                color: white;
+                font-weight: bold;
+                font-size: 18px;
+                transition: 0.6s ease;
+                user-select: none;
+                border: none;
+            }
 
-        .next {
-            right: 0;
-        }
+            .next {
+                right: 0;
+            }
 
-        .prev:hover, .next:hover {
-            background-color: rgba(0, 0, 0, 0.8);
-        }
+            .prev:hover, .next:hover {
+                background-color: rgba(0, 0, 0, 0.8);
+            }
         </style>
         <!-- custon style Sheet & JavaScript -->
         <title>Ecommerce Website</title>
@@ -94,7 +95,7 @@
                         class="primary-navigation flex"
                         >
                         <li>
-                            <a class="fs-100 fs-montserrat bold-500" href="home"
+                            <a class="active fs-100 fs-montserrat bold-500" href="home"
                                >Home</a
                             >
                         </li>
@@ -104,33 +105,40 @@
                             >
                         </li>
                         <li>
-                            <a class="fs-100 fs-montserrat bold-500" href="aboutus.jsp"
-                               >About Us</a
-                            >
-                        </li>
-                        <li>
-                            <a class="fs-100 fs-montserrat bold-500" href="blog.jsp"
+                            <a class="fs-100 fs-montserrat bold-500" href="customerblog"
                                >Blog</a
                             >
                         </li>
+                        <li>
+                            <a class="fs-100 fs-montserrat bold-500" href="about.jsp"
+                               >About Us</a
+                            >
+                        </li>
+
                         <li>
                             <a class="fs-100 fs-montserrat bold-500" href="contactus.jsp"
                                >Contact Us</a
                             >
                         </li>
+
                     </ul>
                 </nav>
             </div>
 
             <div class="header-login flex">
-                <p class="fs-100 fs-montserrat bold-500">login</p>
-                <i class="uil uil-search"></i>
-                <i
-                    id="cart-box"
-                    aria-controls="cart-icon"
-                    class="uil uil-shopping-bag"
-                    ></i>
+                <c:if test="${sessionScope.acc.full_name == null}">
+                    <a style="text-decoration: none;
+                       color: black"class="fs-100 fs-montserrat bold-500" href="login.jsp">Login</a></p>
+                </c:if>
+                <c:if test="${sessionScope.acc.full_name != null}">
+                    <p style="text-decoration: none;
+                       color: black"class="fs-100 fs-montserrat bold-500" id="acc-box" aria-controls="acc-icon">${sessionScope.acc.getFull_name()}</p>
 
+                </c:if>
+                <a  href="showCart">
+                    <i class="uil uil-shopping-bag"
+                       ></i>${n}
+                </a>
                 <!-- =================1111111111================== -->
                 <div id="cart-icon" data-visible="false" class="cart-icon">
                     <div class="shopping flex">
@@ -146,6 +154,30 @@
                         <!-- ================================================== -->
                     </div>
                 </div>
+                <div id="acc-icon" data-visible="false" class="cart-icon">
+                    <div class="shopping flex">
+                        <p>Shopping Basket</p>
+                        <i id="cross-btn" class="uil uil-times"></i>
+                    </div>
+                    <div style="padding-top: 2rem;" class="cart bold-800 flex">
+                        <a style="text-decoration: none;
+                           color: black"class="fs-100 fs-montserrat bold-500" href="logout">Log out</a>
+                    </div>
+                    <div style="padding-top: 2rem;" class="cart bold-800 flex">
+                        <a style="text-decoration: none;
+                           color: black"class="fs-100 fs-montserrat bold-500" href="accsettings">Account Settings</a>
+                    </div>
+                    <div style="padding-top: 2rem;" class="cart bold-800 flex">
+                        <a style="text-decoration: none;
+                           color: black"class="fs-100 fs-montserrat bold-500" href="changePassword">Change Passwords</a>
+                    </div>
+                    <div style="padding-top: 2rem;" class="cart bold-800 flex">
+                        <form action="orderhistory" method="post">
+                            <input type="hidden" value="${sessionScope.acc.id}" name="accid"/>
+                            <input style="border: none;" class="fs-100 fs-montserrat bold-500" type="submit" value="View Order History"/>
+                        </form>
+                    </div>
+                </div>
             </div>
             <div class="mobile-open-btn"><i class="uil uil-align-right"></i></div>
         </header>
@@ -157,11 +189,11 @@
                     <div class="slide">
                         <img style="width: 400px; height: 400px" src="${pro.img}" alt="Product Image 1">
                     </div>
-                        <c:forEach items="${pic}" var="p">
-                    <div class="slide">
-                        <img style="width: 400px; height: 400px" src="${p.img_link}" alt="Product Image 2">
-                    </div>
-                        </c:forEach>
+                    <c:forEach items="${pic}" var="p">
+                        <div class="slide">
+                            <img style="width: 400px; height: 400px" src="${p.img_link}" alt="Product Image 2">
+                        </div>
+                    </c:forEach>
                     <!-- Add more slides as needed -->
                 </div>
                 <button class="prev" onclick="plusSlides(-1)"><i class="uil text-red uil-angle-double-left"></i></button>
@@ -178,28 +210,44 @@
                         <i class="uil uil-star"></i>
                     </div>
                     <div>
-                        <p class="fs-montserrat fs-100">(1 customer review)</p>
+                        <p class="fs-montserrat fs-100">(${amountrv} customer review)</p>
                     </div>
                 </div>
 
                 <div class="price">
-                    <p class="bold-700 fs-poppins fs-300">$ ${pro.price}</p>
+                    <p class="bold-700 fs-poppins fs-300"><fmt:formatNumber value="${pro.price}" type="number" pattern="#,##0" /> VND</p>
                 </div>
 
                 <div>
-                    <p class="fs-montserrat lineheight">
-                        ${pro.description}
-                    </p>
+                    <c:forEach items="${br}" var="b">
+                        <c:if test="${pro.brand_id eq b.id}">
+                        <p class="fs-montserrat lineheight ">
+                        Brand Name:    ${b.brand_name}
+                        </p>
+                        </c:if>
+                    </c:forEach>
+                    <c:forEach items="${cate}" var="b">
+                        <c:if test="${pro.caid eq b.id}">
+                        <p class="fs-montserrat lineheight">
+                         Category:   ${b.ca_name}
+                        </p>
+                        </c:if>
+                    </c:forEach>
+                   
                 </div>
+                <form action="addToCart" method="get">
+                    <div class="product-add-cart flex">
 
-                <div class="product-add-cart flex">
-                    <input type="number" min="0" max="10" class="bg-gray fs-poppins" />
-                    <button
-                        class="product-btn large-btn bg-red text-white fs-poppins fs-50"
-                        >
-                        Add to cart
-                    </button>
-                </div>
+                        <input type="number" name="num" min="0" value="1" max="${pro.stockQuantity}" class="bg-gray fs-poppins " />
+                        <input type="hidden" name="id" value="${pro.id}" />
+                        <input type="hidden" name="acc_num" value="${sessionScope.acc.id}" />
+                        <button 
+                            class="product-btn large-btn bg-red text-white fs-poppins fs-50"
+                            >
+                            Add to cart
+                        </button>
+                    </div>
+                </form>
 
                 <div>
                     <p class="fs-montserrat text-red">
@@ -221,96 +269,49 @@
                 <a
                     id="rev-tab"
                     class="fs-poppins fs-200 text-black bold-700 tabs-light-text"
-                    >Reviews(1)</a
+                    >Reviews(${amountrv})</a
                 >
             </div>
 
             <div class="description grid" data-tab="false">
                 <h3 class="text-black fs-poppins fs-300">Description</h3>
                 <p class="fs-montserrat lineheight">
-                    There are many variations passages of Lorem Ipsum available, but the
-                    majority have suffered alteration words some form by injectedor
-                    randomized which donât even slightly believable. If you are going to
-                    use a passage of Lorem Ipsum, you need to be sure there isnât anything
-                    embarrassing hidden in the middle of text. All the Lorem Ipsum
-                    generators on the Internet tend to repeat predefined chunks as
-                    necessary, making this the first true generator on the Internet. It
-                    uses a dictionary of over 200 Latin words, combined with a handful of
-                    model sentence structures, to generate Lorem Ipsum which looks
-                    reasonable. The generated Lorem Ipsum is therefore always free from
-                    repetition, injected humour, or non-characteristic words etc.
+                    ${pro.description}
                 </p>
             </div>
 
             <article class="reviews-container" data-tab="false">
                 <div class="reviews">
                     <p class="text-black fs-poppins fs-200 bold-700">
-                        1 review for Rockey Mountain
+                        ${amountrv} review for ${pro.proName}
                     </p>
                 </div>
-                <div id="post-reviews">
-                    <div
-                        id="display-reviews"
-                        class="display-reviews bg-very-light-gray flex"
-                        >
-                        <div>
-                            <i class="uil text-black uil-user-circle"></i>
-                        </div>
-                        <div>
-                            <div class="connent-box">
-                                <i class="uil text-red uil-star"></i>
-                                <i class="uil text-red uil-star"></i>
-                                <i class="uil text-red uil-star"></i>
-                                <i class="uil text-red uil-star"></i>
-                                <i class="uil uil-star"></i>
-                                <p class="fs-poppins fs-200">
-                                    <span class="bold-700">Paul </span>- October 7, 2019
-                                </p>
-                                <p class="fs-poppins fs-200">Hello</p>
+                <c:forEach items="${rv}" var="r">
+                    <div id="post-reviews">
+                        <div
+                            id="display-reviews"
+                            class="display-reviews bg-very-light-gray flex"
+                            >
+                            <div style="margin: 0 10px">
+                                <img src="${r.userava}" style="width: 150px; height: 150px; border-radius: 48%; object-fit: cover;">
                             </div>
-                            <div class="flex likes-icon">
-                                <i class="uil bg-gray uil-thumbs-up"></i>
-                                <i class="uil bg-gray uil-thumbs-down"></i>
-                                <span id="count-like" class="bg-white fs-poppins">0</span>
+                            <div>
+                                <div class="connent-box">
+                                    <c:forEach begin="1" end="${r.rating}">
+                                        <i class="uil text-red uil-star"></i>
+                                    </c:forEach>
+                                    <p style="font-size: 20px" class="fs-poppins">
+                                        <span class="bold-700">${r.fullname} </span>- ${r.createdOn}
+                                    </p>
+                                    <p style="font-size: 20px"class="fs-poppins">${r.commentText}</p>
+                                </div>
+
                             </div>
                         </div>
                     </div>
-                </div>
+                </c:forEach>
 
-                <div class="grid">
-                    <div class="reviews">
-                        <p class="text-black fs-poppins fs-200">Add a review</p>
-                    </div>
 
-                    <div class="give-reviews flex">
-                        <div>
-                            <p class="text-black fs-poppins fs-200 bold-700">Your rating *</p>
-                        </div>
-                        <div>
-                            <i class="uil uil-star"></i>
-                            <i class="uil uil-star"></i>
-                            <i class="uil uil-star"></i>
-                            <i class="uil uil-star"></i>
-                            <i class="uil uil-star"></i>
-                        </div>
-                    </div>
-                    <div class="message grid">
-                        <p class="fs-montserrat">Your review</p>
-                        <textarea
-                            type="text"
-                            rows="10"
-                            class="bg-very-light-gray fs-montserrat"
-                            ></textarea>
-                    </div>
-                </div>
-                <div class="review-btn flex">
-                    <button
-                        id="add-connent"
-                        class="large-btn bg-red text-white fs-poppins fs-50"
-                        >
-                        Submit
-                    </button>
-                </div>
             </article>
         </section>
 
@@ -458,31 +459,44 @@
             </section>
         </footer>
         <script>
-        let slideIndex = 0;
+            let slideIndex = 0;
 
-        function showSlides(n) {
-            const slides = document.getElementsByClassName('slide');
-            if (n >= slides.length) {
-                slideIndex = 0;
-            } else if (n < 0) {
-                slideIndex = slides.length - 1;
-            } else {
-                slideIndex = n;
+            function showSlides(n) {
+                const slides = document.getElementsByClassName('slide');
+                if (n >= slides.length) {
+                    slideIndex = 0;
+                } else if (n < 0) {
+                    slideIndex = slides.length - 1;
+                } else {
+                    slideIndex = n;
+                }
+
+                for (let i = 0; i < slides.length; i++) {
+                    slides[i].style.display = 'none';
+                }
+
+                slides[slideIndex].style.display = 'block';
             }
 
-            for (let i = 0; i < slides.length; i++) {
-                slides[i].style.display = 'none';
+            function plusSlides(n) {
+                showSlides(slideIndex + n);
             }
 
-            slides[slideIndex].style.display = 'block';
-        }
+            // Initialize the slider
+            showSlides(slideIndex);
+        </script>
+        <script>
+            const accountBtn = document.getElementById('acc-box');
+            const accItme = document.getElementById('acc-icon');
+            accountBtn.addEventListener('click', () => {
+                const showCart = accItme.getAttribute('data-visible');
 
-        function plusSlides(n) {
-            showSlides(slideIndex + n);
-        }
-
-        // Initialize the slider
-        showSlides(slideIndex);
-    </script>
+                if (showCart === 'false') {
+                    accItme.setAttribute('data-visible', true)
+                } else {
+                    accItme.setAttribute('data-visible', false)
+                }
+            })
+        </script>
     </body>
 </html>

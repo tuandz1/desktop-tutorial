@@ -117,6 +117,7 @@ public class DAOProduct {
             // Xử lý ngoại lệ
         }
     }
+
     public void getTop4Brand() {
         String sql = "SELECT Top 4 [id]\n"
                 + "      ,[brand_name]\n"
@@ -230,6 +231,7 @@ public class DAOProduct {
             // Xử lý ngoại lệ
         }
     }
+
     public void gettop4Product() {
         String sql = "SELECT top 4 [id]\n"
                 + "      ,[proName]\n"
@@ -277,7 +279,7 @@ public class DAOProduct {
                 + "      ,[stockQuantity]\n"
                 + "      ,[publication_date]\n"
                 + "  FROM [Product] where  [brand_id] NOT IN (SELECT [brandid] FROM Block)"
-                + "and [stockQuantity] != 0";
+                + "and [stockQuantity] > 0";
         pro = new Vector<Product>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -483,19 +485,16 @@ public class DAOProduct {
     }
 
     public void getBestProduct() {
-        String sql = "SELECT TOP 8 [id]\n"
-                + "      ,[proName]\n"
-                + "      ,[caid]\n"
-                + "      ,[description]\n"
-                + "      ,[img]\n"
-                + "      ,[price]\n"
-                + "      ,[rate]\n"
-                + "      ,[brand_id]\n"
-                + "      ,[stockQuantity]\n"
-                + "      ,[publication_date]\n"
-                + "  FROM [Product] where   [brand_id] NOT IN (SELECT [brandid] FROM Block) "
-                + "and [stockQuantity] != 0 "
-                + "  ORDER BY [price] DESC;";
+        String sql = "SELECT p.*\n"
+                + "FROM Product p\n"
+                + "JOIN (\n"
+                + "    SELECT TOP 8 product_id, COUNT(product_id) AS product_count\n"
+                + "    FROM orderdetail\n"
+                + "    GROUP BY product_id\n"
+                + "    ORDER BY product_count DESC\n"
+                + ") od ON p.id = od.product_id\n"
+                + "where   [brand_id] NOT IN (SELECT [brandid] FROM Block) and [stockQuantity] > 0\n"
+                + "ORDER BY od.product_count DESC;";
         pro = new Vector<Product>();
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -844,7 +843,7 @@ public class DAOProduct {
     public void DeleteProduct(int id) {
 
         String sql = "UPDATE [Product]\n"
-                + "   SET [stockQuantity] = 0"
+                + "   SET [stockQuantity] = -1"
                 + "      WHERE [id] = ?";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -1068,7 +1067,7 @@ public class DAOProduct {
 
     public int getCountCate() {
         int procount = 0;
-      
+
         String sql = "SELECT  count(id)\n"
                 + "  FROM [Categories]";
         try {

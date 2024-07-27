@@ -115,6 +115,7 @@
       <p>Your order with order code ${orderId} has been successfully paid. BETASHOP will contact you soon to deliver the product or service.</p>
       <p>Redirecting to home in <span id="countdown">10</span> seconds...</p>
       <button onclick="window.location.href = 'home'">Return to Home</button>
+      <button onclick="window.location.href = 'cusorderdetail?id=${orderId}'">View Order Detail</button>
     </div>
   </div>
 </body>

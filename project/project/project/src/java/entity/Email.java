@@ -75,7 +75,7 @@ public class Email {
     }
 
     // nội dung
-    public String messageOrder(LocalDateTime address) {
+    public String messageOrder(String address) {
         return """
                <!DOCTYPE html>
                <html lang="en">
@@ -137,14 +137,14 @@ public class Email {
                <body>
                  <div class="email-container">
                    <div class="header">
-                    <h1>Shoes Shop</h1>
+                    <h1>Beta Shop</h1>
                     <h4>Xác nhận đặt hàng thành công!</h4>
                     </div>
                    <div class="content">
                      <h3>Chi tiết đơn hàng:</h3>\n"""
                 + "<p>Địa chỉ: " + address + "</p>\n"
-                + "<p>Cảm ơn bạn đã tin tưởng và đặt hàng tại Shoes Shop!</p>\n"
-                + "<p>Mọi thắc mắc xin liên hệ với chúng tôi qua:</p><P>Hotline: 0962900476 hoặc Email: shoesshop193@gmail.com.</p>\n"
+                + "<p>Cảm ơn bạn đã tin tưởng và đặt hàng tại Beta Shop!</p>\n"
+                + "<p>Mọi thắc mắc xin liên hệ với chúng tôi qua:</p><P>Hotline: 0962900476 hoặc Email: betashop193@gmail.com.</p>\n"
                 + "<p>Chúng tôi sẽ cố gắng phản hồi bạn sớm nhất có thể!</p>\n"
                 + "</div>\n"
                 + "<div class=\"footer\">\n"

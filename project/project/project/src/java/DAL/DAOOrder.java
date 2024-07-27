@@ -277,6 +277,47 @@ public class DAOOrder {
             // Xử lý ngoại lệ
         }
     }
+    public void getAllOrderShipper(int shipid) {
+        ord = new Vector<>();
+        String sql = "SELECT [id]\n"
+                + "      ,[cus_id]\n"
+                + "      ,[orderDate]\n"
+                + "      ,[status_id]\n"
+                + "      ,[adress]\n"
+                + "      ,[phone]\n"
+                + "      ,[deliverDate]\n"
+                + "      ,[payment_id]\n"
+                + "      ,[totalAmount]\n"
+                + "      ,[cus_name]\n"
+                + "      ,[ship_id]"
+                + ",[shipstatus]\n"
+                + "  FROM [Order]\n"
+                + "where [ship_id] = ?"
+                + " order by id desc";
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, shipid);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt(1);
+                int cus_id = rs.getInt(2);
+                String orderDate = rs.getString(3);
+                int status_id = rs.getInt(4);
+                String adress = rs.getString(5);
+                String phone = rs.getString(6);
+                String deliverDate = rs.getString(7);
+                int payment_id = rs.getInt(8);
+                double totalAmount = rs.getDouble(9);
+                String cus_name = rs.getString(10);
+                int ship_id = rs.getInt(11);
+                String shipstatus = rs.getString(12);
+                ord.add(new Order(id, cus_id, orderDate, status_id, adress, phone, deliverDate, payment_id, totalAmount, cus_name, ship_id, shipstatus));
+            }
+        } catch (SQLException e) {
+            // Xử lý ngoại lệ
+        }
+    }
 
     public void getAllOrderToday() {
         LocalDate time = LocalDate.now();
@@ -424,8 +465,8 @@ public class DAOOrder {
                 + "      ,[cus_name]\n"
                 + "      ,[ship_id]\n"
                 + "      ,[shipstatus]\n"
-                + "  FROM [betashop].[dbo].[Order]\n"
-                + "  where  [status_id] != 1\n"
+                + "  FROM [Order]\n"
+                + "  where  [status_id] = 2\n"
                 + "  order by id desc";
 
         try {
@@ -676,7 +717,7 @@ public class DAOOrder {
     }
 
     public double getTotalMoney(List<Order> list) {
-        int sum = 0;
+        double sum = 0;
         for (Order order : list) {
             sum += order.getTotalAmount();
         }

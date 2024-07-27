@@ -33,87 +33,115 @@
     </head>
     <body class="home">
         <header class="primary-header container flex">
-            <div class="header-inner-one flex">
-                <div class="logo">
-                    <img src="img/logo.png" alt="" />
-                </div>
-                <button
-                    class="mobile-close-btn"
-                    data-visible="false"
-                    aria-controls="primary-navigation"
-                    >
-                    <i class="uil uil-times-circle"></i>
-                </button>
-                <nav>
-                    <ul
-                        id="primary-navigation"
+                <div class="header-inner-one flex">
+                    <div class="logo">
+                        <img src="img/logo.png" alt="" />
+                    </div>
+                    <button
+                        class="mobile-close-btn"
                         data-visible="false"
-                        class="primary-navigation flex"
+                        aria-controls="primary-navigation"
                         >
-                        <li>
-                            <a class="fs-100 fs-montserrat bold-500" href="home"
-                               >Home</a
+                        <i class="uil uil-times-circle"></i>
+                    </button>
+                    <nav>
+                        <ul
+                            id="primary-navigation"
+                            data-visible="false"
+                            class="primary-navigation flex"
                             >
-                        </li>
-                        <li>
-                            <a class="fs-100 fs-montserrat bold-500" href="shop"
-                               >Shop</a
-                            >
-                        </li>
-                        <li>
-                            <a class="fs-100 fs-montserrat bold-500" href="about.jsp"
-                               >About Us</a
-                            >
-                        </li>
-                        <li>
-                            <a class="fs-100 fs-montserrat bold-500" href="blog.jsp"
-                               >Blog</a
-                            >
-                        </li>
-                        <li>
-                            <a
-                                class="active fs-100 fs-montserrat bold-500"
-                                href="contactus.jsp"
-                                >Contact Us</a
-                            >
-                        </li>
-                    </ul>
-                </nav>
-            </div>
+                            <li>
+                                <a class="active fs-100 fs-montserrat bold-500" href="home"
+                                   >Home</a
+                                >
+                            </li>
+                            <li>
+                                <a class="fs-100 fs-montserrat bold-500" href="shop"
+                                   >Shop</a
+                                >
+                            </li>
+                             <li>
+                                <a class="fs-100 fs-montserrat bold-500" href="customerblog"
+                                   >Blog</a
+                                >
+                            </li>
+                            <li>
+                                <a class="fs-100 fs-montserrat bold-500" href="about.jsp"
+                                   >About Us</a
+                                >
+                            </li>
 
-            <div class="header-login flex">
-               <c:if test="${sessionScope.acc.id == null}">
-                <a style="text-decoration: none; color: black"class="fs-100 fs-montserrat bold-500" href="login.jsp">Login</a></p>
-                </c:if>
-                <c:if test="${sessionScope.acc.id != null}">
-                <a style="text-decoration: none; color: black"class="fs-100 fs-montserrat bold-500" href="accsettings">${sessionScope.acc.getFull_name()}</a></p>
-                <a style="text-decoration: none; color: black"class="fs-100 fs-montserrat bold-500" href="login.jsp">Logout</a></p>
-                </c:if>
-                <i class="uil uil-search"></i>
-                <i
-                    id="cart-box"
-                    aria-controls="cart-icon"
-                    class="uil uil-shopping-bag"
-                    ></i>
+                            <li>
+                                <a class="fs-100 fs-montserrat bold-500" href="contactus.jsp"
+                                   >Contact Us</a
+                                >
+                            </li>
 
-                <!-- =================1111111111================== -->
-                <div id="cart-icon" data-visible="false" class="cart-icon">
-                    <div class="shopping flex">
-                        <p>Shopping Basket</p>
-                        <i id="cross-btn" class="uil uil-times"></i>
-                    </div>
-                    <div class="cart bold-800 flex">
-                        <i class="uil uil-shopping-cart-alt"></i>
-                        <p>Cart Is Empty</p>
+                        </ul>
+                    </nav>
+                </div>
 
-                        <!-- ================================================== -->
+                <div class="header-login flex">
+                    <c:if test="${sessionScope.acc.full_name == null}">
+                        <a style="text-decoration: none;
+                           color: black"class="fs-100 fs-montserrat bold-500" href="login.jsp">Login</a></p>
+                        </c:if>
+                        <c:if test="${sessionScope.acc.full_name != null}">
+                            <p style="text-decoration: none;
+                            color: black"class="fs-100 fs-montserrat bold-500" id="acc-box" aria-controls="acc-icon">${sessionScope.acc.getFull_name()}</p>
 
-                        <!-- ================================================== -->
+                        </c:if>
+                        <a  href="showCart">
+                            <i class="uil uil-shopping-bag"
+                               ></i>${n}
+                        </a>
+                        <!-- =================1111111111================== -->
+                        <div id="cart-icon" data-visible="false" class="cart-icon">
+                            <div class="shopping flex">
+                                <p>Shopping Basket</p>
+                                <i id="cross-btn" class="uil uil-times"></i>
+                            </div>
+                            <div class="cart bold-800 flex">
+                                <i class="uil uil-shopping-cart-alt"></i>
+                                <p>Cart Is Empty</p>
+
+                                <!-- ================================================== -->
+
+                                <!-- ================================================== -->
+                            </div>
+                        </div>
+                        <div id="acc-icon" data-visible="false" class="cart-icon">
+                            <div class="shopping flex">
+                                <p>Shopping Basket</p>
+                                <i id="cross-btn" class="uil uil-times"></i>
+                            </div>
+                            <div style="padding-top: 2rem;" class="cart bold-800 flex">
+                            <a style="text-decoration: none;
+                               color: black"class="fs-100 fs-montserrat bold-500" href="logout">Log out</a>
+                            </div>
+                            <div style="padding-top: 2rem;" class="cart bold-800 flex">
+                            <a style="text-decoration: none;
+                               color: black"class="fs-100 fs-montserrat bold-500" href="accsettings">Account Settings</a>
+                            </div>
+                            <div style="padding-top: 2rem;" class="cart bold-800 flex">
+                            <a style="text-decoration: none;
+                               color: black"class="fs-100 fs-montserrat bold-500" href="changePassword">Change Passwords</a>
+                            </div>
+                            <div style="padding-top: 2rem;" class="cart bold-800 flex">
+                            <form action="orderhistory" method="post">
+                                <input type="hidden" value="${sessionScope.acc.id}" name="accid"/>
+                                <input style="border: none;" class="fs-100 fs-montserrat bold-500" type="submit" value="View Order History"/>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="mobile-open-btn"><i class="uil uil-align-right"></i></div>
-        </header>
+                <div class="mobile-open-btn"><i class="uil uil-align-right"></i></div>
+                <c:if test="${mess != null}">
+                        <div id="notification" class="hidden">
+                            ${mess}
+                        </div>
+                    </c:if>
+            </header>
 
         <!-- ===================Shop Feature Section============================ -->
 
@@ -194,7 +222,7 @@
                     <div class="grid">
                         <select name="sques" style="border-radius: 50px; height: 55px" class="bg-gray text-black fs-poppins">
                             <c:forEach items="${allq}" var="o">
-                                <option value="${o.getId()}" >${o.ques_name}</option>
+                                <option value="${o.getId()}"${o.getId() == acc.ques_id ? 'selected' : ''} >${o.ques_name}</option>
                             </c:forEach>
                         </select>
                     </div>
@@ -375,5 +403,62 @@
                 </p>
             </section>
         </footer>
+          <script>
+                    const accountBtn = document.getElementById('acc-box');
+                    const accItme = document.getElementById('acc-icon');
+                    accountBtn.addEventListener('click', () => {
+                        const showCart = accItme.getAttribute('data-visible');
+
+                        if (showCart === 'false') {
+                            accItme.setAttribute('data-visible', true)
+                        } else {
+                            accItme.setAttribute('data-visible', false)
+                        }
+                    })
+                </script>
+                  <script>
+        document.getElementById('showNotification').addEventListener('click', function () {
+                document.getElementById('notification').classList.remove('hidden');
+                setTimeout(function () {
+                    document.getElementById('notification').classList.add('hidden');
+                }, 10000); // Đợi 1 giây trước khi ẩn đi
+            });
+   </script>
+     <style>
+       #notification {
+                background-color: #4CAF50; /* Màu nền */
+                color: white; /* Màu chữ */
+                text-align: center; /* Căn giữa nội dung */
+                padding: 10px; /* Khoảng cách giữa nội dung và khung */
+                position: fixed; /* Vị trí cố định */
+                top: 20px; /* Cách lề trên 20px */
+                right: 20px; /* Cách lề phải 20px */
+                z-index: 1000; /* Lớp chồng lên cao */
+                width: 300px; /* Độ rộng */
+                border-radius: 5px; /* Đường viền cong */
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng bóng đổ */
+                opacity: 0; /* Mặc định ẩn đi */
+                animation: fadeInOut 1s ease-in-out forwards; /* Áp dụng animation */
+            }
+
+            /* Định nghĩa animation */
+            @keyframes fadeInOut {
+                0% {
+                    opacity: 0; /* Ẩn đi ban đầu */
+                }
+                50% {
+                    opacity: 1; /* Hiển thị lên 50% thời gian */
+                }
+                100% {
+                    opacity: 0; /* Mờ dần đi */
+                }
+            }
+
+            /* Hiển thị phần thông báo khi được kích hoạt */
+            #notification:not(.hidden) {
+                display: block;
+            }
+
+   </style>
     </body>
 </html>

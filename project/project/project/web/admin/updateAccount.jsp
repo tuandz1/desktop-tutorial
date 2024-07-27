@@ -117,7 +117,7 @@
                                     </li>
                                 </ul>
                             </li>
-                           <li class="nav-item dropdown nav-user">
+                            <li class="nav-item dropdown nav-user">
                                 <a class="nav-link nav-user-img" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="${sessionScope.acc.avatar}" alt="" class="user-avatar-md rounded-circle"></a>
                                 <div class="dropdown-menu dropdown-menu-right nav-user-dropdown" aria-labelledby="navbarDropdownMenuLink2">
                                     <div class="nav-user-info">
@@ -125,7 +125,7 @@
                                             ${sessionScope.acc.full_name}</h5>
                                         <span class="status"></span><span class="ml-2">Available</span>
                                     </div>
-                                            <a class="dropdown-item" href="accountmanage?action=2&aid=${sessionScope.acc.id}"><i class="fas fa-user mr-2"></i>Account</a>
+                                    <a class="dropdown-item" href="accountmanage?action=2&aid=${sessionScope.acc.id}"><i class="fas fa-user mr-2"></i>Account</a>
                                     <a class="dropdown-item" href="logout"><i class="fas fa-power-off mr-2"></i>Logout</a>
                                 </div>
                             </li>
@@ -147,32 +147,62 @@
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav flex-column">
+                          <ul class="navbar-nav flex-column">
                                 <li class="nav-divider">
                                     Menu
                                 </li>
-                                <li class="nav-item ">
-                                    <a class="nav-link active" href="dashboard" ><i class="fa fa-fw fa-user-circle"></i>Dashboard </a>
+                                  <li class="nav-item ">
+                                    <a class="nav-link active" href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Dashboard </a>
 
                                 </li>
-                                <c:if test="${sessionScope.acc.role_id == 5 || sessionScope.acc.role_id == 4}">
-                                    <li class="nav-item ">
+                                <c:if test="${sessionScope.acc.role_id == 4 || sessionScope.acc.role_id == 2}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link " href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Product Manager </a>
 
-                                        <a class="nav-link  " href="accountmanage" ><i class="fa fa-fw fa-user-circle"></i>Account Manage </a>
+                                </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 5 }">
+                                <li class="nav-item ">
+                                    
+                                    <a class="nav-link  " href="accountmanage" ><i class="fa fa-fw fa-user-circle"></i>Account Manage </a>
 
-                                    </li>
+                                </li>
                                 </c:if>
                                 <c:if test="${sessionScope.acc.role_id == 2}">
-                                    <li class="nav-item ">
-                                        <a class="nav-link " href="brandmanage" ><i class="fa fa-fw fa-user-circle"></i>Brand Manage</a>
+                                <li class="nav-item ">
+                                    <a class="nav-link " href="brandmanage" ><i class="fa fa-fw fa-user-circle"></i>Brand Manage</a>
 
-                                    </li>
+                                </li>
+                                </c:if>
+                                      <c:if test="${sessionScope.acc.role_id == 4}">
+                                <li class="nav-item ">
+                                    <a class="nav-link " href="commentManage" ><i class="fa fa-fw fa-user-circle"></i>Comment Manage</a>
+
+                                </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 2}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="catemanage" ><i class="fa fa-fw fa-user-circle"></i>Cate Manage</a>
+                                    
+                                </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 2}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="blogmanage" ><i class="fa fa-fw fa-user-circle"></i>Blog Manage</a>
+                                    
+                                </li>
                                 </c:if>
                                 <c:if test="${sessionScope.acc.role_id == 4}">
-                                    <li class="nav-item ">
-                                        <a class="nav-link  " href="vouchermanage" ><i class="fa fa-fw fa-user-circle"></i>Voucher Manage</a>
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="ordermanage" ><i class="fa fa-fw fa-user-circle"></i>Order Manage</a>
 
-                                    </li>
+                                </li>
+                                 </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 4}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="vouchermanage" ><i class="fa fa-fw fa-user-circle"></i>Voucher Manage</a>
+
+                                </li>
                                 </c:if>
                             </ul>
                         </div>
@@ -196,29 +226,45 @@
                         <div class="card-body">
                             <form id="validationform" action="updateAccount"  method="post" enctype="multipart/form-data">
                                 <input type="hidden" value="${ac.id}" name="id"/>
-                                 <div class="form-group row">
+                                <div class="form-group row">
                                     <div class=" col-sm-4  text-sm-right ">
                                         <img  style="width: 150px; height: 200px" src="${ac.avatar}" alt="alt"/>
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-12 col-sm-3 col-form-label text-sm-right">Role</label>
-                                    <div class="col-12 col-sm-10 col-lg-6">
-                                        <select style="height: 100%; width: 100%" name="role">
-                                            <c:forEach items="${role}" var="b">
-                                                <option  value="${b.id}">${b.name}</option>
-                                            </c:forEach>
+                                        <c:if test="${sessionScope.acc.role_id == 5}">
+                                    <div class="form-group row">
+                                        <label class="col-12 col-sm-3 col-form-label text-sm-right">Role</label>
+                                        <div class="col-12 col-sm-10 col-lg-6">
+                                            <select style="height: 100%; width: 100%" name="role">
+                                                <c:forEach items="${role}" var="b">
+                                                     <c:if test="${b.id != 1 && b.id !=5}">
+                                                    <option  value="${b.id}" ${b.id == ac.role_id ? 'selected' : ''}>${b.name}</option>
+                                                     </c:if>
+                                                </c:forEach>
 
-                                        </select>
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id != 5}">
+                                    <div class="form-group row">
+                                        <label class="col-12 col-sm-3 col-form-label text-sm-right">Role</label>
+                                        <div class="col-12 col-sm-10 col-lg-6">
+                                            <input type="hidden" name="role" value="${ac.role_id}"/>
+                                            <c:forEach items="${role}" var="b">
+                                                <c:if test="${b.id == ac.role_id}">
+                                                    <p>${b.name}</p>
+                                                </c:if>
+                                            </c:forEach>
+                                        </div>
+                                    </div>
+                                </c:if>
                                 <div class="form-group row">
                                     <label class="col-12 col-sm-3 col-form-label text-sm-right">Security Question</label>
                                     <div class="col-12 col-sm-8 col-lg-6">
                                         <select style="height: 100%; width: 100%" name="qs">
                                             <c:forEach items="${qs}" var="c">
-                                                <option value="${c.id}">${c.ques_name}</option>
+                                                <option value="${c.id}" ${c.id == ac.ques_id ? 'selected' : ''}>${c.ques_name}</option>
                                             </c:forEach>
                                         </select>
                                         <a href="createCate" target="_blank"><i class="far fa-edit"></i>Add Question</a>
@@ -254,7 +300,7 @@
                                     <div class="col-12 col-sm-8 col-lg-6">
                                         <input type="file" id="fileInput" name="ava" accept="image/*" class="form-control">
                                     </div>
-                                <div id="errorMessage" class="error"></div>
+                                    <div id="errorMessage" class="error"></div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-12 col-sm-3 col-form-label text-sm-right">Email</label>
@@ -365,27 +411,27 @@
             });
         }, false);
     })();
-    
-            document.getElementById('fileInput').addEventListener('change', function(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const img = new Image();
-        img.onload = function() {
-            if (img.width / img.height === 3 / 4) {
-                document.getElementById('errorMessage').textContent = '';
-                // Hình ảnh hợp lệ, tiếp tục với tải lên hoặc hành động khác
-            } else {
-                document.getElementById('errorMessage').textContent = 'Hình ảnh phải có tỷ lệ 3:4.';
+
+    document.getElementById('fileInput').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            const img = new Image();
+            img.onload = function () {
+                if (img.width / img.height === 3 / 4) {
+                    document.getElementById('errorMessage').textContent = '';
+                    // Hình ảnh hợp lệ, tiếp tục với tải lên hoặc hành động khác
+                } else {
+                    document.getElementById('errorMessage').textContent = 'Hình ảnh phải có tỷ lệ 3:4.';
+                    event.target.value = ''; // Xóa dữ liệu đầu vào tệp
+                }
+            };
+            img.onerror = function () {
+                document.getElementById('errorMessage').textContent = 'Tệp được chọn không phải là hình ảnh hợp lệ.';
                 event.target.value = ''; // Xóa dữ liệu đầu vào tệp
-            }
-        };
-        img.onerror = function() {
-            document.getElementById('errorMessage').textContent = 'Tệp được chọn không phải là hình ảnh hợp lệ.';
-            event.target.value = ''; // Xóa dữ liệu đầu vào tệp
-        };
-        img.src = URL.createObjectURL(file);
-    }
-});
+            };
+            img.src = URL.createObjectURL(file);
+        }
+    });
 </script>
 </body>
 

@@ -65,8 +65,11 @@
                         </div>
                     </div>
                     <div class="account">
-                        <p>Dont hava account ?</p>
+                        <p>Don't have account ?</p>
                         <a href="register.jsp">Register</a>
+                    </div>
+                    <div class="account">
+                        <a href="home">Back to Home</a>
                     </div>
                 </form>
             </div>

@@ -1,3 +1,6 @@
+<%@taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -31,82 +34,110 @@
   </head>
   <body class="home">
     <header class="primary-header container flex">
-      <div class="header-inner-one flex">
-        <div class="logo">
-          <img src="img/logo.png" alt="" />
-        </div>
-        <button
-          class="mobile-close-btn"
-          data-visible="false"
-          aria-controls="primary-navigation"
-        >
-          <i class="uil uil-times-circle"></i>
-        </button>
-        <nav>
-          <ul
-            id="primary-navigation"
-            data-visible="false"
-            class="primary-navigation flex"
-          >
-            <li>
-              <a class="fs-100 fs-montserrat bold-500" href="home"
-                >Home</a
-              >
-            </li>
-            <li>
-              <a class="fs-100 fs-montserrat bold-500" href="shop"
-                >Shop</a
-              >
-            </li>
-            <li>
-              <a class="fs-100 fs-montserrat bold-500" href="about.jsp"
-                >About Us</a
-              >
-            </li>
-            <li>
-              <a class="fs-100 fs-montserrat bold-500" href="blog.jsp"
-                >Blog</a
-              >
-            </li>
-            <li>
-              <a
-                class="active fs-100 fs-montserrat bold-500"
-                href="contactus.jsp"
-                >Contact Us</a
-              >
-            </li>
-          </ul>
-        </nav>
-      </div>
+                <div class="header-inner-one flex">
+                    <div class="logo">
+                        <img src="img/logo.png" alt="" />
+                    </div>
+                    <button
+                        class="mobile-close-btn"
+                        data-visible="false"
+                        aria-controls="primary-navigation"
+                        >
+                        <i class="uil uil-times-circle"></i>
+                    </button>
+                    <nav>
+                        <ul
+                            id="primary-navigation"
+                            data-visible="false"
+                            class="primary-navigation flex"
+                            >
+                            <li>
+                                <a class="active fs-100 fs-montserrat bold-500" href="home"
+                                   >Home</a
+                                >
+                            </li>
+                            <li>
+                                <a class="fs-100 fs-montserrat bold-500" href="shop"
+                                   >Shop</a
+                                >
+                            </li>
+                            <li>
+                                <a class="fs-100 fs-montserrat bold-500" href="customerblog"
+                                   >Blog</a
+                                >
+                            </li>
+                            <li>
+                                <a class="fs-100 fs-montserrat bold-500" href="about.jsp"
+                                   >About Us</a
+                                >
+                            </li>
 
-      <div class="header-login flex">
-        <p class="fs-100 fs-montserrat bold-500">login</p>
-        <i class="uil uil-search"></i>
-        <i
-          id="cart-box"
-          aria-controls="cart-icon"
-          class="uil uil-shopping-bag"
-        ></i>
+                            <li>
+                                <a class="fs-100 fs-montserrat bold-500" href="contactus.jsp"
+                                   >Contact Us</a
+                                >
+                            </li>
 
-        <!-- =================1111111111================== -->
-        <div id="cart-icon" data-visible="false" class="cart-icon">
-          <div class="shopping flex">
-            <p>Shopping Basket</p>
-            <i id="cross-btn" class="uil uil-times"></i>
-          </div>
-          <div class="cart bold-800 flex">
-            <i class="uil uil-shopping-cart-alt"></i>
-            <p>Cart Is Empty</p>
+                        </ul>
+                    </nav>
+                </div>
 
-            <!-- ================================================== -->
+                <div class="header-login flex">
+                    <c:if test="${sessionScope.acc.full_name == null}">
+                        <a style="text-decoration: none;
+                           color: black"class="fs-100 fs-montserrat bold-500" href="login.jsp">Login</a></p>
+                        </c:if>
+                        <c:if test="${sessionScope.acc.full_name != null}">
+                            <p style="text-decoration: none;
+                            color: black"class="fs-100 fs-montserrat bold-500" id="acc-box" aria-controls="acc-icon">${sessionScope.acc.getFull_name()}</p>
 
-            <!-- ================================================== -->
-          </div>
-        </div>
-      </div>
-      <div class="mobile-open-btn"><i class="uil uil-align-right"></i></div>
-    </header>
+                        </c:if>
+                        <a  href="showCart">
+                            <i class="uil uil-shopping-bag"
+                               ></i>${n}
+                        </a>
+                        <!-- =================1111111111================== -->
+                        <div id="cart-icon" data-visible="false" class="cart-icon">
+                            <div class="shopping flex">
+                                <p>Shopping Basket</p>
+                                <i id="cross-btn" class="uil uil-times"></i>
+                            </div>
+                            <div class="cart bold-800 flex">
+                                <i class="uil uil-shopping-cart-alt"></i>
+                                <p>Cart Is Empty</p>
 
+                                <!-- ================================================== -->
+
+                                <!-- ================================================== -->
+                            </div>
+                        </div>
+                        <div id="acc-icon" data-visible="false" class="cart-icon">
+                            <div class="shopping flex">
+                                <p>Shopping Basket</p>
+                                <i id="cross-btn" class="uil uil-times"></i>
+                            </div>
+                            <div style="padding-top: 2rem;" class="cart bold-800 flex">
+                            <a style="text-decoration: none;
+                               color: black"class="fs-100 fs-montserrat bold-500" href="logout">Log out</a>
+                            </div>
+                            <div style="padding-top: 2rem;" class="cart bold-800 flex">
+                            <a style="text-decoration: none;
+                               color: black"class="fs-100 fs-montserrat bold-500" href="accsettings">Account Settings</a>
+                            </div>
+                            <div style="padding-top: 2rem;" class="cart bold-800 flex">
+                            <a style="text-decoration: none;
+                               color: black"class="fs-100 fs-montserrat bold-500" href="changePassword">Change Passwords</a>
+                            </div>
+                            <div style="padding-top: 2rem;" class="cart bold-800 flex">
+                            <form action="orderhistory" method="post">
+                                <input type="hidden" value="${sessionScope.acc.id}" name="accid"/>
+                                <input style="border: none;" class="fs-100 fs-montserrat bold-500" type="submit" value="View Order History"/>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="mobile-open-btn"><i class="uil uil-align-right"></i></div>
+            </header>
     <!-- ===================Shop Feature Section============================ -->
 
     <section class="shop-feature bg-gray grid">
@@ -300,12 +331,25 @@
 
       <section class="copyRight">
         <p class="c-font fs-montserrat fs-200">
-          © 2022 eStore. All rights reserved.
+          Â© 2022 eStore. All rights reserved.
         </p>
         <p class="fs-montserrat fs-100 text-align p-top">
           Privacy Policy . Term Condition
         </p>
       </section>
+      <script>
+                    const accountBtn = document.getElementById('acc-box');
+                    const accItme = document.getElementById('acc-icon');
+                    accountBtn.addEventListener('click', () => {
+                        const showCart = accItme.getAttribute('data-visible');
+
+                        if (showCart === 'false') {
+                            accItme.setAttribute('data-visible', true)
+                        } else {
+                            accItme.setAttribute('data-visible', false)
+                        }
+                    })
+                </script>
     </footer>
   </body>
 </html>

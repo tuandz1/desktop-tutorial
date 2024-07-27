@@ -159,32 +159,62 @@
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="navbarNav">
-                                   <ul class="navbar-nav flex-column">
+                            <ul class="navbar-nav flex-column">
                                 <li class="nav-divider">
                                     Menu
                                 </li>
-                                <li class="nav-item ">
-                                    <a class="nav-link active" href="dashboard" ><i class="fa fa-fw fa-user-circle"></i>Dashboard </a>
+                                  <li class="nav-item ">
+                                    <a class="nav-link active" href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Dashboard </a>
 
                                 </li>
-                                <c:if test="${sessionScope.acc.role_id == 5 || sessionScope.acc.role_id == 4}">
-                                    <li class="nav-item ">
+                                <c:if test="${sessionScope.acc.role_id == 4 || sessionScope.acc.role_id == 2}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link " href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Product Manager </a>
 
-                                        <a class="nav-link  " href="accountmanage" ><i class="fa fa-fw fa-user-circle"></i>Account Manage </a>
+                                </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 5}">
+                                <li class="nav-item ">
+                                    
+                                    <a class="nav-link  " href="accountmanage" ><i class="fa fa-fw fa-user-circle"></i>Account Manage </a>
 
-                                    </li>
+                                </li>
                                 </c:if>
                                 <c:if test="${sessionScope.acc.role_id == 2}">
-                                    <li class="nav-item ">
-                                        <a class="nav-link " href="brandmanage" ><i class="fa fa-fw fa-user-circle"></i>Brand Manage</a>
+                                <li class="nav-item ">
+                                    <a class="nav-link " href="brandmanage" ><i class="fa fa-fw fa-user-circle"></i>Brand Manage</a>
 
-                                    </li>
+                                </li>
                                 </c:if>
                                 <c:if test="${sessionScope.acc.role_id == 4}">
-                                    <li class="nav-item ">
-                                        <a class="nav-link  " href="vouchermanage" ><i class="fa fa-fw fa-user-circle"></i>Voucher Manage</a>
+                                <li class="nav-item ">
+                                    <a class="nav-link " href="commentManage" ><i class="fa fa-fw fa-user-circle"></i>Comment Manage</a>
 
-                                    </li>
+                                </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 2}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="catemanage" ><i class="fa fa-fw fa-user-circle"></i>Cate Manage</a>
+                                    
+                                </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 2}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="blogmanage" ><i class="fa fa-fw fa-user-circle"></i>Blog Manage</a>
+                                    
+                                </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 4}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="ordermanage" ><i class="fa fa-fw fa-user-circle"></i>Order Manage</a>
+
+                                </li>
+                                 </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 4}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="vouchermanage" ><i class="fa fa-fw fa-user-circle"></i>Voucher Manage</a>
+
+                                </li>
                                 </c:if>
                             </ul>
                         </div>
@@ -395,7 +425,7 @@
                     </div>
                      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                         <div class="card">
-                                                       <h5 class="card-header">Top Selling Products</h5>
+                                                       <h5 class="card-header">Top Accounts</h5>
                             <div class="card-body p-0">
                                 <div class="table-responsive">
                                     <table class="table">

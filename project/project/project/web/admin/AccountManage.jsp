@@ -14,7 +14,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
         <script src="jquery-3.7.1.min.js"></script>
-         <script src="${pageContext.request.contextPath}/js/admin/table2excel.js"></script>
+        <script src="${pageContext.request.contextPath}/js/admin/table2excel.js"></script>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/vendor/bootstrap/css/bootstrap.min.css">
         <link href="${pageContext.request.contextPath}/vendor/fonts/circular-std/style.css" rel="stylesheet">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/style.css">
@@ -133,7 +133,7 @@
                                             ${sessionScope.acc.full_name}</h5>
                                         <span class="status"></span><span class="ml-2">Available</span>
                                     </div>
-                                            <a class="dropdown-item" href="accountmanage?action=2&aid=${sessionScope.acc.id}"><i class="fas fa-user mr-2"></i>Account</a>
+                                    <a class="dropdown-item" href="accountmanage?action=2&aid=${sessionScope.acc.id}"><i class="fas fa-user mr-2"></i>Account</a>
                                     <a class="dropdown-item" href="logout"><i class="fas fa-power-off mr-2"></i>Logout</a>
                                 </div>
                             </li>
@@ -155,14 +155,20 @@
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="navbarNav">
-     <ul class="navbar-nav flex-column">
+                            <ul class="navbar-nav flex-column">
                                 <li class="nav-divider">
                                     Menu
                                 </li>
                                 <li class="nav-item ">
-                                    <a class="nav-link active" href="dashboard" ><i class="fa fa-fw fa-user-circle"></i>Dashboard </a>
+                                    <a class="nav-link active" href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Dashboard </a>
 
                                 </li>
+                                <c:if test="${sessionScope.acc.role_id == 4 || sessionScope.acc.role_id == 2}">
+                                    <li class="nav-item ">
+                                        <a class="nav-link " href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Product Manager </a>
+
+                                    </li>
+                                </c:if>
                                 <c:if test="${sessionScope.acc.role_id == 5 || sessionScope.acc.role_id == 4}">
                                     <li class="nav-item ">
 
@@ -178,11 +184,36 @@
                                 </c:if>
                                 <c:if test="${sessionScope.acc.role_id == 4}">
                                     <li class="nav-item ">
+                                        <a class="nav-link " href="commentManage" ><i class="fa fa-fw fa-user-circle"></i>Comment Manage</a>
+
+                                    </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 2}">
+                                    <li class="nav-item ">
+                                        <a class="nav-link  " href="catemanage" ><i class="fa fa-fw fa-user-circle"></i>Cate Manage</a>
+
+                                    </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 2}">
+                                    <li class="nav-item ">
+                                        <a class="nav-link  " href="blogmanage" ><i class="fa fa-fw fa-user-circle"></i>Blog Manage</a>
+
+                                    </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 4}">
+                                    <li class="nav-item ">
+                                        <a class="nav-link  " href="ordermanage" ><i class="fa fa-fw fa-user-circle"></i>Order Manage</a>
+
+                                    </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 4}">
+                                    <li class="nav-item ">
                                         <a class="nav-link  " href="vouchermanage" ><i class="fa fa-fw fa-user-circle"></i>Voucher Manage</a>
 
                                     </li>
                                 </c:if>
                             </ul>
+                        </div>
                     </nav>
                 </div>
             </div>
@@ -213,7 +244,7 @@
                                 </div >
                                 <div class="row">
                                     <a href="accountmanage?action=1" class="col-2 btn btn-primary"><i class="  fas fa-plus-circle"></i> Add Account</a>
-                                     &nbsp;
+                                    &nbsp;
                                     <button id="exportBtn" class="col-2 btn btn-primary"><i class="  fas fa-plus-circle"></i> export to file</button>
                                     <form class="col-12 form-control" action="accountmanage"method="post">
                                         <div class="input-group ">
@@ -270,14 +301,16 @@
                                                             <td>${a.full_name}</td>
                                                             <c:forEach items="${role}" var="r">
                                                                 <c:if test="${r.id eq a.role_id}">
-                                                            <td>${r.name}</td>
+                                                                    <td>${r.name}</td>
                                                                 </c:if>
                                                             </c:forEach>
                                                             <td > ${a.email} </td>
                                                             <td > ${a.address} </td>
                                                             <td > ${a.phone} </td>
                                                             <td> 
+                                                                <c:if test="${a.role_id >1}">
                                                                 <a href="accountmanage?action=2&aid=${a.id}" class="btn btn-outline-success"><i class=" fas fa-edit"></i></a>
+                                                                </c:if>
                                                                 &nbsp; 
                                                                 <c:set var="isBlocked" value="false" />
                                                                 <c:forEach var="bl" items="${bl}">
@@ -368,13 +401,13 @@
                 <script>
 
                 </script>
-                  <script>
-            document.getElementById("exportBtn").addEventListener('click', function () {
-                var table2excel = new Table2Excel();
-                table2excel.export(document.querySelectorAll("#userTable"));
-            });
+                <script>
+                    document.getElementById("exportBtn").addEventListener('click', function () {
+                        var table2excel = new Table2Excel();
+                        table2excel.export(document.querySelectorAll("#userTable"));
+                    });
 
-        </script>
+                </script>
                 </body>
 
                 </html>     

@@ -16,7 +16,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  *
@@ -86,37 +90,68 @@ public class mailControll extends HttpServlet {
         List<Account> allacc = dao.getAcc();
 
         Account acc = dao.getAccountformemailandphone(email, phone);
-        int flag = 0;
-        String mes = "";
-        for (Account account : allacc) {
-            if (account.getEmail().equals(email) && account.getPhone().equals(phone)) {
-                flag++;
-            }
-        }
-        if (flag != 0) {
-            dao.changetAccountPass(email, phone, newpass);
-            Email e = new Email();
-            LocalDateTime currentDateTime = LocalDateTime.now();
-            e.sendEmail(e.forgotAccount(acc.getFull_name()), e.messagePass(currentDateTime, acc.getFull_name(), newpass), email);
-
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-        } else {
-            mes = "Invalid email or wrong phone number ";
+        if (acc == null) {
+            String mes = "Invalid email or wrong phone number ";
             request.setAttribute("mes", mes);
             request.getRequestDispatcher("forgotPassword.jsp").forward(request, response);
-        }
+        } else {
+            int flag = 0;
+            String mes = "";
+            for (Account account : allacc) {
+                if (acc.getEmail().equals(email) && acc.getPhone().equals(phone)) {
+                    flag++;
+                }
+            }
+            if (flag != 0) {
+                dao.changetAccountPass(email, phone, "@" + newpass);
+                Email e = new Email();
+                LocalDateTime currentDateTime = LocalDateTime.now();
 
+                response.sendRedirect("login");
+
+                executorService.submit(() -> {
+                    e.sendEmail(e.forgotAccount(acc.getFull_name()), e.messagePass(currentDateTime, acc.getFull_name(), "@" + newpass), email);
+
+                });
+            } else {
+                mes = "Invalid email or wrong phone number ";
+                request.setAttribute("mes", mes);
+                request.getRequestDispatcher("forgotPassword.jsp").forward(request, response);
+            }
+        }
     }
 
-    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+    private static final String ALPHANUMERIC_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private static final String SPECIAL_CHARACTERS = "!@#$%^&*()-_=+[]{}|;:'\",.<>?/`~";
+    private static final String CHARACTERS = ALPHANUMERIC_CHARACTERS + SPECIAL_CHARACTERS;
     private static final SecureRandom random = new SecureRandom();
 
     public static String generateRandomString() {
         StringBuilder sb = new StringBuilder(8);
-        for (int i = 0; i < 8; i++) {
-            sb.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));
+
+        // Generate 7 random alphanumeric characters
+        for (int i = 0; i < 7; i++) {
+            sb.append(ALPHANUMERIC_CHARACTERS.charAt(random.nextInt(ALPHANUMERIC_CHARACTERS.length())));
         }
-        return sb.toString();
+
+        // Add one special character
+        sb.append(SPECIAL_CHARACTERS.charAt(random.nextInt(SPECIAL_CHARACTERS.length())));
+
+        // Shuffle the characters in the string
+        List<Character> charList = new ArrayList<>();
+        for (char c : sb.toString().toCharArray()) {
+            charList.add(c);
+        }
+        Collections.shuffle(charList);
+
+        StringBuilder result = new StringBuilder(charList.size());
+        for (char c : charList) {
+            result.append(c);
+        }
+
+        return result.toString();
     }
 
     /**

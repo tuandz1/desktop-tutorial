@@ -147,32 +147,62 @@
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav flex-column">
+                           <ul class="navbar-nav flex-column">
                                 <li class="nav-divider">
                                     Menu
                                 </li>
-                                <li class="nav-item ">
-                                    <a class="nav-link active" href="dashboard" ><i class="fa fa-fw fa-user-circle"></i>Dashboard </a>
+                                  <li class="nav-item ">
+                                    <a class="nav-link active" href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Dashboard </a>
 
                                 </li>
+                                <c:if test="${sessionScope.acc.role_id == 4 || sessionScope.acc.role_id == 2}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link " href="productmanage" ><i class="fa fa-fw fa-user-circle"></i>Product Manager </a>
+
+                                </li>
+                                </c:if>
                                 <c:if test="${sessionScope.acc.role_id == 5 || sessionScope.acc.role_id == 4}">
-                                    <li class="nav-item ">
+                                <li class="nav-item ">
+                                    
+                                    <a class="nav-link  " href="accountmanage" ><i class="fa fa-fw fa-user-circle"></i>Account Manage </a>
 
-                                        <a class="nav-link  " href="accountmanage" ><i class="fa fa-fw fa-user-circle"></i>Account Manage </a>
-
-                                    </li>
+                                </li>
                                 </c:if>
                                 <c:if test="${sessionScope.acc.role_id == 2}">
-                                    <li class="nav-item ">
-                                        <a class="nav-link " href="brandmanage" ><i class="fa fa-fw fa-user-circle"></i>Brand Manage</a>
+                                <li class="nav-item ">
+                                    <a class="nav-link " href="brandmanage" ><i class="fa fa-fw fa-user-circle"></i>Brand Manage</a>
 
-                                    </li>
+                                </li>
+                                </c:if>
+                                      <c:if test="${sessionScope.acc.role_id == 4}">
+                                <li class="nav-item ">
+                                    <a class="nav-link " href="commentManage" ><i class="fa fa-fw fa-user-circle"></i>Comment Manage</a>
+
+                                </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 2}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="catemanage" ><i class="fa fa-fw fa-user-circle"></i>Cate Manage</a>
+                                    
+                                </li>
+                                </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 2}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="blogmanage" ><i class="fa fa-fw fa-user-circle"></i>Blog Manage</a>
+                                    
+                                </li>
                                 </c:if>
                                 <c:if test="${sessionScope.acc.role_id == 4}">
-                                    <li class="nav-item ">
-                                        <a class="nav-link  " href="vouchermanage" ><i class="fa fa-fw fa-user-circle"></i>Voucher Manage</a>
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="ordermanage" ><i class="fa fa-fw fa-user-circle"></i>Order Manage</a>
 
-                                    </li>
+                                </li>
+                                 </c:if>
+                                <c:if test="${sessionScope.acc.role_id == 4}">
+                                  <li class="nav-item ">
+                                    <a class="nav-link  " href="vouchermanage" ><i class="fa fa-fw fa-user-circle"></i>Voucher Manage</a>
+
+                                </li>
                                 </c:if>
                             </ul>
                         </div>
@@ -205,7 +235,7 @@
                                 <div class="form-group row">
                                     <label class="col-12 col-sm-3 col-form-label text-sm-right">Images Product</label>
                                     <div class="col-12 col-sm-8 col-lg-6">
-                                        <input type="file" name="imgs" id="fileInput" multiple accept="image/*" class="form-control">
+                                        <input required="" type="file" name="imgs" id="fileInput" multiple accept="image/*" class="form-control">
                                     </div>
                                      <div id="errorMessages" style="color: red;"></div>
                                 </div>
